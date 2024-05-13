@@ -1,0 +1,17 @@
+{
+	"info": {
+		"fileBlobStorageConnector": {
+			"directoryCreating": "Creating directory \"{directory}\"",
+			"directoryCreated": "Created directory \"{directory}\"",
+			"directoryExists": "Skipping create directory \"{directory}\" as it already exists"
+		}
+	},
+	"error": {
+		"fileBlobStorageConnector": {
+			"directoryCreateFailed": "Creating directory \"{directory}\" failed",
+			"getBlobFailed": "Unable to get blob \"{id}\"",
+			"setBlobFailed": "Unable to set blob",
+			"removeBlobFailed": "Unable to remove blob"
+		}
+	}
+}
