@@ -311,7 +311,10 @@ describe("FileBlobStorageConnector", () => {
 			}
 		);
 		await expect(
-			blobStorage.get({ tenantId: TEST_TENANT_ID }, `urn:${FileBlobStorageConnector.NAMESPACE}:1234`)
+			blobStorage.get(
+				{ tenantId: TEST_TENANT_ID },
+				`urn:${FileBlobStorageConnector.NAMESPACE}:1234`
+			)
 		).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "fileBlobStorageConnector.getBlobFailed"
@@ -414,14 +417,16 @@ describe("FileBlobStorageConnector", () => {
 			}
 		);
 		await expect(
-			blobStorage.remove({ tenantId: TEST_TENANT_ID }, `urn:${FileBlobStorageConnector.NAMESPACE}:1234`)
+			blobStorage.remove(
+				{ tenantId: TEST_TENANT_ID },
+				`urn:${FileBlobStorageConnector.NAMESPACE}:1234`
+			)
 		).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "fileBlobStorageConnector.removeBlobFailed"
 		});
 		expect(I18n.hasMessage("error.fileBlobStorageConnector.removeBlobFailed")).toEqual(true);
 	});
-
 
 	test("can not remove an item", async () => {
 		const blobStorage = new FileBlobStorageConnector(
