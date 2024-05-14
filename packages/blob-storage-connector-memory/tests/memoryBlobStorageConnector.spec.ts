@@ -1,10 +1,15 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import { I18n, Urn } from "@gtsc/core";
 import { MemoryBlobStorageConnector } from "../src/memoryBlobStorageConnector";
 
 const TEST_TENANT_ID = "test-tenant";
 
 describe("MemoryBlobStorageConnector", () => {
+	beforeAll(async () => {
+		I18n.addDictionary("en", await import("../locales/en.json"));
+	});
+
 	test("can construct", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
 		expect(blobStorage).toBeDefined();
@@ -50,9 +55,11 @@ describe("MemoryBlobStorageConnector", () => {
 
 	test("can set an item", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		const id = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
-		expect(id).toBeDefined();
+		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		expect(idUrn).toBeDefined();
 
+		const urn = Urn.fromValidString(idUrn);
+		const id = urn.namespaceSpecific();
 		const store = blobStorage.getStore(TEST_TENANT_ID);
 		expect(store).toBeDefined();
 		expect(store?.[id]).toBeDefined();
@@ -88,18 +95,32 @@ describe("MemoryBlobStorageConnector", () => {
 		});
 	});
 
+	test("can fail to get an item with mismatched urn namespace", async () => {
+		const blobStorage = new MemoryBlobStorageConnector();
+		await expect(
+			blobStorage.get({ tenantId: TEST_TENANT_ID }, "urn:foo:1234")
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "memoryBlobStorageConnector.namespaceMismatch",
+			properties: {
+				namespace: MemoryBlobStorageConnector.NAMESPACE
+			}
+		});
+		expect(I18n.hasMessage("error.memoryBlobStorageConnector.namespaceMismatch")).toEqual(true);
+	});
+
 	test("can not get an item", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		const id = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
-		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, `${id}-2`);
+		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, `${idUrn}-2`);
 
 		expect(item).toBeUndefined();
 	});
 
 	test("can get an item", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		const id = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
-		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, id);
+		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, idUrn);
 
 		expect(item).toBeDefined();
 		expect(item?.length).toEqual(3);
@@ -134,11 +155,27 @@ describe("MemoryBlobStorageConnector", () => {
 		});
 	});
 
+	test("can fail to remove an item with mismatched urn namespace", async () => {
+		const blobStorage = new MemoryBlobStorageConnector();
+		await expect(
+			blobStorage.remove({ tenantId: TEST_TENANT_ID }, "urn:foo:1234")
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "memoryBlobStorageConnector.namespaceMismatch",
+			properties: {
+				namespace: MemoryBlobStorageConnector.NAMESPACE
+			}
+		});
+		expect(I18n.hasMessage("error.memoryBlobStorageConnector.namespaceMismatch")).toEqual(true);
+	});
+
 	test("can not remove an item", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		const id = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		const urn = Urn.fromValidString(idUrn);
+		const id = urn.namespaceSpecific();
 
-		await blobStorage.remove({ tenantId: TEST_TENANT_ID }, `${id}-2`);
+		await blobStorage.remove({ tenantId: TEST_TENANT_ID }, `${idUrn}-2`);
 
 		const store = blobStorage.getStore(TEST_TENANT_ID);
 		expect(store).toBeDefined();
@@ -147,8 +184,11 @@ describe("MemoryBlobStorageConnector", () => {
 
 	test("can remove an item", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		const id = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
-		await blobStorage.remove({ tenantId: TEST_TENANT_ID }, id);
+		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		const urn = Urn.fromValidString(idUrn);
+		const id = urn.namespaceSpecific();
+
+		await blobStorage.remove({ tenantId: TEST_TENANT_ID }, idUrn);
 
 		const store = blobStorage.getStore(TEST_TENANT_ID);
 		expect(store).toBeDefined();

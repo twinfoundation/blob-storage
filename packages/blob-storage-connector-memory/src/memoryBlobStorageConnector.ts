@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
-import { Converter, Guards, Is } from "@gtsc/core";
+import { Converter, GeneralError, Guards, Urn } from "@gtsc/core";
 import { Sha256 } from "@gtsc/crypto";
 import { nameof } from "@gtsc/nameof";
 import type { IRequestContext } from "@gtsc/services";
@@ -11,6 +11,12 @@ import type { IMemoryBlobStorageConnectorConfig } from "./models/IMemoryBlobStor
  * Class for performing blob storage operations in-memory.
  */
 export class MemoryBlobStorageConnector implements IBlobStorageConnector {
+	/**
+	 * The namespace for the items.
+	 * @internal
+	 */
+	public static readonly NAMESPACE: string = "blob-memory";
+
 	/**
 	 * Runtime name for the class.
 	 * @internal
@@ -35,7 +41,7 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 	 * Set the blob.
 	 * @param requestContext The context for the request.
 	 * @param blob The data for the blob.
-	 * @returns The id of the stored blob.
+	 * @returns The id of the stored blob in urn format.
 	 */
 	public async set(requestContext: IRequestContext, blob: Uint8Array): Promise<string> {
 		Guards.object(MemoryBlobStorageConnector._CLASS_NAME, nameof(requestContext), requestContext);
@@ -51,13 +57,13 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 		this._store[requestContext.tenantId] ??= {};
 		this._store[requestContext.tenantId][id] = blob;
 
-		return id;
+		return new Urn(MemoryBlobStorageConnector.NAMESPACE, id).toString();
 	}
 
 	/**
 	 * Get the blob.
 	 * @param requestContext The context for the request.
-	 * @param id The id of the blob to get.
+	 * @param id The id of the blob to get in urn format.
 	 * @returns The data for the blob if it can be found or undefined.
 	 */
 	public async get(requestContext: IRequestContext, id: string): Promise<Uint8Array | undefined> {
@@ -67,15 +73,23 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 			nameof(requestContext.tenantId),
 			requestContext.tenantId
 		);
-		Guards.stringValue(MemoryBlobStorageConnector._CLASS_NAME, nameof(id), id);
+		Urn.guard(MemoryBlobStorageConnector._CLASS_NAME, nameof(id), id);
+		const urnParsed = Urn.fromValidString(id);
 
-		return this._store[requestContext.tenantId]?.[id];
+		if (urnParsed.namespaceIdentifier() !== MemoryBlobStorageConnector.NAMESPACE) {
+			throw new GeneralError(MemoryBlobStorageConnector._CLASS_NAME, "namespaceMismatch", {
+				namespace: MemoryBlobStorageConnector.NAMESPACE,
+				id
+			});
+		}
+
+		return this._store[requestContext.tenantId]?.[urnParsed.namespaceSpecific()];
 	}
 
 	/**
 	 * Remove the blob.
 	 * @param requestContext The context for the request.
-	 * @param id The id of the blob to remove.
+	 * @param id The id of the blob to remove in urn format.
 	 * @returns Nothing.
 	 */
 	public async remove(requestContext: IRequestContext, id: string): Promise<void> {
@@ -85,11 +99,17 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 			nameof(requestContext.tenantId),
 			requestContext.tenantId
 		);
-		Guards.stringValue(MemoryBlobStorageConnector._CLASS_NAME, nameof(id), id);
+		Urn.guard(MemoryBlobStorageConnector._CLASS_NAME, nameof(id), id);
+		const urnParsed = Urn.fromValidString(id);
 
-		if (!Is.undefined(this._store[requestContext.tenantId]?.[id])) {
-			delete this._store[requestContext.tenantId]?.[id];
+		if (urnParsed.namespaceIdentifier() !== MemoryBlobStorageConnector.NAMESPACE) {
+			throw new GeneralError(MemoryBlobStorageConnector._CLASS_NAME, "namespaceMismatch", {
+				namespace: MemoryBlobStorageConnector.NAMESPACE,
+				id
+			});
 		}
+
+		delete this._store[requestContext.tenantId]?.[urnParsed.namespaceSpecific()];
 	}
 
 	/**
