@@ -212,22 +212,39 @@ describe("FileBlobStorageConnector", () => {
 		});
 	});
 
+	test("can fail to set an item when write operation fails", async () => {
+		const blobStorage = new FileBlobStorageConnector(
+			{ logging: testLogging },
+			{
+				directory: TEST_DIRECTORY,
+				extension: "\0"
+			}
+		);
+
+		await expect(
+			blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]))
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "fileBlobStorageConnector.setBlobFailed"
+		});
+
+		expect(I18n.hasMessage("error.fileBlobStorageConnector.setBlobFailed")).toEqual(true);
+	});
+
 	test("can set an item", async () => {
 		const blobStorage = new FileBlobStorageConnector(
 			{ logging: testLogging },
 			{ directory: TEST_DIRECTORY }
 		);
-		const id = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
 
-		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, id);
+		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, idUrn);
 
 		expect(item).toBeDefined();
 		expect(item?.length).toEqual(3);
 		expect(item?.[0]).toEqual(1);
 		expect(item?.[1]).toEqual(2);
 		expect(item?.[2]).toEqual(3);
-
-		expect(I18n.hasMessage("error.fileBlobStorageConnector.setBlobFailed")).toEqual(true);
 	});
 
 	test("can fail to get an item with no tenant id", async () => {
@@ -266,6 +283,42 @@ describe("FileBlobStorageConnector", () => {
 		});
 	});
 
+	test("can fail to get an item with mismatched urn namespace", async () => {
+		const blobStorage = new FileBlobStorageConnector(
+			{ logging: testLogging },
+			{
+				directory: TEST_DIRECTORY
+			}
+		);
+		await expect(
+			blobStorage.get({ tenantId: TEST_TENANT_ID }, "urn:foo:1234")
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "fileBlobStorageConnector.namespaceMismatch",
+			properties: {
+				namespace: FileBlobStorageConnector.NAMESPACE
+			}
+		});
+		expect(I18n.hasMessage("error.fileBlobStorageConnector.namespaceMismatch")).toEqual(true);
+	});
+
+	test("can fail to get an item with read failure", async () => {
+		const blobStorage = new FileBlobStorageConnector(
+			{ logging: testLogging },
+			{
+				directory: TEST_DIRECTORY,
+				extension: "\0"
+			}
+		);
+		await expect(
+			blobStorage.get({ tenantId: TEST_TENANT_ID }, `urn:${FileBlobStorageConnector.NAMESPACE}:1234`)
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "fileBlobStorageConnector.getBlobFailed"
+		});
+		expect(I18n.hasMessage("error.fileBlobStorageConnector.getBlobFailed")).toEqual(true);
+	});
+
 	test("can not get an item", async () => {
 		const blobStorage = new FileBlobStorageConnector(
 			{ logging: testLogging },
@@ -273,8 +326,8 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		);
-		const id = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
-		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, `${id}-2`);
+		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, `${idUrn}-2`);
 
 		expect(item).toBeUndefined();
 	});
@@ -287,16 +340,14 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		);
-		const id = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
-		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, id);
+		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, idUrn);
 
 		expect(item).toBeDefined();
 		expect(item?.length).toEqual(3);
 		expect(item?.[0]).toEqual(1);
 		expect(item?.[1]).toEqual(2);
 		expect(item?.[2]).toEqual(3);
-
-		expect(I18n.hasMessage("error.fileBlobStorageConnector.getBlobFailed")).toEqual(true);
 	});
 
 	test("can fail to remove an item with no tenant id", async () => {
@@ -335,6 +386,43 @@ describe("FileBlobStorageConnector", () => {
 		});
 	});
 
+	test("can fail to remove an item with mismatched urn namespace", async () => {
+		const blobStorage = new FileBlobStorageConnector(
+			{ logging: testLogging },
+			{
+				directory: TEST_DIRECTORY
+			}
+		);
+		await expect(
+			blobStorage.remove({ tenantId: TEST_TENANT_ID }, "urn:foo:1234")
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "fileBlobStorageConnector.namespaceMismatch",
+			properties: {
+				namespace: FileBlobStorageConnector.NAMESPACE
+			}
+		});
+		expect(I18n.hasMessage("error.fileBlobStorageConnector.namespaceMismatch")).toEqual(true);
+	});
+
+	test("can fail to remove an item with storage failure", async () => {
+		const blobStorage = new FileBlobStorageConnector(
+			{ logging: testLogging },
+			{
+				directory: TEST_DIRECTORY,
+				extension: "\0"
+			}
+		);
+		await expect(
+			blobStorage.remove({ tenantId: TEST_TENANT_ID }, `urn:${FileBlobStorageConnector.NAMESPACE}:1234`)
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "fileBlobStorageConnector.removeBlobFailed"
+		});
+		expect(I18n.hasMessage("error.fileBlobStorageConnector.removeBlobFailed")).toEqual(true);
+	});
+
+
 	test("can not remove an item", async () => {
 		const blobStorage = new FileBlobStorageConnector(
 			{ logging: testLogging },
@@ -342,11 +430,11 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		);
-		const id = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
 
-		await blobStorage.remove({ tenantId: TEST_TENANT_ID }, `${id}-2`);
+		await blobStorage.remove({ tenantId: TEST_TENANT_ID }, `${idUrn}-2`);
 
-		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, id);
+		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, idUrn);
 
 		expect(item).toBeDefined();
 	});
@@ -358,12 +446,10 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		);
-		const id = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
-		await blobStorage.remove({ tenantId: TEST_TENANT_ID }, id);
-		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, id);
+		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		await blobStorage.remove({ tenantId: TEST_TENANT_ID }, idUrn);
+		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, idUrn);
 
 		expect(item).toBeUndefined();
-
-		expect(I18n.hasMessage("error.fileBlobStorageConnector.removeBlobFailed")).toEqual(true);
 	});
 });

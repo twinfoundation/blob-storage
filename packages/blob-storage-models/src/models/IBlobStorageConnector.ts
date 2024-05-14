@@ -10,14 +10,14 @@ export interface IBlobStorageConnector extends IService {
 	 * Set the blob.
 	 * @param requestContext The context for the request.
 	 * @param blob The data for the blob.
-	 * @returns The id of the stored blob.
+	 * @returns The id of the stored blob in urn format.
 	 */
 	set(requestContext: IRequestContext, blob: Uint8Array): Promise<string>;
 
 	/**
 	 * Get the blob.
 	 * @param requestContext The context for the request.
-	 * @param id The id of the blob to get.
+	 * @param id The id of the blob to get in urn format.
 	 * @returns The data for the blob if it can be found or undefined.
 	 */
 	get(requestContext: IRequestContext, id: string): Promise<Uint8Array | undefined>;
@@ -25,7 +25,7 @@ export interface IBlobStorageConnector extends IService {
 	/**
 	 * Remove the blob.
 	 * @param requestContext The context for the request.
-	 * @param id The id of the blob to remove.
+	 * @param id The id of the blob to remove in urn format.
 	 * @returns Nothing.
 	 */
 	remove(requestContext: IRequestContext, id: string): Promise<void>;

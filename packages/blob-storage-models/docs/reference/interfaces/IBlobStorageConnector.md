@@ -45,7 +45,7 @@ Get the blob.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `requestContext` | `IRequestContext` | The context for the request. |
-| `id` | `string` | The id of the blob to get. |
+| `id` | `string` | The id of the blob to get in urn format. |
 
 #### Returns
 
@@ -66,7 +66,7 @@ Remove the blob.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `requestContext` | `IRequestContext` | The context for the request. |
-| `id` | `string` | The id of the blob to remove. |
+| `id` | `string` | The id of the blob to remove in urn format. |
 
 #### Returns
 
@@ -93,7 +93,7 @@ Set the blob.
 
 `Promise`\<`string`\>
 
-The id of the stored blob.
+The id of the stored blob in urn format.
 
 ___
 

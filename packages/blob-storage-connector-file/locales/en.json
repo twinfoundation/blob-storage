@@ -11,7 +11,8 @@
 			"directoryCreateFailed": "Creating directory \"{directory}\" failed",
 			"getBlobFailed": "Unable to get blob \"{id}\"",
 			"setBlobFailed": "Unable to set blob",
-			"removeBlobFailed": "Unable to remove blob"
+			"removeBlobFailed": "Unable to remove blob",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\""
 		}
 	}
 }
