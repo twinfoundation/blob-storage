@@ -1,4 +1,4 @@
-# GTSC / Blob Storage
+# GTSC Blob Storage
 
 This mono-repository contains the packages to use with Blob Storage in GTSC applications.
 
