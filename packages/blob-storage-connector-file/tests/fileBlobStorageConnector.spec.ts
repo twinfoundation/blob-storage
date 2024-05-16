@@ -2,18 +2,19 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { rm } from "node:fs/promises";
 import { Converter, I18n, RandomHelper } from "@gtsc/core";
+import { EntitySchemaHelper } from "@gtsc/entity";
 import { MemoryEntityStorageConnector } from "@gtsc/entity-storage-connector-memory";
 import {
-	EntityLogEntryDescriptor,
-	EntityStorageLoggingConnector,
-	type IEntityLogEntry
+	EntityLogEntry,
+	EntityStorageLoggingConnector
 } from "@gtsc/logging-connector-entity-storage";
 import type { ILogging } from "@gtsc/logging-models";
 import { LoggingService } from "@gtsc/logging-service";
 import { FileBlobStorageConnector } from "../src/fileBlobStorageConnector";
 import type { IFileBlobStorageConnectorConfig } from "../src/models/IFileBlobStorageConnectorConfig";
 
-let memoryEntityStorageStorage: MemoryEntityStorageConnector<IEntityLogEntry>;
+const entityLogEntrySchema = EntitySchemaHelper.getSchema(EntityLogEntry);
+let memoryEntityStorageStorage: MemoryEntityStorageConnector<EntityLogEntry>;
 let testLogging: ILogging;
 
 const TEST_DIRECTORY_ROOT = "./.tmp/";
@@ -26,7 +27,9 @@ describe("FileBlobStorageConnector", () => {
 	});
 
 	beforeEach(() => {
-		memoryEntityStorageStorage = new MemoryEntityStorageConnector(EntityLogEntryDescriptor);
+		memoryEntityStorageStorage = new MemoryEntityStorageConnector<EntityLogEntry>(
+			entityLogEntrySchema
+		);
 		const blobStorageLoggingConnector = new EntityStorageLoggingConnector({
 			logEntryStorage: memoryEntityStorageStorage
 		});

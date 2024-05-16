@@ -8,19 +8,25 @@ Class for performing blob storage operations in file.
 
 ## Constructors
 
-### constructor
+### new FileBlobStorageConnector()
 
-• **new FileBlobStorageConnector**(`dependencies`, `config`): [`FileBlobStorageConnector`](FileBlobStorageConnector.md)
+> **new FileBlobStorageConnector**(`dependencies`, `config`): [`FileBlobStorageConnector`](FileBlobStorageConnector.md)
 
 Create a new instance of FileBlobStorageConnector.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `dependencies` | `Object` | The dependencies for the connector. |
-| `dependencies.logging` | `ILogging` | The logging contract. |
-| `config` | [`IFileBlobStorageConnectorConfig`](../interfaces/IFileBlobStorageConnectorConfig.md) | The configuration for the blob storage connector. |
+• **dependencies**
+
+The dependencies for the connector.
+
+• **dependencies.logging**: `ILogging`
+
+The logging contract.
+
+• **config**: [`IFileBlobStorageConnectorConfig`](../interfaces/IFileBlobStorageConnectorConfig.md)
+
+The configuration for the blob storage connector.
 
 #### Returns
 
@@ -30,23 +36,23 @@ Create a new instance of FileBlobStorageConnector.
 
 ### NAMESPACE
 
-▪ `Static` `Readonly` **NAMESPACE**: `string` = `"blob-file"`
+> `static` `readonly` **NAMESPACE**: `string` = `"blob-file"`
 
 The namespace for the items.
 
 ## Methods
 
-### bootstrap
+### bootstrap()
 
-▸ **bootstrap**(`requestContext`): `Promise`\<`void`\>
+> **bootstrap**(`requestContext`): `Promise`\<`void`\>
 
 Bootstrap the connector by creating and initializing any resources it needs.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The request context for bootstrapping. |
+• **requestContext**: `IRequestContext`
+
+The request context for bootstrapping.
 
 #### Returns
 
@@ -56,22 +62,25 @@ The response of the bootstrapping as log entries.
 
 #### Implementation of
 
-IBlobStorageConnector.bootstrap
+`IBlobStorageConnector.bootstrap`
 
-___
+***
 
-### get
+### get()
 
-▸ **get**(`requestContext`, `id`): `Promise`\<`undefined` \| `Uint8Array`\>
+> **get**(`requestContext`, `id`): `Promise`\<`undefined` \| `Uint8Array`\>
 
 Get the blob.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `id` | `string` | The id of the blob to get in urn format. |
+• **requestContext**: `IRequestContext`
+
+The context for the request.
+
+• **id**: `string`
+
+The id of the blob to get in urn format.
 
 #### Returns
 
@@ -81,22 +90,25 @@ The data for the blob if it can be found or undefined.
 
 #### Implementation of
 
-IBlobStorageConnector.get
+`IBlobStorageConnector.get`
 
-___
+***
 
-### remove
+### remove()
 
-▸ **remove**(`requestContext`, `id`): `Promise`\<`void`\>
+> **remove**(`requestContext`, `id`): `Promise`\<`void`\>
 
 Remove the blob.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `id` | `string` | The id of the blob to remove in urn format. |
+• **requestContext**: `IRequestContext`
+
+The context for the request.
+
+• **id**: `string`
+
+The id of the blob to remove in urn format.
 
 #### Returns
 
@@ -106,22 +118,25 @@ Nothing.
 
 #### Implementation of
 
-IBlobStorageConnector.remove
+`IBlobStorageConnector.remove`
 
-___
+***
 
-### set
+### set()
 
-▸ **set**(`requestContext`, `blob`): `Promise`\<`string`\>
+> **set**(`requestContext`, `blob`): `Promise`\<`string`\>
 
 Set the blob.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `blob` | `Uint8Array` | The data for the blob. |
+• **requestContext**: `IRequestContext`
+
+The context for the request.
+
+• **blob**: `Uint8Array`
+
+The data for the blob.
 
 #### Returns
 
@@ -131,4 +146,4 @@ The id of the stored blob in urn format.
 
 #### Implementation of
 
-IBlobStorageConnector.set
+`IBlobStorageConnector.set`
