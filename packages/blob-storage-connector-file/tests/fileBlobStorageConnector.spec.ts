@@ -4,17 +4,14 @@ import { rm } from "node:fs/promises";
 import { Converter, I18n, RandomHelper } from "@gtsc/core";
 import { EntitySchemaHelper } from "@gtsc/entity";
 import { MemoryEntityStorageConnector } from "@gtsc/entity-storage-connector-memory";
-import {
-	EntityLogEntry,
-	EntityStorageLoggingConnector
-} from "@gtsc/logging-connector-entity-storage";
+import { LogEntry, EntityStorageLoggingConnector } from "@gtsc/logging-connector-entity-storage";
 import type { ILogging } from "@gtsc/logging-models";
 import { LoggingService } from "@gtsc/logging-service";
 import { FileBlobStorageConnector } from "../src/fileBlobStorageConnector";
 import type { IFileBlobStorageConnectorConfig } from "../src/models/IFileBlobStorageConnectorConfig";
 
-const entityLogEntrySchema = EntitySchemaHelper.getSchema(EntityLogEntry);
-let memoryEntityStorageStorage: MemoryEntityStorageConnector<EntityLogEntry>;
+const logEntrySchema = EntitySchemaHelper.getSchema(LogEntry);
+let memoryEntityStorageStorage: MemoryEntityStorageConnector<LogEntry>;
 let testLogging: ILogging;
 
 const TEST_DIRECTORY_ROOT = "./.tmp/";
@@ -27,9 +24,7 @@ describe("FileBlobStorageConnector", () => {
 	});
 
 	beforeEach(() => {
-		memoryEntityStorageStorage = new MemoryEntityStorageConnector<EntityLogEntry>(
-			entityLogEntrySchema
-		);
+		memoryEntityStorageStorage = new MemoryEntityStorageConnector<LogEntry>(logEntrySchema);
 		const blobStorageLoggingConnector = new EntityStorageLoggingConnector({
 			logEntryStorage: memoryEntityStorageStorage
 		});
