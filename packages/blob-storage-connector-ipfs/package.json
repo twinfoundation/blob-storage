@@ -1,11 +1,11 @@
 {
-	"name": "@gtsc/blob-storage-service",
+	"name": "@gtsc/blob-storage-connector-ipfs",
 	"version": "0.0.3-next.5",
-	"description": "Blob storage contract implementation and REST endpoint definitions",
+	"description": "Blob Storage connector implementation using IPFS",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/gtscio/blob-storage.git",
-		"directory": "packages/blob-storage-service"
+		"directory": "packages/blob-storage-connector-ipfs"
 	},
 	"author": "martyn.janes@iota.org",
 	"license": "Apache-2.0",
@@ -24,26 +24,24 @@
 		"docs:clean": "rimraf docs/reference",
 		"docs:generate": "typedoc",
 		"docs:remove-header": "replace-in-files --regex='^.*overview.md.*?\\s\\s.*?\\s\\s' --string='docs/' --replacement='' docs/**/*.md",
-		"docs:api": "ts-to-openapi ./ts-to-openapi.json ./docs/open-api/spec.json",
-		"docs": "npm run docs:clean && npm run docs:generate && npm run docs:remove-header && npm run docs:api",
+		"docs": "npm run docs:clean && npm run docs:generate && npm run docs:remove-header",
 		"dist": "npm run clean && npm run build && npm run test && npm run bundle && npm run docs"
 	},
 	"dependencies": {
-		"@gtsc/api-models": "next",
 		"@gtsc/blob-storage-models": "0.0.3-next.5",
 		"@gtsc/core": "next",
-		"@gtsc/nameof": "^0.0.4",
-		"@gtsc/services": "next",
-		"@gtsc/web": "next"
+		"@gtsc/crypto": "next",
+		"@gtsc/nameof": "^0.0.4"
 	},
 	"devDependencies": {
 		"@gtsc/nameof-transformer": "^0.0.4",
-		"@gtsc/ts-to-openapi": "next",
 		"@vitest/coverage-v8": "^1.6.0",
 		"copyfiles": "^2.4.1",
 		"replace-in-files-cli": "^2.2.0",
+		"dotenv": "^16.4.5",
 		"rimraf": "^5.0.7",
 		"rollup": "^4.17.2",
+		"rollup-plugin-copy": "^3.5.0",
 		"rollup-plugin-typescript2": "^0.36.0",
 		"ts-patch": "^3.1.2",
 		"typedoc": "^0.25.13",

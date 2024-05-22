@@ -56,7 +56,7 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 		config: IFileBlobStorageConnectorConfig
 	) {
 		Guards.object(FileBlobStorageConnector._CLASS_NAME, nameof(dependencies), dependencies);
-		Guards.object(
+		Guards.object<ILogging>(
 			FileBlobStorageConnector._CLASS_NAME,
 			nameof(dependencies.logging),
 			dependencies.logging
@@ -129,7 +129,11 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async set(requestContext: IRequestContext, blob: Uint8Array): Promise<string> {
-		Guards.object(FileBlobStorageConnector._CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.object<IRequestContext>(
+			FileBlobStorageConnector._CLASS_NAME,
+			nameof(requestContext),
+			requestContext
+		);
 		Guards.stringValue(
 			FileBlobStorageConnector._CLASS_NAME,
 			nameof(requestContext.tenantId),
@@ -159,7 +163,11 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 	 * @returns The data for the blob if it can be found or undefined.
 	 */
 	public async get(requestContext: IRequestContext, id: string): Promise<Uint8Array | undefined> {
-		Guards.object(FileBlobStorageConnector._CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.object<IRequestContext>(
+			FileBlobStorageConnector._CLASS_NAME,
+			nameof(requestContext),
+			requestContext
+		);
 		Guards.stringValue(
 			FileBlobStorageConnector._CLASS_NAME,
 			nameof(requestContext.tenantId),
@@ -196,7 +204,11 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 	 * @returns True if the blob was found.
 	 */
 	public async remove(requestContext: IRequestContext, id: string): Promise<boolean> {
-		Guards.object(FileBlobStorageConnector._CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.object<IRequestContext>(
+			FileBlobStorageConnector._CLASS_NAME,
+			nameof(requestContext),
+			requestContext
+		);
 		Guards.stringValue(
 			FileBlobStorageConnector._CLASS_NAME,
 			nameof(requestContext.tenantId),

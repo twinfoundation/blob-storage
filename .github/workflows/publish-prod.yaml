@@ -11,6 +11,7 @@ on:
           - blob-storage-models
           - blob-storage-connector-memory
           - blob-storage-connector-file
+          - blob-storage-connector-ipfs
           - blob-storage-service
           - blob-storage-rest-client
 jobs:
@@ -21,6 +22,8 @@ jobs:
 
     env:
       TEST_MNEMONIC: ${{ secrets.TEST_MNEMONIC }}
+      TEST_IPFS_API_URL: ${{ secrets.TEST_IPFS_API_URL }}
+      TEST_IPFS_BEARER_TOKEN: ${{ secrets.TEST_IPFS_BEARER_TOKEN }}
 
     steps:
       - name: Checkout

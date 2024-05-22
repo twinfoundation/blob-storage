@@ -77,7 +77,11 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	public async get(requestContext: IRequestContext, id: string): Promise<Uint8Array> {
-		Guards.object(BlobStorageClient._CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.object<IRequestContext>(
+			BlobStorageClient._CLASS_NAME,
+			nameof(requestContext),
+			requestContext
+		);
 		Guards.stringValue(
 			BlobStorageClient._CLASS_NAME,
 			nameof(requestContext.tenantId),
@@ -106,7 +110,11 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 	 * @returns Nothing.
 	 */
 	public async remove(requestContext: IRequestContext, id: string): Promise<void> {
-		Guards.object(BlobStorageClient._CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.object<IRequestContext>(
+			BlobStorageClient._CLASS_NAME,
+			nameof(requestContext),
+			requestContext
+		);
 		Guards.stringValue(
 			BlobStorageClient._CLASS_NAME,
 			nameof(requestContext.tenantId),
