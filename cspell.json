@@ -17,6 +17,6 @@
 		".eslintrc.cjs",
 		"**/wordlists/**"
 	],
-	"words": ["gtsc", "Helia", "IIPFS", "IPFS", "Kubo", "nameof", "Stiftung"],
+	"words": ["gtsc", "IIPFS", "IPFS", "nameof", "Stiftung"],
 	"ignoreRegExpList": ["/from\\s+(['\"]).*\\1/", "/eslint-disable.*/"]
 }
