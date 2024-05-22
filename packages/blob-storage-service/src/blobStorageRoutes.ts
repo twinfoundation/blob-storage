@@ -130,7 +130,7 @@ export function generateRestRoutes(
 		operationId: "blobStorageRemove",
 		summary: "Remove the blob from storage",
 		tag: tags[0].name,
-		method: "GET",
+		method: "DELETE",
 		path: `${baseRouteName}/:id`,
 		handler: async (requestContext, request, body) =>
 			blobStorageRemove(requestContext, factoryServiceName, request, body),

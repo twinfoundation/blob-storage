@@ -29,6 +29,7 @@
 		"dist": "npm run clean && npm run build && npm run test && npm run bundle && npm run docs"
 	},
 	"dependencies": {
+		"@gtsc/api-models": "next",
 		"@gtsc/blob-storage-models": "0.0.3-next.5",
 		"@gtsc/core": "next",
 		"@gtsc/nameof": "^0.0.4",
