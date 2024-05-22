@@ -23,6 +23,8 @@ jobs:
 
     env:
       TEST_MNEMONIC: ${{ secrets.TEST_MNEMONIC }}
+      TEST_IPFS_API_URL: ${{ secrets.TEST_IPFS_API_URL }}
+      TEST_IPFS_BEARER_TOKEN: ${{ secrets.TEST_IPFS_BEARER_TOKEN }}
 
     steps:
       - name: Checkout
