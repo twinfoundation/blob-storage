@@ -26,7 +26,7 @@ export interface IBlobStorageConnector extends IService {
 	 * Remove the blob.
 	 * @param requestContext The context for the request.
 	 * @param id The id of the blob to remove in urn format.
-	 * @returns Nothing.
+	 * @returns True if the blob was found.
 	 */
-	remove(requestContext: IRequestContext, id: string): Promise<void>;
+	remove(requestContext: IRequestContext, id: string): Promise<boolean>;
 }

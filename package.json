@@ -1,6 +1,6 @@
 {
 	"name": "@gtsc/blob-storage",
-	"version": "0.0.3-next.4",
+	"version": "0.0.3-next.5",
 	"description": "Blob Storage",
 	"repository": {
 		"type": "git",
@@ -41,7 +41,9 @@
 	"workspaces": [
 		"packages/blob-storage-models",
 		"packages/blob-storage-connector-memory",
-		"packages/blob-storage-connector-file"
+		"packages/blob-storage-connector-file",
+		"packages/blob-storage-service",
+		"packages/blob-storage-rest-client"
 	],
 	"type": "module"
 }
