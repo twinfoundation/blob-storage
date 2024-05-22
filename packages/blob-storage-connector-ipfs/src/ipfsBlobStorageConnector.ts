@@ -93,8 +93,6 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 					Size: string;
 				};
 
-				console.log(result.Hash);
-
 				return new Urn(IpfsBlobStorageConnector.NAMESPACE, result.Hash).toString();
 			}
 

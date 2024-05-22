@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { I18n, RandomHelper } from "@gtsc/core";
-import { TEST_IPFS_CONFIG } from "./setupTestEnv";
+import { I18n, RandomHelper, Urn } from "@gtsc/core";
+import { TEST_IPFS_CONFIG, TEST_IPFS_PUBLIC_GATEWAY } from "./setupTestEnv";
 import { IpfsBlobStorageConnector } from "../src/ipfsBlobStorageConnector";
 
 const TEST_TENANT_ID = "test-tenant";
@@ -50,6 +50,9 @@ describe("IpfsBlobStorageConnector", () => {
 		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, TEST_DATA);
 
 		expect(idUrn).toBeDefined();
+
+		const urn = Urn.fromValidString(idUrn);
+		console.log(TEST_IPFS_PUBLIC_GATEWAY.replace(":hash", urn.namespaceSpecific()));
 	});
 
 	test("can fail to get an item with no tenant id", async () => {
