@@ -1,6 +1,7 @@
 # Class: IpfsBlobStorageConnector
 
 Class for performing blob storage operations on IPFS.
+See https://docs.ipfs.tech/reference/kubo/rpc/ for more information.
 
 ## Implements
 
