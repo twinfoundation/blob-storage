@@ -11,6 +11,7 @@ on:
           - blob-storage-models
           - blob-storage-connector-memory
           - blob-storage-connector-file
+          - blob-storage-connector-ipfs
           - blob-storage-service
           - blob-storage-rest-client
 jobs:

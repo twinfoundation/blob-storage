@@ -42,6 +42,7 @@
 		"packages/blob-storage-models",
 		"packages/blob-storage-connector-memory",
 		"packages/blob-storage-connector-file",
+		"packages/blob-storage-connector-ipfs",
 		"packages/blob-storage-service",
 		"packages/blob-storage-rest-client"
 	],

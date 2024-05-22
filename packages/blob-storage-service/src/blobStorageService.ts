@@ -54,7 +54,11 @@ export class BlobStorageService implements IBlobStorage {
 			namespace?: string;
 		}
 	): Promise<string> {
-		Guards.object(BlobStorageService._CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.object<IRequestContext>(
+			BlobStorageService._CLASS_NAME,
+			nameof(requestContext),
+			requestContext
+		);
 		Guards.stringValue(
 			BlobStorageService._CLASS_NAME,
 			nameof(requestContext.tenantId),
@@ -81,7 +85,11 @@ export class BlobStorageService implements IBlobStorage {
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	public async get(requestContext: IRequestContext, id: string): Promise<Uint8Array> {
-		Guards.object(BlobStorageService._CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.object<IRequestContext>(
+			BlobStorageService._CLASS_NAME,
+			nameof(requestContext),
+			requestContext
+		);
 		Guards.stringValue(
 			BlobStorageService._CLASS_NAME,
 			nameof(requestContext.tenantId),
@@ -113,7 +121,11 @@ export class BlobStorageService implements IBlobStorage {
 	 * @returns Nothing.
 	 */
 	public async remove(requestContext: IRequestContext, id: string): Promise<void> {
-		Guards.object(BlobStorageService._CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.object<IRequestContext>(
+			BlobStorageService._CLASS_NAME,
+			nameof(requestContext),
+			requestContext
+		);
 		Guards.stringValue(
 			BlobStorageService._CLASS_NAME,
 			nameof(requestContext.tenantId),
