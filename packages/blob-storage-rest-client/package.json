@@ -1,6 +1,6 @@
 {
 	"name": "@gtsc/blob-storage-rest-client",
-	"version": "0.0.3-next.6",
+	"version": "0.0.3-next.7",
 	"description": "Blob storage implementation which can connect to REST endpoints",
 	"repository": {
 		"type": "git",
@@ -29,7 +29,7 @@
 	},
 	"dependencies": {
 		"@gtsc/api-models": "next",
-		"@gtsc/blob-storage-models": "0.0.3-next.6",
+		"@gtsc/blob-storage-models": "0.0.3-next.7",
 		"@gtsc/core": "next",
 		"@gtsc/nameof": "^0.0.4",
 		"@gtsc/services": "next"
