@@ -76,7 +76,7 @@ The store.
 
 ### remove()
 
-> **remove**(`requestContext`, `id`): `Promise`\<`void`\>
+> **remove**(`requestContext`, `id`): `Promise`\<`boolean`\>
 
 Remove the blob.
 
@@ -92,9 +92,9 @@ The id of the blob to remove in urn format.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<`boolean`\>
 
-Nothing.
+True if the blob was found.
 
 #### Implementation of
 

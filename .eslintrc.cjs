@@ -15,7 +15,7 @@ module.exports = {
 		'plugin:promise/recommended',
 		'plugin:unicorn/all'
 	],
-	ignorePatterns: ['dist', 'coverage', 'rollup.config.mjs'],
+	ignorePatterns: ['dist', 'coverage', 'rollup.config.mjs', 'vitest.config.ts.timestamp*'],
 	parserOptions: {
 		ecmaVersion: 2020,
 		project: './tsconfig.eslint.json',
@@ -226,12 +226,12 @@ module.exports = {
 					'new Error is disallowed as it is not specific enough, and bypasses the i18n formatting'
 			},
 			{
-				selector: 'ImportDeclaration[source.value=/\\.$/]',
+				selector: String.raw`ImportDeclaration[source.value=/\.$/]`,
 				message:
 					'Importing from paths ending in "." are not allowed, use specific file import instead to avoid circular dependencies'
 			},
 			{
-				selector: 'ImportDeclaration[source.value=/\\..src$/]',
+				selector: String.raw`ImportDeclaration[source.value=/\..src$/]`,
 				message:
 					'Importing from paths ending in "/src" are not allowed, use specific file import instead to avoid circular dependencies'
 			},

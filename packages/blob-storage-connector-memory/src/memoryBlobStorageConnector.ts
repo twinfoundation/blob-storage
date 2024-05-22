@@ -90,9 +90,9 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 	 * Remove the blob.
 	 * @param requestContext The context for the request.
 	 * @param id The id of the blob to remove in urn format.
-	 * @returns Nothing.
+	 * @returns True if the blob was found.
 	 */
-	public async remove(requestContext: IRequestContext, id: string): Promise<void> {
+	public async remove(requestContext: IRequestContext, id: string): Promise<boolean> {
 		Guards.object(MemoryBlobStorageConnector._CLASS_NAME, nameof(requestContext), requestContext);
 		Guards.stringValue(
 			MemoryBlobStorageConnector._CLASS_NAME,
@@ -109,7 +109,12 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 			});
 		}
 
-		delete this._store[requestContext.tenantId]?.[urnParsed.namespaceSpecific()];
+		const namespaceId = urnParsed.namespaceSpecific();
+		if (this._store[requestContext.tenantId]?.[namespaceId]) {
+			delete this._store[requestContext.tenantId][namespaceId];
+			return true;
+		}
+		return false;
 	}
 
 	/**

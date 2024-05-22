@@ -11,7 +11,14 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        package: [blob-storage-models, blob-storage-connector-memory, blob-storage-connector-file]
+        package:
+          [
+            blob-storage-models,
+            blob-storage-connector-memory,
+            blob-storage-connector-file,
+            blob-storage-service,
+            blob-storage-rest-client
+          ]
 
     steps:
       - name: Checkout

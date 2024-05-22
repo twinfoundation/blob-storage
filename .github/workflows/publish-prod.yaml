@@ -11,6 +11,8 @@ on:
           - blob-storage-models
           - blob-storage-connector-memory
           - blob-storage-connector-file
+          - blob-storage-service
+          - blob-storage-rest-client
 jobs:
   publish:
     runs-on: ubuntu-latest

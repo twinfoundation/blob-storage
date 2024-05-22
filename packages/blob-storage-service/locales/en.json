@@ -1,0 +1,10 @@
+{
+	"error": {
+		"blobStorageService": {
+			"noConnectors": "There are no connectors registered with the blob storage factory",
+			"setFailed": "There was a problem storing the blob",
+			"getFailed": "There was a problem getting the blob",
+			"removeFailed": "There was a problem removing the blob"
+		}
+	}
+}
