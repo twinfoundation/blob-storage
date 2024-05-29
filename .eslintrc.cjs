@@ -239,6 +239,10 @@ module.exports = {
 				selector: 'PropertyDefinition[value!=null][static=false]',
 				message:
 					'Do not use property initializers inline, perform the initialization in the constructor instead'
+			},
+			{
+				selector: 'TSEnumDeclaration',
+				message: 'Do not use enums, instead use iterable union types'
 			}
 		],
 		'no-return-assign': ['error'],
