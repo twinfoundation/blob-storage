@@ -7,7 +7,7 @@ import type { IIpfsBlobStorageConnectorConfig } from "../src/models/IIpfsBlobSto
 
 dotenv.config({ path: [path.join(__dirname, ".env"), path.join(__dirname, ".env.dev")] });
 
-console.log("Setting up test environment from .env and .env.dev files");
+process.stdout.write("Setting up test environment from .env and .env.dev files\n");
 
 Guards.stringValue("TestEnv", "TEST_IPFS_API_URL", process.env.TEST_IPFS_API_URL);
 Guards.stringValue("TestEnv", "TEST_IPFS_BEARER_TOKEN", process.env.TEST_IPFS_BEARER_TOKEN);
