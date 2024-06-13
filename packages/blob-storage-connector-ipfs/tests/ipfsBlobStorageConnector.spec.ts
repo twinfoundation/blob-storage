@@ -52,7 +52,7 @@ describe("IpfsBlobStorageConnector", () => {
 		expect(idUrn).toBeDefined();
 
 		const urn = Urn.fromValidString(idUrn);
-		process.stdout.write(`${TEST_IPFS_PUBLIC_GATEWAY.replace(":hash", urn.namespaceSpecific())}\n`);
+		console.debug(TEST_IPFS_PUBLIC_GATEWAY.replace(":hash", urn.namespaceSpecific()));
 	});
 
 	test("can fail to get an item with no tenant id", async () => {
