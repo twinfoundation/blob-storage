@@ -5,7 +5,7 @@ import path from "node:path";
 import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
 import { BaseError, Converter, FilenameHelper, GeneralError, Guards, Urn } from "@gtsc/core";
 import { Sha256 } from "@gtsc/crypto";
-import type { ILogging } from "@gtsc/logging-models";
+import { LoggingConnectorFactory, type ILoggingConnector } from "@gtsc/logging-models";
 import { nameof } from "@gtsc/nameof";
 import type { IRequestContext } from "@gtsc/services";
 import type { IFileBlobStorageConnectorConfig } from "./models/IFileBlobStorageConnectorConfig";
@@ -26,10 +26,10 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 	private static readonly _CLASS_NAME: string = nameof<FileBlobStorageConnector>();
 
 	/**
-	 * The logging contract.
+	 * The logging connector.
 	 * @internal
 	 */
-	private readonly _logging: ILogging;
+	private readonly _logging: ILoggingConnector;
 
 	/**
 	 * The directory to use for storage.
@@ -45,31 +45,21 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 
 	/**
 	 * Create a new instance of FileBlobStorageConnector.
-	 * @param dependencies The dependencies for the connector.
-	 * @param dependencies.logging The logging contract.
-	 * @param config The configuration for the blob storage connector.
+	 * @param options The options for the connector.
+	 * @param options.loggingConnectorType The type of logging connector to use, defaults to "logging".
+	 * @param options.config The configuration for the connector.
 	 */
-	constructor(
-		dependencies: {
-			logging: ILogging;
-		},
-		config: IFileBlobStorageConnectorConfig
-	) {
-		Guards.object(FileBlobStorageConnector._CLASS_NAME, nameof(dependencies), dependencies);
-		Guards.object<ILogging>(
+	constructor(options: { loggingConnectorType?: string; config: IFileBlobStorageConnectorConfig }) {
+		Guards.object(FileBlobStorageConnector._CLASS_NAME, nameof(options), options);
+		Guards.object(FileBlobStorageConnector._CLASS_NAME, nameof(options.config), options.config);
+		Guards.stringValue(
 			FileBlobStorageConnector._CLASS_NAME,
-			nameof(dependencies.logging),
-			dependencies.logging
+			nameof(options.config.directory),
+			options.config.directory
 		);
-		Guards.object<FileBlobStorageConnector>(
-			FileBlobStorageConnector._CLASS_NAME,
-			nameof(config),
-			config
-		);
-		Guards.string(FileBlobStorageConnector._CLASS_NAME, nameof(config.directory), config.directory);
-		this._logging = dependencies.logging;
-		this._directory = path.resolve(config.directory);
-		this._extension = config.extension ?? ".blob";
+		this._logging = LoggingConnectorFactory.get(options.loggingConnectorType ?? "logging");
+		this._directory = path.resolve(options.config.directory);
+		this._extension = options.config.extension ?? ".blob";
 	}
 
 	/**
