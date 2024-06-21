@@ -28,7 +28,7 @@ describe("FileBlobStorageConnector", () => {
 		memoryEntityStorage = new MemoryEntityStorageConnector<LogEntry>({
 			entitySchema: nameof(LogEntry)
 		});
-		EntityStorageConnectorFactory.register("logging-entity-storage", () => memoryEntityStorage);
+		EntityStorageConnectorFactory.register("log-entry", () => memoryEntityStorage);
 		LoggingConnectorFactory.register("logging", () => new EntityStorageLoggingConnector());
 	});
 

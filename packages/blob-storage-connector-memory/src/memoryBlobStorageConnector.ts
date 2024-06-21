@@ -5,7 +5,6 @@ import { Converter, GeneralError, Guards, Urn } from "@gtsc/core";
 import { Sha256 } from "@gtsc/crypto";
 import { nameof } from "@gtsc/nameof";
 import type { IRequestContext } from "@gtsc/services";
-import type { IMemoryBlobStorageConnectorConfig } from "./models/IMemoryBlobStorageConnectorConfig";
 
 /**
  * Class for performing blob storage operations in-memory.
@@ -31,10 +30,9 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 
 	/**
 	 * Create a new instance of MemoryBlobStorageConnector.
-	 * @param config The configuration for the blob storage connector.
 	 */
-	constructor(config?: IMemoryBlobStorageConnectorConfig) {
-		this._store = config?.initialValues ?? {};
+	constructor() {
+		this._store = {};
 	}
 
 	/**

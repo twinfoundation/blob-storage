@@ -15,18 +15,6 @@ describe("MemoryBlobStorageConnector", () => {
 		expect(blobStorage).toBeDefined();
 	});
 
-	test("can construct with initial values", async () => {
-		const blobStorage = new MemoryBlobStorageConnector({
-			initialValues: {
-				[TEST_TENANT_ID]: {
-					foo: new Uint8Array([1, 2, 3, 4])
-				}
-			}
-		});
-		const store = blobStorage.getStore(TEST_TENANT_ID);
-		expect(store?.foo?.length).toEqual(4);
-	});
-
 	test("can fail to set an item with no tenant id", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
 		await expect(blobStorage.set({}, undefined as unknown as Uint8Array)).rejects.toMatchObject({
