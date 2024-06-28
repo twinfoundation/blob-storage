@@ -8,7 +8,7 @@ export interface IBlobStorageRemoveRequest {
 	/**
 	 * The path parameters.
 	 */
-	path: {
+	pathParams: {
 		/**
 		 * The id of the blob to remove in urn format.
 		 */

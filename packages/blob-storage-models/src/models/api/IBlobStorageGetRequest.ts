@@ -8,7 +8,7 @@ export interface IBlobStorageGetRequest {
 	/**
 	 * The path parameters.
 	 */
-	path: {
+	pathParams: {
 		/**
 		 * The id of the blob to get in urn format.
 		 */

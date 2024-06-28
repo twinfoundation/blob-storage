@@ -14,7 +14,12 @@
             "url": "https://localhost"
         }
     ],
-    "tags": [],
+    "tags": [
+        {
+            "name": "Blob Storage",
+            "description": "Endpoints which are modelled to access a blob storage contract."
+        }
+    ],
     "paths": {
         "/blob-storage": {
             "post": {

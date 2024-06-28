@@ -1,13 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-// Copyright 2024 IOTA Stiftung.
-// SPDX-License-Identifier: Apache-2.0.
-import {
-	BaseRestClient,
-	type IBaseRestClientConfig,
-	type ICreatedResponse,
-	type INoContentResponse
-} from "@gtsc/api-models";
+import { BaseRestClient } from "@gtsc/api-core";
+import type { IBaseRestClientConfig, ICreatedResponse, INoContentResponse } from "@gtsc/api-models";
 import type {
 	IBlobStorage,
 	IBlobStorageGetRequest,
@@ -94,7 +88,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 			"/:id",
 			"GET",
 			{
-				path: {
+				pathParams: {
 					id
 				}
 			}
@@ -127,7 +121,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 			"/:id",
 			"DELETE",
 			{
-				path: {
+				pathParams: {
 					id
 				}
 			}

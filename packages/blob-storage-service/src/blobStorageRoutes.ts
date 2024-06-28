@@ -51,8 +51,8 @@ export function generateRestRoutes(
 		tag: tags[0].name,
 		method: "POST",
 		path: `${baseRouteName}/`,
-		handler: async (requestContext, request, body) =>
-			blobStorageSet(requestContext, factoryServiceName, request, body),
+		handler: async (requestContext, request) =>
+			blobStorageSet(requestContext, factoryServiceName, request),
 		requestType: {
 			type: nameof<IBlobStorageSetRequest>(),
 			examples: [
@@ -91,15 +91,15 @@ export function generateRestRoutes(
 		tag: tags[0].name,
 		method: "GET",
 		path: `${baseRouteName}/:id`,
-		handler: async (requestContext, request, body) =>
-			blobStorageGet(requestContext, factoryServiceName, request, body),
+		handler: async (requestContext, request) =>
+			blobStorageGet(requestContext, factoryServiceName, request),
 		requestType: {
 			type: nameof<IBlobStorageGetRequest>(),
 			examples: [
 				{
 					id: "blobStorageGetRequestExample",
 					request: {
-						path: {
+						pathParams: {
 							id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
 						}
 					}
@@ -132,15 +132,15 @@ export function generateRestRoutes(
 		tag: tags[0].name,
 		method: "DELETE",
 		path: `${baseRouteName}/:id`,
-		handler: async (requestContext, request, body) =>
-			blobStorageRemove(requestContext, factoryServiceName, request, body),
+		handler: async (requestContext, request) =>
+			blobStorageRemove(requestContext, factoryServiceName, request),
 		requestType: {
 			type: nameof<IBlobStorageRemoveRequest>(),
 			examples: [
 				{
 					id: "blobStorageRemoveRequestExample",
 					request: {
-						path: {
+						pathParams: {
 							id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
 						}
 					}
@@ -206,12 +206,16 @@ export async function blobStorageGet(
 	body?: unknown
 ): Promise<IBlobStorageGetResponse> {
 	Guards.object<IBlobStorageGetRequest>(ROUTES_SOURCE, nameof(request), request);
-	Guards.object<IBlobStorageGetRequest["path"]>(ROUTES_SOURCE, nameof(request.path), request.path);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.path.id), request.path.id);
+	Guards.object<IBlobStorageGetRequest["pathParams"]>(
+		ROUTES_SOURCE,
+		nameof(request.pathParams),
+		request.pathParams
+	);
+	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
 	const service = ServiceFactory.get<IBlobStorage>(serviceName);
 
-	const result = await service.get(requestContext, request.path.id);
+	const result = await service.get(requestContext, request.pathParams.id);
 
 	return {
 		body: {
@@ -235,10 +239,14 @@ export async function blobStorageRemove(
 	body?: unknown
 ): Promise<void> {
 	Guards.object<IBlobStorageRemoveRequest>(ROUTES_SOURCE, nameof(request), request);
-	Guards.object<IBlobStorageGetRequest["path"]>(ROUTES_SOURCE, nameof(request.path), request.path);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.path.id), request.path.id);
+	Guards.object<IBlobStorageGetRequest["pathParams"]>(
+		ROUTES_SOURCE,
+		nameof(request.pathParams),
+		request.pathParams
+	);
+	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
 	const service = ServiceFactory.get<IBlobStorage>(serviceName);
 
-	await service.remove(requestContext, request.path.id);
+	await service.remove(requestContext, request.pathParams.id);
 }
