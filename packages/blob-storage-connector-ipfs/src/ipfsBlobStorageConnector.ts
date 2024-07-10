@@ -19,9 +19,8 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 
 	/**
 	 * Runtime name for the class.
-	 * @internal
 	 */
-	private static readonly _CLASS_NAME: string = nameof<IpfsBlobStorageConnector>();
+	public readonly CLASS_NAME: string = nameof<IpfsBlobStorageConnector>();
 
 	/**
 	 * The configuration for the connector.
@@ -34,12 +33,8 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 	 * @param config The configuration for the blob storage connector.
 	 */
 	constructor(config: IIpfsBlobStorageConnectorConfig) {
-		Guards.object<IIpfsBlobStorageConnectorConfig>(
-			IpfsBlobStorageConnector._CLASS_NAME,
-			nameof(config),
-			config
-		);
-		Guards.stringValue(IpfsBlobStorageConnector._CLASS_NAME, nameof(config.apiUrl), config.apiUrl);
+		Guards.object<IIpfsBlobStorageConnectorConfig>(this.CLASS_NAME, nameof(config), config);
+		Guards.stringValue(this.CLASS_NAME, nameof(config.apiUrl), config.apiUrl);
 
 		this._config = config;
 		this._config.apiUrl = StringHelper.trimTrailingSlashes(this._config.apiUrl);
@@ -52,17 +47,9 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async set(requestContext: IRequestContext, blob: Uint8Array): Promise<string> {
-		Guards.object<IRequestContext>(
-			IpfsBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			IpfsBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.uint8Array(IpfsBlobStorageConnector._CLASS_NAME, nameof(blob), blob);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
 
 		try {
 			const formBlob = new Blob([blob], { type: "application/octet-stream" });
@@ -96,11 +83,11 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 				return new Urn(IpfsBlobStorageConnector.NAMESPACE, result.Hash).toString();
 			}
 
-			throw new GeneralError(IpfsBlobStorageConnector._CLASS_NAME, "fetchFail", {
+			throw new GeneralError(this.CLASS_NAME, "fetchFail", {
 				message: response.statusText
 			});
 		} catch (err) {
-			throw new GeneralError(IpfsBlobStorageConnector._CLASS_NAME, "setBlobFailed", undefined, err);
+			throw new GeneralError(this.CLASS_NAME, "setBlobFailed", undefined, err);
 		}
 	}
 
@@ -111,21 +98,13 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 	 * @returns The data for the blob if it can be found or undefined.
 	 */
 	public async get(requestContext: IRequestContext, id: string): Promise<Uint8Array | undefined> {
-		Guards.object<IRequestContext>(
-			IpfsBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			IpfsBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Urn.guard(IpfsBlobStorageConnector._CLASS_NAME, nameof(id), id);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		const urnParsed = Urn.fromValidString(id);
 
 		if (urnParsed.namespaceIdentifier() !== IpfsBlobStorageConnector.NAMESPACE) {
-			throw new GeneralError(IpfsBlobStorageConnector._CLASS_NAME, "namespaceMismatch", {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: IpfsBlobStorageConnector.NAMESPACE,
 				id
 			});
@@ -156,7 +135,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 				return new Uint8Array(result);
 			}
 
-			throw new GeneralError(IpfsBlobStorageConnector._CLASS_NAME, "fetchFail", {
+			throw new GeneralError(this.CLASS_NAME, "fetchFail", {
 				message: response.statusText
 			});
 		} catch {}
@@ -169,21 +148,13 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 	 * @returns True if the blob was found.
 	 */
 	public async remove(requestContext: IRequestContext, id: string): Promise<boolean> {
-		Guards.object<IRequestContext>(
-			IpfsBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			IpfsBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Urn.guard(IpfsBlobStorageConnector._CLASS_NAME, nameof(id), id);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		const urnParsed = Urn.fromValidString(id);
 
 		if (urnParsed.namespaceIdentifier() !== IpfsBlobStorageConnector.NAMESPACE) {
-			throw new GeneralError(IpfsBlobStorageConnector._CLASS_NAME, "namespaceMismatch", {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: IpfsBlobStorageConnector.NAMESPACE,
 				id
 			});
@@ -212,7 +183,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 				return true;
 			}
 
-			throw new GeneralError(IpfsBlobStorageConnector._CLASS_NAME, "fetchFail", {
+			throw new GeneralError(this.CLASS_NAME, "fetchFail", {
 				message: response.statusText
 			});
 		} catch {

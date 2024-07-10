@@ -40,6 +40,18 @@ The configuration for the connector.
 
 The namespace for the items.
 
+***
+
+### CLASS\_NAME
+
+> `readonly` **CLASS\_NAME**: `string`
+
+Runtime name for the class.
+
+#### Implementation of
+
+`IBlobStorageConnector.CLASS_NAME`
+
 ## Methods
 
 ### bootstrap()

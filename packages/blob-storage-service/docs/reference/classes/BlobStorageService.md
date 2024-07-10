@@ -24,6 +24,18 @@ The configuration for the service.
 
 [`BlobStorageService`](BlobStorageService.md)
 
+## Properties
+
+### CLASS\_NAME
+
+> `readonly` **CLASS\_NAME**: `string`
+
+Runtime name for the class.
+
+#### Implementation of
+
+`IBlobStorage.CLASS_NAME`
+
 ## Methods
 
 ### set()

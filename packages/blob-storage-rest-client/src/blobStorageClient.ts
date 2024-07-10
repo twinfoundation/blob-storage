@@ -24,6 +24,11 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 	private static readonly _CLASS_NAME: string = nameof<BlobStorageClient>();
 
 	/**
+	 * Runtime name for the class.
+	 */
+	public readonly CLASS_NAME: string = BlobStorageClient._CLASS_NAME;
+
+	/**
 	 * Create a new instance of BlobStorageClient.
 	 * @param config The configuration for the client.
 	 */
@@ -46,7 +51,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 			namespace?: string;
 		}
 	): Promise<string> {
-		Guards.uint8Array(BlobStorageClient._CLASS_NAME, nameof(blob), blob);
+		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
 
 		const response = await this.fetch<IBlobStorageSetRequest, ICreatedResponse>(
 			requestContext,
@@ -71,17 +76,9 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	public async get(requestContext: IRequestContext, id: string): Promise<Uint8Array> {
-		Guards.object<IRequestContext>(
-			BlobStorageClient._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			BlobStorageClient._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Urn.guard(BlobStorageClient._CLASS_NAME, nameof(id), id);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		const response = await this.fetch<IBlobStorageGetRequest, IBlobStorageGetResponse>(
 			requestContext,
@@ -104,17 +101,9 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 	 * @returns Nothing.
 	 */
 	public async remove(requestContext: IRequestContext, id: string): Promise<void> {
-		Guards.object<IRequestContext>(
-			BlobStorageClient._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			BlobStorageClient._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Urn.guard(BlobStorageClient._CLASS_NAME, nameof(id), id);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		await this.fetch<IBlobStorageRemoveRequest, INoContentResponse>(
 			requestContext,

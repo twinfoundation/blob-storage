@@ -16,9 +16,8 @@ import type { IBlobStorageServiceConfig } from "./models/IBlobStorageServiceConf
 export class BlobStorageService implements IBlobStorage {
 	/**
 	 * Runtime name for the class.
-	 * @internal
 	 */
-	private static readonly _CLASS_NAME: string = nameof<BlobStorageService>();
+	public readonly CLASS_NAME: string = nameof<BlobStorageService>();
 
 	/**
 	 * The namespace of the default storage connector to use.
@@ -34,7 +33,7 @@ export class BlobStorageService implements IBlobStorage {
 	constructor(config?: IBlobStorageServiceConfig) {
 		const names = BlobStorageConnectorFactory.names();
 		if (names.length === 0) {
-			throw new GeneralError(BlobStorageService._CLASS_NAME, "noConnectors");
+			throw new GeneralError(this.CLASS_NAME, "noConnectors");
 		}
 		this._defaultNamespace = config?.defaultNamespace ?? names[0];
 	}
@@ -54,16 +53,8 @@ export class BlobStorageService implements IBlobStorage {
 			namespace?: string;
 		}
 	): Promise<string> {
-		Guards.object<IRequestContext>(
-			BlobStorageService._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			BlobStorageService._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
 
 		try {
 			const connectorNamespace = options?.namespace ?? this._defaultNamespace;
@@ -73,7 +64,7 @@ export class BlobStorageService implements IBlobStorage {
 
 			return blobStorageConnector.set(requestContext, blob);
 		} catch (error) {
-			throw new GeneralError(BlobStorageService._CLASS_NAME, "setFailed", undefined, error);
+			throw new GeneralError(this.CLASS_NAME, "setFailed", undefined, error);
 		}
 	}
 
@@ -85,17 +76,9 @@ export class BlobStorageService implements IBlobStorage {
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	public async get(requestContext: IRequestContext, id: string): Promise<Uint8Array> {
-		Guards.object<IRequestContext>(
-			BlobStorageService._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			BlobStorageService._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Urn.guard(BlobStorageService._CLASS_NAME, nameof(id), id);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		try {
 			const idUri = Urn.fromValidString(id);
@@ -105,12 +88,12 @@ export class BlobStorageService implements IBlobStorage {
 
 			const blob = await blobStorageConnector.get(requestContext, id);
 			if (Is.undefined(blob)) {
-				throw new NotFoundError(BlobStorageService._CLASS_NAME, "blobNotFound", id);
+				throw new NotFoundError(this.CLASS_NAME, "blobNotFound", id);
 			}
 
 			return blob;
 		} catch (error) {
-			throw new GeneralError(BlobStorageService._CLASS_NAME, "getFailed", undefined, error);
+			throw new GeneralError(this.CLASS_NAME, "getFailed", undefined, error);
 		}
 	}
 
@@ -121,17 +104,9 @@ export class BlobStorageService implements IBlobStorage {
 	 * @returns Nothing.
 	 */
 	public async remove(requestContext: IRequestContext, id: string): Promise<void> {
-		Guards.object<IRequestContext>(
-			BlobStorageService._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			BlobStorageService._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Urn.guard(BlobStorageService._CLASS_NAME, nameof(id), id);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		try {
 			const idUri = Urn.fromValidString(id);
@@ -142,10 +117,10 @@ export class BlobStorageService implements IBlobStorage {
 			const removed = await blobStorageConnector.remove(requestContext, id);
 
 			if (!removed) {
-				throw new NotFoundError(BlobStorageService._CLASS_NAME, "blobNotFound", id);
+				throw new NotFoundError(this.CLASS_NAME, "blobNotFound", id);
 			}
 		} catch (error) {
-			throw new GeneralError(BlobStorageService._CLASS_NAME, "removeFailed", undefined, error);
+			throw new GeneralError(this.CLASS_NAME, "removeFailed", undefined, error);
 		}
 	}
 }

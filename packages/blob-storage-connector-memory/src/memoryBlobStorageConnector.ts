@@ -18,9 +18,8 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 
 	/**
 	 * Runtime name for the class.
-	 * @internal
 	 */
-	private static readonly _CLASS_NAME: string = nameof<MemoryBlobStorageConnector>();
+	public readonly CLASS_NAME: string = nameof<MemoryBlobStorageConnector>();
 
 	/**
 	 * The storage for the in-memory items.
@@ -42,17 +41,9 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async set(requestContext: IRequestContext, blob: Uint8Array): Promise<string> {
-		Guards.object<IRequestContext>(
-			MemoryBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			MemoryBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.uint8Array(MemoryBlobStorageConnector._CLASS_NAME, nameof(blob), blob);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
 
 		const id = Converter.bytesToHex(Sha256.sum256(blob));
 
@@ -69,21 +60,13 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 	 * @returns The data for the blob if it can be found or undefined.
 	 */
 	public async get(requestContext: IRequestContext, id: string): Promise<Uint8Array | undefined> {
-		Guards.object<IRequestContext>(
-			MemoryBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			MemoryBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Urn.guard(MemoryBlobStorageConnector._CLASS_NAME, nameof(id), id);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		const urnParsed = Urn.fromValidString(id);
 
 		if (urnParsed.namespaceIdentifier() !== MemoryBlobStorageConnector.NAMESPACE) {
-			throw new GeneralError(MemoryBlobStorageConnector._CLASS_NAME, "namespaceMismatch", {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: MemoryBlobStorageConnector.NAMESPACE,
 				id
 			});
@@ -99,21 +82,13 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 	 * @returns True if the blob was found.
 	 */
 	public async remove(requestContext: IRequestContext, id: string): Promise<boolean> {
-		Guards.object<IRequestContext>(
-			MemoryBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			MemoryBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Urn.guard(MemoryBlobStorageConnector._CLASS_NAME, nameof(id), id);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		const urnParsed = Urn.fromValidString(id);
 
 		if (urnParsed.namespaceIdentifier() !== MemoryBlobStorageConnector.NAMESPACE) {
-			throw new GeneralError(MemoryBlobStorageConnector._CLASS_NAME, "namespaceMismatch", {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: MemoryBlobStorageConnector.NAMESPACE,
 				id
 			});

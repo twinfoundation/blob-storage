@@ -18,6 +18,18 @@ Create a new instance of MemoryBlobStorageConnector.
 
 [`MemoryBlobStorageConnector`](MemoryBlobStorageConnector.md)
 
+## Properties
+
+### CLASS\_NAME
+
+> `readonly` **CLASS\_NAME**: `string`
+
+Runtime name for the class.
+
+#### Implementation of
+
+`IBlobStorageConnector.CLASS_NAME`
+
 ## Methods
 
 ### set()
