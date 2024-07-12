@@ -11,7 +11,6 @@ import type {
 } from "@gtsc/blob-storage-models";
 import { Converter, Guards, StringHelper, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import type { IRequestContext } from "@gtsc/services";
 
 /**
  * Client for performing blob storage through to REST endpoints.
@@ -38,14 +37,12 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 
 	/**
 	 * Set the blob.
-	 * @param requestContext The context for the request.
 	 * @param blob The data for the blob.
 	 * @param options Additional options for the blob.
 	 * @param options.namespace The namespace to use for storing, defaults to service configured namespace.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async set(
-		requestContext: IRequestContext,
 		blob: Uint8Array,
 		options?: {
 			namespace?: string;
@@ -53,35 +50,26 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 	): Promise<string> {
 		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
 
-		const response = await this.fetch<IBlobStorageSetRequest, ICreatedResponse>(
-			requestContext,
-			"/",
-			"POST",
-			{
-				body: {
-					blob: Converter.bytesToBase64(blob),
-					namespace: options?.namespace
-				}
+		const response = await this.fetch<IBlobStorageSetRequest, ICreatedResponse>("/", "POST", {
+			body: {
+				blob: Converter.bytesToBase64(blob),
+				namespace: options?.namespace
 			}
-		);
+		});
 
 		return response.headers.location;
 	}
 
 	/**
 	 * Get the blob.
-	 * @param requestContext The context for the request.
 	 * @param id The id of the blob to get in urn format.
 	 * @returns The data for the blob if it can be found.
 	 * @throws Not found error if the blob cannot be found.
 	 */
-	public async get(requestContext: IRequestContext, id: string): Promise<Uint8Array> {
-		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+	public async get(id: string): Promise<Uint8Array> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		const response = await this.fetch<IBlobStorageGetRequest, IBlobStorageGetResponse>(
-			requestContext,
 			"/:id",
 			"GET",
 			{
@@ -96,24 +84,16 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 
 	/**
 	 * Remove the blob.
-	 * @param requestContext The context for the request.
 	 * @param id The id of the blob to remove in urn format.
 	 * @returns Nothing.
 	 */
-	public async remove(requestContext: IRequestContext, id: string): Promise<void> {
-		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+	public async remove(id: string): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
-		await this.fetch<IBlobStorageRemoveRequest, INoContentResponse>(
-			requestContext,
-			"/:id",
-			"DELETE",
-			{
-				pathParams: {
-					id
-				}
+		await this.fetch<IBlobStorageRemoveRequest, INoContentResponse>("/:id", "DELETE", {
+			pathParams: {
+				id
 			}
-		);
+		});
 	}
 }

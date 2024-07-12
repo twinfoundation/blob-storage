@@ -15,7 +15,7 @@ let memoryEntityStorage: MemoryEntityStorageConnector<LogEntry>;
 
 const TEST_DIRECTORY_ROOT = "./.tmp/";
 const TEST_DIRECTORY = `${TEST_DIRECTORY_ROOT}test-data-${Converter.bytesToHex(RandomHelper.generate(8))}`;
-const TEST_TENANT_ID = "test-tenant";
+const TEST_PARTITION_ID = "test-partition";
 
 describe("FileBlobStorageConnector", () => {
 	beforeAll(async () => {
@@ -111,8 +111,8 @@ describe("FileBlobStorageConnector", () => {
 				directory: "|\0"
 			}
 		});
-		await blobStorage.bootstrap({ tenantId: TEST_TENANT_ID });
-		const logs = memoryEntityStorage.getStore(TEST_TENANT_ID);
+		await blobStorage.bootstrap({ partitionId: TEST_PARTITION_ID });
+		const logs = memoryEntityStorage.getStore(TEST_PARTITION_ID);
 		expect(logs).toBeDefined();
 		expect(logs?.length).toEqual(2);
 		expect(logs?.[0].message).toEqual("directoryCreating");
@@ -127,8 +127,8 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		});
-		await blobStorage.bootstrap({ tenantId: TEST_TENANT_ID });
-		const logs = memoryEntityStorage.getStore(TEST_TENANT_ID);
+		await blobStorage.bootstrap({ partitionId: TEST_PARTITION_ID });
+		const logs = memoryEntityStorage.getStore(TEST_PARTITION_ID);
 		expect(logs).toBeDefined();
 		expect(logs?.length).toEqual(2);
 		expect(logs?.[0].message).toEqual("directoryCreating");
@@ -143,28 +143,12 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		});
-		await blobStorage.bootstrap({ tenantId: TEST_TENANT_ID });
-		const logs = memoryEntityStorage.getStore(TEST_TENANT_ID);
+		await blobStorage.bootstrap({ partitionId: TEST_PARTITION_ID });
+		const logs = memoryEntityStorage.getStore(TEST_PARTITION_ID);
 		expect(logs).toBeDefined();
 		expect(logs?.length).toEqual(1);
 		expect(logs?.[0].message).toEqual("directoryExists");
 		expect(I18n.hasMessage("info.fileBlobStorageConnector.directoryExists")).toEqual(true);
-	});
-
-	test("can fail to set an item with no tenant id", async () => {
-		const blobStorage = new FileBlobStorageConnector({
-			config: {
-				directory: TEST_DIRECTORY
-			}
-		});
-		await expect(blobStorage.set({}, undefined as unknown as Uint8Array)).rejects.toMatchObject({
-			name: "GuardError",
-			message: "guard.string",
-			properties: {
-				property: "requestContext.tenantId",
-				value: "undefined"
-			}
-		});
 	});
 
 	test("can fail to set an item with no blob", async () => {
@@ -173,13 +157,27 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		});
-		await expect(
-			blobStorage.set({ tenantId: TEST_TENANT_ID }, undefined as unknown as Uint8Array)
-		).rejects.toMatchObject({
+		await expect(blobStorage.set(undefined as unknown as Uint8Array)).rejects.toMatchObject({
 			name: "GuardError",
 			message: "guard.uint8Array",
 			properties: {
 				property: "blob",
+				value: "undefined"
+			}
+		});
+	});
+
+	test("can fail to set an item with no partition id", async () => {
+		const blobStorage = new FileBlobStorageConnector({
+			config: {
+				directory: TEST_DIRECTORY
+			}
+		});
+		await expect(blobStorage.set(new Uint8Array())).rejects.toMatchObject({
+			name: "GuardError",
+			message: "guard.string",
+			properties: {
+				property: "requestContext.partitionId",
 				value: "undefined"
 			}
 		});
@@ -194,7 +192,7 @@ describe("FileBlobStorageConnector", () => {
 		});
 
 		await expect(
-			blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]))
+			blobStorage.set(new Uint8Array([1, 2, 3]), { partitionId: TEST_PARTITION_ID })
 		).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "fileBlobStorageConnector.setBlobFailed"
@@ -209,9 +207,11 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		});
-		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]), {
+			partitionId: TEST_PARTITION_ID
+		});
 
-		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, idUrn);
+		const item = await blobStorage.get(idUrn, { partitionId: TEST_PARTITION_ID });
 
 		expect(item).toBeDefined();
 		expect(item?.length).toEqual(3);
@@ -220,35 +220,33 @@ describe("FileBlobStorageConnector", () => {
 		expect(item?.[2]).toEqual(3);
 	});
 
-	test("can fail to get an item with no tenant id", async () => {
-		const blobStorage = new FileBlobStorageConnector({
-			config: {
-				directory: TEST_DIRECTORY
-			}
-		});
-		await expect(blobStorage.get({}, undefined as unknown as string)).rejects.toMatchObject({
-			name: "GuardError",
-			message: "guard.string",
-			properties: {
-				property: "requestContext.tenantId",
-				value: "undefined"
-			}
-		});
-	});
-
 	test("can fail to get an item with no id", async () => {
 		const blobStorage = new FileBlobStorageConnector({
 			config: {
 				directory: TEST_DIRECTORY
 			}
 		});
-		await expect(
-			blobStorage.get({ tenantId: TEST_TENANT_ID }, undefined as unknown as string)
-		).rejects.toMatchObject({
+		await expect(blobStorage.get(undefined as unknown as string)).rejects.toMatchObject({
 			name: "GuardError",
 			message: "guard.string",
 			properties: {
 				property: "id",
+				value: "undefined"
+			}
+		});
+	});
+
+	test("can fail to get an item with no partition id", async () => {
+		const blobStorage = new FileBlobStorageConnector({
+			config: {
+				directory: TEST_DIRECTORY
+			}
+		});
+		await expect(blobStorage.get("urn:foo:1234")).rejects.toMatchObject({
+			name: "GuardError",
+			message: "guard.string",
+			properties: {
+				property: "requestContext.partitionId",
 				value: "undefined"
 			}
 		});
@@ -261,7 +259,7 @@ describe("FileBlobStorageConnector", () => {
 			}
 		});
 		await expect(
-			blobStorage.get({ tenantId: TEST_TENANT_ID }, "urn:foo:1234")
+			blobStorage.get("urn:foo:1234", { partitionId: TEST_PARTITION_ID })
 		).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "fileBlobStorageConnector.namespaceMismatch",
@@ -280,10 +278,9 @@ describe("FileBlobStorageConnector", () => {
 			}
 		});
 		await expect(
-			blobStorage.get(
-				{ tenantId: TEST_TENANT_ID },
-				`urn:${FileBlobStorageConnector.NAMESPACE}:1234`
-			)
+			blobStorage.get(`urn:${FileBlobStorageConnector.NAMESPACE}:1234`, {
+				partitionId: TEST_PARTITION_ID
+			})
 		).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "fileBlobStorageConnector.getBlobFailed"
@@ -297,8 +294,10 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		});
-		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
-		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, `${idUrn}-2`);
+		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]), {
+			partitionId: TEST_PARTITION_ID
+		});
+		const item = await blobStorage.get(`${idUrn}-2`, { partitionId: TEST_PARTITION_ID });
 
 		expect(item).toBeUndefined();
 	});
@@ -309,8 +308,10 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		});
-		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
-		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, idUrn);
+		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]), {
+			partitionId: TEST_PARTITION_ID
+		});
+		const item = await blobStorage.get(idUrn, { partitionId: TEST_PARTITION_ID });
 
 		expect(item).toBeDefined();
 		expect(item?.length).toEqual(3);
@@ -319,35 +320,33 @@ describe("FileBlobStorageConnector", () => {
 		expect(item?.[2]).toEqual(3);
 	});
 
-	test("can fail to remove an item with no tenant id", async () => {
-		const blobStorage = new FileBlobStorageConnector({
-			config: {
-				directory: TEST_DIRECTORY
-			}
-		});
-		await expect(blobStorage.remove({}, undefined as unknown as string)).rejects.toMatchObject({
-			name: "GuardError",
-			message: "guard.string",
-			properties: {
-				property: "requestContext.tenantId",
-				value: "undefined"
-			}
-		});
-	});
-
 	test("can fail to remove an item with no id", async () => {
 		const blobStorage = new FileBlobStorageConnector({
 			config: {
 				directory: TEST_DIRECTORY
 			}
 		});
-		await expect(
-			blobStorage.remove({ tenantId: TEST_TENANT_ID }, undefined as unknown as string)
-		).rejects.toMatchObject({
+		await expect(blobStorage.remove(undefined as unknown as string)).rejects.toMatchObject({
 			name: "GuardError",
 			message: "guard.string",
 			properties: {
 				property: "id",
+				value: "undefined"
+			}
+		});
+	});
+
+	test("can fail to remove an item with no partition id", async () => {
+		const blobStorage = new FileBlobStorageConnector({
+			config: {
+				directory: TEST_DIRECTORY
+			}
+		});
+		await expect(blobStorage.remove("urn:foo:123")).rejects.toMatchObject({
+			name: "GuardError",
+			message: "guard.string",
+			properties: {
+				property: "requestContext.partitionId",
 				value: "undefined"
 			}
 		});
@@ -360,7 +359,7 @@ describe("FileBlobStorageConnector", () => {
 			}
 		});
 		await expect(
-			blobStorage.remove({ tenantId: TEST_TENANT_ID }, "urn:foo:1234")
+			blobStorage.remove("urn:foo:1234", { partitionId: TEST_PARTITION_ID })
 		).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "fileBlobStorageConnector.namespaceMismatch",
@@ -379,10 +378,9 @@ describe("FileBlobStorageConnector", () => {
 			}
 		});
 		await expect(
-			blobStorage.remove(
-				{ tenantId: TEST_TENANT_ID },
-				`urn:${FileBlobStorageConnector.NAMESPACE}:1234`
-			)
+			blobStorage.remove(`urn:${FileBlobStorageConnector.NAMESPACE}:1234`, {
+				partitionId: TEST_PARTITION_ID
+			})
 		).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "fileBlobStorageConnector.removeBlobFailed"
@@ -396,11 +394,13 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		});
-		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
+		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]), {
+			partitionId: TEST_PARTITION_ID
+		});
 
-		await blobStorage.remove({ tenantId: TEST_TENANT_ID }, `${idUrn}-2`);
+		await blobStorage.remove(`${idUrn}-2`, { partitionId: TEST_PARTITION_ID });
 
-		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, idUrn);
+		const item = await blobStorage.get(idUrn, { partitionId: TEST_PARTITION_ID });
 
 		expect(item).toBeDefined();
 	});
@@ -411,9 +411,11 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		});
-		const idUrn = await blobStorage.set({ tenantId: TEST_TENANT_ID }, new Uint8Array([1, 2, 3]));
-		await blobStorage.remove({ tenantId: TEST_TENANT_ID }, idUrn);
-		const item = await blobStorage.get({ tenantId: TEST_TENANT_ID }, idUrn);
+		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]), {
+			partitionId: TEST_PARTITION_ID
+		});
+		await blobStorage.remove(idUrn, { partitionId: TEST_PARTITION_ID });
+		const item = await blobStorage.get(idUrn, { partitionId: TEST_PARTITION_ID });
 
 		expect(item).toBeUndefined();
 	});

@@ -1,11 +1,10 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-
 import type {
 	ICreatedResponse,
-	IRestRoute,
-	INotFoundResponse,
 	INoContentResponse,
+	INotFoundResponse,
+	IRestRoute,
 	ITag
 } from "@gtsc/api-models";
 import type {
@@ -17,7 +16,7 @@ import type {
 } from "@gtsc/blob-storage-models";
 import { Converter, Guards } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import { ServiceFactory, type IRequestContext } from "@gtsc/services";
+import { ServiceFactory, type IServiceRequestContext } from "@gtsc/services";
 import { HttpStatusCodes } from "@gtsc/web";
 
 /**
@@ -126,7 +125,7 @@ export function generateRestRoutes(
 		]
 	};
 
-	const blobStorageRemoveRoute: IRestRoute<IBlobStorageRemoveRequest, void> = {
+	const blobStorageRemoveRoute: IRestRoute<IBlobStorageRemoveRequest, INoContentResponse> = {
 		operationId: "blobStorageRemove",
 		summary: "Remove the blob from storage",
 		tag: tags[0].name,
@@ -165,23 +164,25 @@ export function generateRestRoutes(
  * @param requestContext The request context for the API.
  * @param factoryServiceName The name of the service to use in the routes.
  * @param request The request.
- * @param body The body if required for pure content.
  * @returns The response object with additional http response properties.
  */
 export async function blobStorageSet(
-	requestContext: IRequestContext,
+	requestContext: IServiceRequestContext,
 	factoryServiceName: string,
-	request: IBlobStorageSetRequest,
-	body?: unknown
+	request: IBlobStorageSetRequest
 ): Promise<ICreatedResponse> {
 	Guards.object<IBlobStorageSetRequest>(ROUTES_SOURCE, nameof(request), request);
 	Guards.object<IBlobStorageSetRequest["body"]>(ROUTES_SOURCE, nameof(request.body), request.body);
 	Guards.stringBase64(ROUTES_SOURCE, nameof(request.body.blob), request.body.blob);
 
 	const service = ServiceFactory.get<IBlobStorage>(factoryServiceName);
-	const id = await service.set(requestContext, Converter.base64ToBytes(request.body.blob), {
-		namespace: request.body.namespace
-	});
+	const id = await service.set(
+		Converter.base64ToBytes(request.body.blob),
+		{
+			namespace: request.body.namespace
+		},
+		requestContext
+	);
 
 	return {
 		statusCode: HttpStatusCodes.CREATED,
@@ -196,14 +197,12 @@ export async function blobStorageSet(
  * @param requestContext The request context for the API.
  * @param serviceName The name of the service to use in the routes.
  * @param request The request.
- * @param body The body if required for pure content.
  * @returns The response object with additional http response properties.
  */
 export async function blobStorageGet(
-	requestContext: IRequestContext,
+	requestContext: IServiceRequestContext,
 	serviceName: string,
-	request: IBlobStorageGetRequest,
-	body?: unknown
+	request: IBlobStorageGetRequest
 ): Promise<IBlobStorageGetResponse> {
 	Guards.object<IBlobStorageGetRequest>(ROUTES_SOURCE, nameof(request), request);
 	Guards.object<IBlobStorageGetRequest["pathParams"]>(
@@ -215,7 +214,7 @@ export async function blobStorageGet(
 
 	const service = ServiceFactory.get<IBlobStorage>(serviceName);
 
-	const result = await service.get(requestContext, request.pathParams.id);
+	const result = await service.get(request.pathParams.id, requestContext);
 
 	return {
 		body: {
@@ -229,15 +228,13 @@ export async function blobStorageGet(
  * @param requestContext The request context for the API.
  * @param serviceName The name of the service to use in the routes.
  * @param request The request.
- * @param body The body if required for pure content.
  * @returns The response object with additional http response properties.
  */
 export async function blobStorageRemove(
-	requestContext: IRequestContext,
+	requestContext: IServiceRequestContext,
 	serviceName: string,
-	request: IBlobStorageRemoveRequest,
-	body?: unknown
-): Promise<void> {
+	request: IBlobStorageRemoveRequest
+): Promise<INoContentResponse> {
 	Guards.object<IBlobStorageRemoveRequest>(ROUTES_SOURCE, nameof(request), request);
 	Guards.object<IBlobStorageGetRequest["pathParams"]>(
 		ROUTES_SOURCE,
@@ -248,5 +245,7 @@ export async function blobStorageRemove(
 
 	const service = ServiceFactory.get<IBlobStorage>(serviceName);
 
-	await service.remove(requestContext, request.pathParams.id);
+	await service.remove(request.pathParams.id, requestContext);
+
+	return {};
 }
