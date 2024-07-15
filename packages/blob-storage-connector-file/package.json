@@ -1,6 +1,6 @@
 {
 	"name": "@gtsc/blob-storage-connector-file",
-	"version": "0.0.3-next.12",
+	"version": "0.0.3-next.13",
 	"description": "Blob Storage connector implementation using file storage",
 	"repository": {
 		"type": "git",
@@ -28,10 +28,10 @@
 		"dist": "npm run clean && npm run build && npm run test && npm run bundle && npm run docs"
 	},
 	"dependencies": {
-		"@gtsc/blob-storage-models": "0.0.3-next.12",
+		"@gtsc/blob-storage-models": "0.0.3-next.13",
 		"@gtsc/core": "next",
 		"@gtsc/crypto": "next",
-		"@gtsc/nameof": "0.0.4",
+		"@gtsc/nameof": "next",
 		"@gtsc/logging-models": "next"
 	},
 	"devDependencies": {
@@ -39,7 +39,7 @@
 		"@gtsc/logging-service": "next",
 		"@gtsc/entity": "next",
 		"@gtsc/entity-storage-connector-memory": "next",
-		"@gtsc/nameof-transformer": "0.0.4",
+		"@gtsc/nameof-transformer": "next",
 		"@types/node": "20.14.6",
 		"@vitest/coverage-v8": "1.6.0",
 		"copyfiles": "2.4.1",

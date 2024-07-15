@@ -17,7 +17,7 @@ import type {
 import { Converter, Guards } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import { ServiceFactory, type IServiceRequestContext } from "@gtsc/services";
-import { HttpStatusCodes } from "@gtsc/web";
+import { HttpStatusCode } from "@gtsc/web";
 
 /**
  * The source used when communicating about these routes.
@@ -72,7 +72,7 @@ export function generateRestRoutes(
 					{
 						id: "blobStorageSetResponseExample",
 						response: {
-							statusCode: HttpStatusCodes.CREATED,
+							statusCode: HttpStatusCode.created,
 							headers: {
 								location:
 									"blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
@@ -185,7 +185,7 @@ export async function blobStorageSet(
 	);
 
 	return {
-		statusCode: HttpStatusCodes.CREATED,
+		statusCode: HttpStatusCode.created,
 		headers: {
 			location: id
 		}
@@ -247,5 +247,7 @@ export async function blobStorageRemove(
 
 	await service.remove(request.pathParams.id, requestContext);
 
-	return {};
+	return {
+		statusCode: HttpStatusCode.noContent
+	};
 }
