@@ -1,6 +1,6 @@
-# Function: generateRestRoutes()
+# Function: generateRestRoutesBlobStorage()
 
-> **generateRestRoutes**(`baseRouteName`, `factoryServiceName`): `IRestRoute`[]
+> **generateRestRoutesBlobStorage**(`baseRouteName`, `factoryServiceName`): `IRestRoute`[]
 
 The REST routes for blob storage.
 

@@ -2,10 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { rm } from "node:fs/promises";
 import { Converter, I18n, RandomHelper } from "@gtsc/core";
-import { EntitySchemaFactory, EntitySchemaHelper } from "@gtsc/entity";
 import { MemoryEntityStorageConnector } from "@gtsc/entity-storage-connector-memory";
 import { EntityStorageConnectorFactory } from "@gtsc/entity-storage-models";
-import { EntityStorageLoggingConnector, LogEntry } from "@gtsc/logging-connector-entity-storage";
+import {
+	EntityStorageLoggingConnector,
+	LogEntry,
+	initSchema
+} from "@gtsc/logging-connector-entity-storage";
 import { LoggingConnectorFactory } from "@gtsc/logging-models";
 import { nameof } from "@gtsc/nameof";
 import { FileBlobStorageConnector } from "../src/fileBlobStorageConnector";
@@ -21,7 +24,7 @@ describe("FileBlobStorageConnector", () => {
 	beforeAll(async () => {
 		I18n.addDictionary("en", await import("../locales/en.json"));
 
-		EntitySchemaFactory.register(nameof(LogEntry), () => EntitySchemaHelper.getSchema(LogEntry));
+		initSchema();
 	});
 
 	beforeEach(() => {

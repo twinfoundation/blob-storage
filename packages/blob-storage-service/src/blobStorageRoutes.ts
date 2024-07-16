@@ -27,7 +27,7 @@ const ROUTES_SOURCE = "blobStorageRoutes";
 /**
  * The tag to associate with the routes.
  */
-export const tags: ITag[] = [
+export const tagsBlobStorage: ITag[] = [
 	{
 		name: "Blob Storage",
 		description: "Endpoints which are modelled to access a blob storage contract."
@@ -40,14 +40,14 @@ export const tags: ITag[] = [
  * @param factoryServiceName The name of the service to use in the routes store in the ServiceFactory.
  * @returns The generated routes.
  */
-export function generateRestRoutes(
+export function generateRestRoutesBlobStorage(
 	baseRouteName: string,
 	factoryServiceName: string
 ): IRestRoute[] {
 	const blobStorageSetRoute: IRestRoute<IBlobStorageSetRequest, ICreatedResponse> = {
 		operationId: "blobStorageSet",
 		summary: "Set a blob in to storage",
-		tag: tags[0].name,
+		tag: tagsBlobStorage[0].name,
 		method: "POST",
 		path: `${baseRouteName}/`,
 		handler: async (requestContext, request) =>
@@ -87,7 +87,7 @@ export function generateRestRoutes(
 	const blobStorageGetRoute: IRestRoute<IBlobStorageGetRequest, IBlobStorageGetResponse> = {
 		operationId: "blobStorageGet",
 		summary: "Get the blob from storage",
-		tag: tags[0].name,
+		tag: tagsBlobStorage[0].name,
 		method: "GET",
 		path: `${baseRouteName}/:id`,
 		handler: async (requestContext, request) =>
@@ -128,7 +128,7 @@ export function generateRestRoutes(
 	const blobStorageRemoveRoute: IRestRoute<IBlobStorageRemoveRequest, INoContentResponse> = {
 		operationId: "blobStorageRemove",
 		summary: "Remove the blob from storage",
-		tag: tags[0].name,
+		tag: tagsBlobStorage[0].name,
 		method: "DELETE",
 		path: `${baseRouteName}/:id`,
 		handler: async (requestContext, request) =>
