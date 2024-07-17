@@ -381,30 +381,20 @@
             "BlobStorageSetRequest": {
                 "type": "object",
                 "properties": {
-                    "body": {
-                        "type": "object",
-                        "properties": {
-                            "blob": {
-                                "type": "string",
-                                "description": "The data to store in base64 encoding."
-                            },
-                            "namespace": {
-                                "type": "string",
-                                "description": "The namespace to store the data in, defaults to service configured namespace."
-                            }
-                        },
-                        "required": [
-                            "blob"
-                        ],
-                        "additionalProperties": false,
-                        "description": "The body parameters."
+                    "blob": {
+                        "type": "string",
+                        "description": "The data to store in base64 encoding."
+                    },
+                    "namespace": {
+                        "type": "string",
+                        "description": "The namespace to store the data in, defaults to service configured namespace."
                     }
                 },
                 "required": [
-                    "body"
+                    "blob"
                 ],
                 "additionalProperties": false,
-                "description": "Request to set an entry in blob storage."
+                "description": "The body parameters."
             },
             "BlobStorageGetResponse": {
                 "type": "object",

@@ -6,6 +6,7 @@ import { generateRestRoutesBlobStorage, tagsBlobStorage } from "./blobStorageRou
 export const restEntryPoints: IRestRouteEntryPoint[] = [
 	{
 		name: "blobStorage",
+		defaultBaseRoute: "blob-storage",
 		tags: tagsBlobStorage,
 		generateRoutes: generateRestRoutesBlobStorage
 	}
