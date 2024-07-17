@@ -6,7 +6,7 @@ import { MemoryEntityStorageConnector } from "@gtsc/entity-storage-connector-mem
 import { EntityStorageConnectorFactory } from "@gtsc/entity-storage-models";
 import {
 	EntityStorageLoggingConnector,
-	LogEntry,
+	type LogEntry,
 	initSchema
 } from "@gtsc/logging-connector-entity-storage";
 import { LoggingConnectorFactory } from "@gtsc/logging-models";
@@ -29,7 +29,7 @@ describe("FileBlobStorageConnector", () => {
 
 	beforeEach(() => {
 		memoryEntityStorage = new MemoryEntityStorageConnector<LogEntry>({
-			entitySchema: nameof(LogEntry)
+			entitySchema: nameof<LogEntry>()
 		});
 		EntityStorageConnectorFactory.register("log-entry", () => memoryEntityStorage);
 		LoggingConnectorFactory.register("logging", () => new EntityStorageLoggingConnector());
