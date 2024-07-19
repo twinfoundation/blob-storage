@@ -114,7 +114,7 @@ describe("FileBlobStorageConnector", () => {
 				directory: "|\0"
 			}
 		});
-		await blobStorage.bootstrap({ partitionId: TEST_PARTITION_ID });
+		await blobStorage.bootstrap(TEST_PARTITION_ID);
 		const logs = memoryEntityStorage.getStore(TEST_PARTITION_ID);
 		expect(logs).toBeDefined();
 		expect(logs?.length).toEqual(2);
@@ -130,7 +130,7 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		});
-		await blobStorage.bootstrap({ partitionId: TEST_PARTITION_ID });
+		await blobStorage.bootstrap(TEST_PARTITION_ID);
 		const logs = memoryEntityStorage.getStore(TEST_PARTITION_ID);
 		expect(logs).toBeDefined();
 		expect(logs?.length).toEqual(2);
@@ -146,7 +146,7 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		});
-		await blobStorage.bootstrap({ partitionId: TEST_PARTITION_ID });
+		await blobStorage.bootstrap(TEST_PARTITION_ID);
 		const logs = memoryEntityStorage.getStore(TEST_PARTITION_ID);
 		expect(logs).toBeDefined();
 		expect(logs?.length).toEqual(1);

@@ -59,10 +59,10 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 
 	/**
 	 * Bootstrap the connector by creating and initializing any resources it needs.
-	 * @param requestContext The request context for bootstrapping.
+	 * @param systemPartitionId The system partition id.
 	 * @returns The response of the bootstrapping as log entries.
 	 */
-	public async bootstrap(requestContext?: IServiceRequestContext): Promise<void> {
+	public async bootstrap(systemPartitionId: string): Promise<void> {
 		if (!(await this.dirExists(this._directory))) {
 			this._logging.log(
 				{
@@ -73,7 +73,7 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 						directory: this._directory
 					}
 				},
-				requestContext
+				{ partitionId: systemPartitionId }
 			);
 
 			try {
@@ -88,7 +88,7 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 							directory: this._directory
 						}
 					},
-					requestContext
+					{ partitionId: systemPartitionId }
 				);
 			} catch (err) {
 				this._logging.log(
@@ -101,7 +101,7 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 						},
 						error: BaseError.fromError(err)
 					},
-					requestContext
+					{ partitionId: systemPartitionId }
 				);
 			}
 		} else {
@@ -114,7 +114,7 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 						directory: this._directory
 					}
 				},
-				requestContext
+				{ partitionId: systemPartitionId }
 			);
 		}
 	}
