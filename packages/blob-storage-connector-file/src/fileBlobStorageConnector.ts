@@ -5,7 +5,7 @@ import path from "node:path";
 import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
 import { BaseError, Converter, FilenameHelper, GeneralError, Guards, Urn } from "@gtsc/core";
 import { Sha256 } from "@gtsc/crypto";
-import { LoggingConnectorFactory, type ILoggingConnector } from "@gtsc/logging-models";
+import { LoggingConnectorFactory } from "@gtsc/logging-models";
 import { nameof } from "@gtsc/nameof";
 import type { IServiceRequestContext } from "@gtsc/services";
 import type { IFileBlobStorageConnectorConfig } from "./models/IFileBlobStorageConnectorConfig";
@@ -25,12 +25,6 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 	public readonly CLASS_NAME: string = nameof<FileBlobStorageConnector>();
 
 	/**
-	 * The logging connector.
-	 * @internal
-	 */
-	private readonly _logging: ILoggingConnector;
-
-	/**
 	 * The directory to use for storage.
 	 * @internal
 	 */
@@ -45,26 +39,32 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Create a new instance of FileBlobStorageConnector.
 	 * @param options The options for the connector.
-	 * @param options.loggingConnectorType The type of logging connector to use, defaults to "logging".
 	 * @param options.config The configuration for the connector.
 	 */
-	constructor(options: { loggingConnectorType?: string; config: IFileBlobStorageConnectorConfig }) {
+	constructor(options: { config: IFileBlobStorageConnectorConfig }) {
 		Guards.object(this.CLASS_NAME, nameof(options), options);
 		Guards.object(this.CLASS_NAME, nameof(options.config), options.config);
 		Guards.stringValue(this.CLASS_NAME, nameof(options.config.directory), options.config.directory);
-		this._logging = LoggingConnectorFactory.get(options.loggingConnectorType ?? "logging");
 		this._directory = path.resolve(options.config.directory);
 		this._extension = options.config.extension ?? ".blob";
 	}
 
 	/**
 	 * Bootstrap the connector by creating and initializing any resources it needs.
-	 * @param systemPartitionId The system partition id.
+	 * @param systemRequestContext The system request context.
+	 * @param systemLoggingConnectorType The system logging connector type, defaults to "system-logging".
 	 * @returns The response of the bootstrapping as log entries.
 	 */
-	public async bootstrap(systemPartitionId: string): Promise<void> {
+	public async bootstrap(
+		systemRequestContext: IServiceRequestContext,
+		systemLoggingConnectorType?: string
+	): Promise<void> {
+		const systemLogging = LoggingConnectorFactory.getIfExists(
+			systemLoggingConnectorType ?? "system-logging"
+		);
+
 		if (!(await this.dirExists(this._directory))) {
-			this._logging.log(
+			await systemLogging?.log(
 				{
 					level: "info",
 					source: this.CLASS_NAME,
@@ -73,13 +73,13 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 						directory: this._directory
 					}
 				},
-				{ partitionId: systemPartitionId }
+				systemRequestContext
 			);
 
 			try {
 				await mkdir(this._directory, { recursive: true });
 
-				this._logging.log(
+				await systemLogging?.log(
 					{
 						level: "info",
 						source: this.CLASS_NAME,
@@ -88,10 +88,10 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 							directory: this._directory
 						}
 					},
-					{ partitionId: systemPartitionId }
+					systemRequestContext
 				);
 			} catch (err) {
-				this._logging.log(
+				await systemLogging?.log(
 					{
 						level: "error",
 						source: this.CLASS_NAME,
@@ -101,11 +101,11 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 						},
 						error: BaseError.fromError(err)
 					},
-					{ partitionId: systemPartitionId }
+					systemRequestContext
 				);
 			}
 		} else {
-			this._logging.log(
+			await systemLogging?.log(
 				{
 					level: "info",
 					source: this.CLASS_NAME,
@@ -114,7 +114,7 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 						directory: this._directory
 					}
 				},
-				{ partitionId: systemPartitionId }
+				systemRequestContext
 			);
 		}
 	}
