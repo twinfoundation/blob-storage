@@ -281,7 +281,7 @@ describe("FileBlobStorageConnector", () => {
 			}
 		});
 		await expect(
-			blobStorage.get(`urn:${FileBlobStorageConnector.NAMESPACE}:1234`, {
+			blobStorage.get(`urn:blob:${FileBlobStorageConnector.NAMESPACE}:1234`, {
 				partitionId: TEST_PARTITION_ID
 			})
 		).rejects.toMatchObject({
@@ -381,7 +381,7 @@ describe("FileBlobStorageConnector", () => {
 			}
 		});
 		await expect(
-			blobStorage.remove(`urn:${FileBlobStorageConnector.NAMESPACE}:1234`, {
+			blobStorage.remove(`urn:blob:${FileBlobStorageConnector.NAMESPACE}:1234`, {
 				partitionId: TEST_PARTITION_ID
 			})
 		).rejects.toMatchObject({

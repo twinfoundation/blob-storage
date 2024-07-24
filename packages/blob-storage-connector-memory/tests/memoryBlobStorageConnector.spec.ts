@@ -47,7 +47,7 @@ describe("MemoryBlobStorageConnector", () => {
 		expect(idUrn).toBeDefined();
 
 		const urn = Urn.fromValidString(idUrn);
-		const id = urn.namespaceSpecific();
+		const id = urn.namespaceSpecific(1);
 		const store = blobStorage.getStore(TEST_PARTITION_ID);
 		expect(store).toBeDefined();
 		expect(store?.[id]).toBeDefined();
@@ -165,7 +165,7 @@ describe("MemoryBlobStorageConnector", () => {
 			partitionId: TEST_PARTITION_ID
 		});
 		const urn = Urn.fromValidString(idUrn);
-		const id = urn.namespaceSpecific();
+		const id = urn.namespaceSpecific(1);
 
 		await blobStorage.remove(`${idUrn}-2`, { partitionId: TEST_PARTITION_ID });
 
@@ -180,7 +180,7 @@ describe("MemoryBlobStorageConnector", () => {
 			partitionId: TEST_PARTITION_ID
 		});
 		const urn = Urn.fromValidString(idUrn);
-		const id = urn.namespaceSpecific();
+		const id = urn.namespaceSpecific(1);
 
 		await blobStorage.remove(idUrn, { partitionId: TEST_PARTITION_ID });
 

@@ -17,7 +17,7 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * The namespace for the items.
 	 */
-	public static readonly NAMESPACE: string = "blob-file";
+	public static readonly NAMESPACE: string = "file";
 
 	/**
 	 * Runtime name for the class.
@@ -142,7 +142,7 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 
 			await writeFile(fullPath, blob);
 
-			return new Urn(FileBlobStorageConnector.NAMESPACE, id).toString();
+			return `blob:${new Urn(FileBlobStorageConnector.NAMESPACE, id).toString()}`;
 		} catch (err) {
 			throw new GeneralError(this.CLASS_NAME, "setBlobFailed", undefined, err);
 		}
@@ -167,7 +167,7 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 
 		const urnParsed = Urn.fromValidString(id);
 
-		if (urnParsed.namespaceIdentifier() !== FileBlobStorageConnector.NAMESPACE) {
+		if (urnParsed.namespaceMethod() !== FileBlobStorageConnector.NAMESPACE) {
 			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: FileBlobStorageConnector.NAMESPACE,
 				id
@@ -179,7 +179,7 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 
 			const fullPath = path.join(
 				partitionPath,
-				`${urnParsed.namespaceSpecific()}${this._extension}`
+				`${urnParsed.namespaceSpecific(1)}${this._extension}`
 			);
 
 			return await readFile(fullPath);
@@ -207,7 +207,7 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 
 		const urnParsed = Urn.fromValidString(id);
 
-		if (urnParsed.namespaceIdentifier() !== FileBlobStorageConnector.NAMESPACE) {
+		if (urnParsed.namespaceMethod() !== FileBlobStorageConnector.NAMESPACE) {
 			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: FileBlobStorageConnector.NAMESPACE,
 				id
@@ -219,7 +219,7 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 
 			const fullPath = path.join(
 				partitionPath,
-				`${urnParsed.namespaceSpecific()}${this._extension}`
+				`${urnParsed.namespaceSpecific(1)}${this._extension}`
 			);
 
 			await unlink(fullPath);
@@ -231,8 +231,6 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 			}
 			throw new GeneralError(this.CLASS_NAME, "removeBlobFailed", { id }, err);
 		}
-
-		return false;
 	}
 
 	/**

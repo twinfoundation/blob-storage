@@ -36,7 +36,7 @@ describe("IpfsBlobStorageConnector", () => {
 		expect(idUrn).toBeDefined();
 
 		const urn = Urn.fromValidString(idUrn);
-		console.debug(TEST_IPFS_PUBLIC_GATEWAY.replace(":hash", urn.namespaceSpecific()));
+		console.debug(TEST_IPFS_PUBLIC_GATEWAY.replace(":hash", urn.namespaceSpecific(1)));
 	});
 
 	test("can fail to get an item with no id", async () => {

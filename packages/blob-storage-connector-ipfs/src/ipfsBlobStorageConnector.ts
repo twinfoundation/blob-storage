@@ -15,7 +15,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 	 * The namespace for the items.
 	 * @internal
 	 */
-	public static readonly NAMESPACE: string = "blob-ipfs";
+	public static readonly NAMESPACE: string = "ipfs";
 
 	/**
 	 * Runtime name for the class.
@@ -78,7 +78,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 					Size: string;
 				};
 
-				return new Urn(IpfsBlobStorageConnector.NAMESPACE, result.Hash).toString();
+				return `blob:${new Urn(IpfsBlobStorageConnector.NAMESPACE, result.Hash).toString()}`;
 			}
 
 			throw new GeneralError(this.CLASS_NAME, "fetchFail", {
@@ -102,7 +102,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		const urnParsed = Urn.fromValidString(id);
 
-		if (urnParsed.namespaceIdentifier() !== IpfsBlobStorageConnector.NAMESPACE) {
+		if (urnParsed.namespaceMethod() !== IpfsBlobStorageConnector.NAMESPACE) {
 			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: IpfsBlobStorageConnector.NAMESPACE,
 				id
@@ -124,7 +124,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 			}
 
 			const response = await fetch(
-				`${this._config.apiUrl}/cat?arg=${urnParsed.namespaceSpecific()}`,
+				`${this._config.apiUrl}/cat?arg=${urnParsed.namespaceSpecific(1)}`,
 				fetchOptions
 			);
 
@@ -150,7 +150,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		const urnParsed = Urn.fromValidString(id);
 
-		if (urnParsed.namespaceIdentifier() !== IpfsBlobStorageConnector.NAMESPACE) {
+		if (urnParsed.namespaceMethod() !== IpfsBlobStorageConnector.NAMESPACE) {
 			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: IpfsBlobStorageConnector.NAMESPACE,
 				id
@@ -172,7 +172,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 			}
 
 			const response = await fetch(
-				`${this._config.apiUrl}/pin/rm?arg=${urnParsed.namespaceSpecific()}`,
+				`${this._config.apiUrl}/pin/rm?arg=${urnParsed.namespaceSpecific(1)}`,
 				fetchOptions
 			);
 

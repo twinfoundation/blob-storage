@@ -14,7 +14,7 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 	 * The namespace for the items.
 	 * @internal
 	 */
-	public static readonly NAMESPACE: string = "blob-memory";
+	public static readonly NAMESPACE: string = "memory";
 
 	/**
 	 * Runtime name for the class.
@@ -53,7 +53,7 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 		this._store[requestContext.partitionId] ??= {};
 		this._store[requestContext.partitionId][id] = blob;
 
-		return new Urn(MemoryBlobStorageConnector.NAMESPACE, id).toString();
+		return `blob:${new Urn(MemoryBlobStorageConnector.NAMESPACE, id).toString()}`;
 	}
 
 	/**
@@ -75,14 +75,14 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 
 		const urnParsed = Urn.fromValidString(id);
 
-		if (urnParsed.namespaceIdentifier() !== MemoryBlobStorageConnector.NAMESPACE) {
+		if (urnParsed.namespaceMethod() !== MemoryBlobStorageConnector.NAMESPACE) {
 			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: MemoryBlobStorageConnector.NAMESPACE,
 				id
 			});
 		}
 
-		return this._store[requestContext?.partitionId]?.[urnParsed.namespaceSpecific()];
+		return this._store[requestContext?.partitionId]?.[urnParsed.namespaceSpecific(1)];
 	}
 
 	/**
@@ -101,14 +101,14 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 
 		const urnParsed = Urn.fromValidString(id);
 
-		if (urnParsed.namespaceIdentifier() !== MemoryBlobStorageConnector.NAMESPACE) {
+		if (urnParsed.namespaceMethod() !== MemoryBlobStorageConnector.NAMESPACE) {
 			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: MemoryBlobStorageConnector.NAMESPACE,
 				id
 			});
 		}
 
-		const namespaceId = urnParsed.namespaceSpecific();
+		const namespaceId = urnParsed.namespaceSpecific(1);
 		if (this._store[requestContext.partitionId]?.[namespaceId]) {
 			delete this._store[requestContext.partitionId][namespaceId];
 			return true;
