@@ -15,6 +15,11 @@ import type { IBlobStorageServiceConfig } from "./models/IBlobStorageServiceConf
  */
 export class BlobStorageService implements IBlobStorage {
 	/**
+	 * The namespace supported by the blob storage service.
+	 */
+	public static readonly NAMESPACE: string = "blob";
+
+	/**
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<BlobStorageService>();
@@ -78,10 +83,7 @@ export class BlobStorageService implements IBlobStorage {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		try {
-			const idUri = Urn.fromValidString(id);
-			const connectorNamespace = idUri.namespaceIdentifier();
-			const blobStorageConnector =
-				BlobStorageConnectorFactory.get<IBlobStorageConnector>(connectorNamespace);
+			const blobStorageConnector = this.getConnector(id);
 
 			const blob = await blobStorageConnector.get(id, requestContext);
 			if (Is.undefined(blob)) {
@@ -104,10 +106,7 @@ export class BlobStorageService implements IBlobStorage {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		try {
-			const idUri = Urn.fromValidString(id);
-			const connectorNamespace = idUri.namespaceIdentifier();
-			const blobStorageConnector =
-				BlobStorageConnectorFactory.get<IBlobStorageConnector>(connectorNamespace);
+			const blobStorageConnector = this.getConnector(id);
 
 			const removed = await blobStorageConnector.remove(id, requestContext);
 
@@ -117,5 +116,24 @@ export class BlobStorageService implements IBlobStorage {
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "removeFailed", undefined, error);
 		}
+	}
+
+	/**
+	 * Get the connector from the uri.
+	 * @param id The id of the blob storage item in urn format.
+	 * @returns The connector.
+	 * @internal
+	 */
+	private getConnector(id: string): IBlobStorageConnector {
+		const idUri = Urn.fromValidString(id);
+
+		if (idUri.namespaceIdentifier() !== BlobStorageService.NAMESPACE) {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
+				namespace: BlobStorageService.NAMESPACE,
+				id
+			});
+		}
+
+		return BlobStorageConnectorFactory.get<IBlobStorageConnector>(idUri.namespaceMethod());
 	}
 }
