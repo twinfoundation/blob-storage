@@ -12,12 +12,12 @@ describe("IpfsBlobStorageConnector", () => {
 	});
 
 	test("can construct", async () => {
-		const blobStorage = new IpfsBlobStorageConnector(TEST_IPFS_CONFIG);
+		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 		expect(blobStorage).toBeDefined();
 	});
 
 	test("can fail to set an item with no blob", async () => {
-		const blobStorage = new IpfsBlobStorageConnector(TEST_IPFS_CONFIG);
+		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 		await expect(blobStorage.set(undefined as unknown as Uint8Array)).rejects.toMatchObject({
 			name: "GuardError",
 			message: "guard.uint8Array",
@@ -29,7 +29,7 @@ describe("IpfsBlobStorageConnector", () => {
 	});
 
 	test("can set an item", async () => {
-		const blobStorage = new IpfsBlobStorageConnector(TEST_IPFS_CONFIG);
+		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 
 		const idUrn = await blobStorage.set(TEST_DATA);
 
@@ -40,7 +40,7 @@ describe("IpfsBlobStorageConnector", () => {
 	});
 
 	test("can fail to get an item with no id", async () => {
-		const blobStorage = new IpfsBlobStorageConnector(TEST_IPFS_CONFIG);
+		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 		await expect(blobStorage.get(undefined as unknown as string)).rejects.toMatchObject({
 			name: "GuardError",
 			message: "guard.string",
@@ -52,7 +52,7 @@ describe("IpfsBlobStorageConnector", () => {
 	});
 
 	test("can fail to get an item with mismatched urn namespace", async () => {
-		const blobStorage = new IpfsBlobStorageConnector(TEST_IPFS_CONFIG);
+		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 		await expect(blobStorage.get("urn:foo:1234")).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "ipfsBlobStorageConnector.namespaceMismatch",
@@ -64,7 +64,7 @@ describe("IpfsBlobStorageConnector", () => {
 	});
 
 	test("can not get an item", async () => {
-		const blobStorage = new IpfsBlobStorageConnector(TEST_IPFS_CONFIG);
+		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 		const idUrn = await blobStorage.set(TEST_DATA);
 		const item = await blobStorage.get(`${idUrn}-2`);
 
@@ -72,7 +72,7 @@ describe("IpfsBlobStorageConnector", () => {
 	});
 
 	test("can get an item", async () => {
-		const blobStorage = new IpfsBlobStorageConnector(TEST_IPFS_CONFIG);
+		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 		const idUrn = await blobStorage.set(TEST_DATA);
 		const item = await blobStorage.get(idUrn);
 
@@ -81,7 +81,7 @@ describe("IpfsBlobStorageConnector", () => {
 	});
 
 	test("can fail to remove an item with no id", async () => {
-		const blobStorage = new IpfsBlobStorageConnector(TEST_IPFS_CONFIG);
+		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 		await expect(blobStorage.remove(undefined as unknown as string)).rejects.toMatchObject({
 			name: "GuardError",
 			message: "guard.string",
@@ -93,7 +93,7 @@ describe("IpfsBlobStorageConnector", () => {
 	});
 
 	test("can fail to remove an item with mismatched urn namespace", async () => {
-		const blobStorage = new IpfsBlobStorageConnector(TEST_IPFS_CONFIG);
+		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 		await expect(blobStorage.remove("urn:foo:1234")).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "ipfsBlobStorageConnector.namespaceMismatch",
@@ -105,7 +105,7 @@ describe("IpfsBlobStorageConnector", () => {
 	});
 
 	test("can not remove an item", async () => {
-		const blobStorage = new IpfsBlobStorageConnector(TEST_IPFS_CONFIG);
+		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 		const idUrn = await blobStorage.set(TEST_DATA);
 
 		const removed = await blobStorage.remove(`${idUrn}-2`);
@@ -113,7 +113,7 @@ describe("IpfsBlobStorageConnector", () => {
 	});
 
 	test("can remove an item", async () => {
-		const blobStorage = new IpfsBlobStorageConnector(TEST_IPFS_CONFIG);
+		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 		const idUrn = await blobStorage.set(TEST_DATA);
 		const removed = await blobStorage.remove(idUrn);
 		expect(removed).toBe(true);

@@ -12,7 +12,6 @@ import type { IServiceRequestContext } from "@gtsc/services";
 export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * The namespace for the items.
-	 * @internal
 	 */
 	public static readonly NAMESPACE: string = "memory";
 

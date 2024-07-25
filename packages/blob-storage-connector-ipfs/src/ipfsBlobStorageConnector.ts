@@ -13,7 +13,6 @@ import type { IIpfsBlobStorageConnectorConfig } from "./models/IIpfsBlobStorageC
 export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * The namespace for the items.
-	 * @internal
 	 */
 	public static readonly NAMESPACE: string = "ipfs";
 
@@ -29,14 +28,20 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 	private readonly _config: IIpfsBlobStorageConnectorConfig;
 
 	/**
-	 * Create a new instance of Ipfs.
-	 * @param config The configuration for the blob storage connector.
+	 * Create a new instance of IpfsBlobStorageConnector.
+	 * @param options The options for the connector.
+	 * @param options.config The configuration for the connector.
 	 */
-	constructor(config: IIpfsBlobStorageConnectorConfig) {
-		Guards.object<IIpfsBlobStorageConnectorConfig>(this.CLASS_NAME, nameof(config), config);
-		Guards.stringValue(this.CLASS_NAME, nameof(config.apiUrl), config.apiUrl);
+	constructor(options: { config: IIpfsBlobStorageConnectorConfig }) {
+		Guards.object(this.CLASS_NAME, nameof(options), options);
+		Guards.object<IIpfsBlobStorageConnectorConfig>(
+			this.CLASS_NAME,
+			nameof(options.config),
+			options.config
+		);
+		Guards.stringValue(this.CLASS_NAME, nameof(options.config.apiUrl), options.config.apiUrl);
 
-		this._config = config;
+		this._config = options.config;
 		this._config.apiUrl = StringHelper.trimTrailingSlashes(this._config.apiUrl);
 	}
 
