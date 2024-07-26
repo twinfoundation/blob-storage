@@ -9,7 +9,7 @@ import {
 	type LogEntry,
 	initSchema
 } from "@gtsc/logging-connector-entity-storage";
-import { LoggingConnectorFactory } from "@gtsc/logging-models";
+import { LoggingConnectorFactory, SystemLoggingConnector } from "@gtsc/logging-models";
 import { nameof } from "@gtsc/nameof";
 import { FileBlobStorageConnector } from "../src/fileBlobStorageConnector";
 import type { IFileBlobStorageConnectorConfig } from "../src/models/IFileBlobStorageConnectorConfig";
@@ -32,7 +32,12 @@ describe("FileBlobStorageConnector", () => {
 			entitySchema: nameof<LogEntry>()
 		});
 		EntityStorageConnectorFactory.register("log-entry", () => memoryEntityStorage);
-		LoggingConnectorFactory.register("system-logging", () => new EntityStorageLoggingConnector());
+		LoggingConnectorFactory.register("logging", () => new EntityStorageLoggingConnector());
+		const systemLoggingConnector = new SystemLoggingConnector({
+			loggingConnectorType: "logging",
+			systemPartitionId: TEST_PARTITION_ID
+		});
+		LoggingConnectorFactory.register("system-logging", () => systemLoggingConnector);
 	});
 
 	afterAll(async () => {
@@ -114,7 +119,7 @@ describe("FileBlobStorageConnector", () => {
 				directory: "|\0"
 			}
 		});
-		await blobStorage.bootstrap({ partitionId: TEST_PARTITION_ID });
+		await blobStorage.bootstrap();
 		const logs = memoryEntityStorage.getStore(TEST_PARTITION_ID);
 		expect(logs).toBeDefined();
 		expect(logs?.length).toEqual(2);
@@ -130,7 +135,7 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		});
-		await blobStorage.bootstrap({ partitionId: TEST_PARTITION_ID });
+		await blobStorage.bootstrap();
 		const logs = memoryEntityStorage.getStore(TEST_PARTITION_ID);
 		expect(logs).toBeDefined();
 		expect(logs?.length).toEqual(2);
@@ -146,7 +151,7 @@ describe("FileBlobStorageConnector", () => {
 				directory: TEST_DIRECTORY
 			}
 		});
-		await blobStorage.bootstrap({ partitionId: TEST_PARTITION_ID });
+		await blobStorage.bootstrap();
 		const logs = memoryEntityStorage.getStore(TEST_PARTITION_ID);
 		expect(logs).toBeDefined();
 		expect(logs?.length).toEqual(1);
