@@ -3,11 +3,10 @@
 import { access, mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
-import { BaseError, Converter, FilenameHelper, GeneralError, Guards, Urn } from "@gtsc/core";
+import { BaseError, Converter, GeneralError, Guards, Urn } from "@gtsc/core";
 import { Sha256 } from "@gtsc/crypto";
 import { LoggingConnectorFactory } from "@gtsc/logging-models";
 import { nameof } from "@gtsc/nameof";
-import type { IServiceRequestContext } from "@gtsc/services";
 import type { IFileBlobStorageConnectorConfig } from "./models/IFileBlobStorageConnectorConfig";
 
 /**
@@ -106,23 +105,19 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Set the blob.
 	 * @param blob The data for the blob.
-	 * @param requestContext The context for the request.
 	 * @returns The id of the stored blob in urn format.
 	 */
-	public async set(blob: Uint8Array, requestContext?: IServiceRequestContext): Promise<string> {
+	public async set(blob: Uint8Array): Promise<string> {
 		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
-		Guards.stringValue(
-			this.CLASS_NAME,
-			nameof(requestContext?.partitionId),
-			requestContext?.partitionId
-		);
 
 		try {
-			const partitionPath = await this.createPartitionPath(requestContext.partitionId, true);
+			if (!(await this.dirExists(this._directory))) {
+				await mkdir(this._directory);
+			}
 
 			const id = Converter.bytesToHex(Sha256.sum256(blob));
 
-			const fullPath = path.join(partitionPath, `${id}${this._extension}`);
+			const fullPath = path.join(this._directory, `${id}${this._extension}`);
 
 			await writeFile(fullPath, blob);
 
@@ -135,19 +130,10 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Get the blob.
 	 * @param id The id of the blob to get in urn format.
-	 * @param requestContext The context for the request.
 	 * @returns The data for the blob if it can be found or undefined.
 	 */
-	public async get(
-		id: string,
-		requestContext?: IServiceRequestContext
-	): Promise<Uint8Array | undefined> {
+	public async get(id: string): Promise<Uint8Array | undefined> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
-		Guards.stringValue(
-			this.CLASS_NAME,
-			nameof(requestContext?.partitionId),
-			requestContext?.partitionId
-		);
 
 		const urnParsed = Urn.fromValidString(id);
 
@@ -159,10 +145,8 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 		}
 
 		try {
-			const partitionPath = await this.createPartitionPath(requestContext.partitionId, false);
-
 			const fullPath = path.join(
-				partitionPath,
+				this._directory,
 				`${urnParsed.namespaceSpecific(1)}${this._extension}`
 			);
 
@@ -178,16 +162,10 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Remove the blob.
 	 * @param id The id of the blob to remove in urn format.
-	 * @param requestContext The context for the request.
 	 * @returns True if the blob was found.
 	 */
-	public async remove(id: string, requestContext?: IServiceRequestContext): Promise<boolean> {
+	public async remove(id: string): Promise<boolean> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
-		Guards.stringValue(
-			this.CLASS_NAME,
-			nameof(requestContext?.partitionId),
-			requestContext?.partitionId
-		);
 
 		const urnParsed = Urn.fromValidString(id);
 
@@ -199,10 +177,8 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 		}
 
 		try {
-			const partitionPath = await this.createPartitionPath(requestContext.partitionId, false);
-
 			const fullPath = path.join(
-				partitionPath,
+				this._directory,
 				`${urnParsed.namespaceSpecific(1)}${this._extension}`
 			);
 
@@ -215,21 +191,6 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 			}
 			throw new GeneralError(this.CLASS_NAME, "removeBlobFailed", { id }, err);
 		}
-	}
-
-	/**
-	 * Create the path and folder for partition.
-	 * @param create Create the partition path if it doesn't exist.
-	 * @returns The path with partition included.
-	 * @internal
-	 */
-	private async createPartitionPath(partitionId: string, create: boolean): Promise<string> {
-		const partitionPath = path.join(this._directory, FilenameHelper.safeFilename(partitionId));
-		if (create && !(await this.dirExists(partitionPath))) {
-			await mkdir(partitionPath);
-		}
-
-		return partitionPath;
 	}
 
 	/**

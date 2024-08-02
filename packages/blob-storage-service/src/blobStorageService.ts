@@ -7,7 +7,6 @@ import {
 } from "@gtsc/blob-storage-models";
 import { GeneralError, Guards, Is, NotFoundError, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import type { IServiceRequestContext } from "@gtsc/services";
 import type { IBlobStorageServiceConfig } from "./models/IBlobStorageServiceConfig";
 
 /**
@@ -48,15 +47,13 @@ export class BlobStorageService implements IBlobStorage {
 	 * @param blob The data for the blob.
 	 * @param options Additional options for the blob.
 	 * @param options.namespace The namespace to use for storing, defaults to service configured namespace.
-	 * @param requestContext The context for the request.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async set(
 		blob: Uint8Array,
 		options?: {
 			namespace?: string;
-		},
-		requestContext?: IServiceRequestContext
+		}
 	): Promise<string> {
 		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
 
@@ -66,7 +63,7 @@ export class BlobStorageService implements IBlobStorage {
 			const blobStorageConnector =
 				BlobStorageConnectorFactory.get<IBlobStorageConnector>(connectorNamespace);
 
-			return blobStorageConnector.set(blob, requestContext);
+			return blobStorageConnector.set(blob);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "setFailed", undefined, error);
 		}
@@ -75,17 +72,16 @@ export class BlobStorageService implements IBlobStorage {
 	/**
 	 * Get the blob.
 	 * @param id The id of the blob to get in urn format.
-	 * @param requestContext The context for the request.
 	 * @returns The data for the blob if it can be found.
 	 * @throws Not found error if the blob cannot be found.
 	 */
-	public async get(id: string, requestContext?: IServiceRequestContext): Promise<Uint8Array> {
+	public async get(id: string): Promise<Uint8Array> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		try {
 			const blobStorageConnector = this.getConnector(id);
 
-			const blob = await blobStorageConnector.get(id, requestContext);
+			const blob = await blobStorageConnector.get(id);
 			if (Is.undefined(blob)) {
 				throw new NotFoundError(this.CLASS_NAME, "blobNotFound", id);
 			}
@@ -99,16 +95,15 @@ export class BlobStorageService implements IBlobStorage {
 	/**
 	 * Remove the blob.
 	 * @param id The id of the blob to remove in urn format.
-	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
-	public async remove(id: string, requestContext?: IServiceRequestContext): Promise<void> {
+	public async remove(id: string): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		try {
 			const blobStorageConnector = this.getConnector(id);
 
-			const removed = await blobStorageConnector.remove(id, requestContext);
+			const removed = await blobStorageConnector.remove(id);
 
 			if (!removed) {
 				throw new NotFoundError(this.CLASS_NAME, "blobNotFound", id);

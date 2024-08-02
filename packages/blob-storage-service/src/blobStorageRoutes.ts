@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type {
 	ICreatedResponse,
+	IHttpRequestContext,
 	INoContentResponse,
 	INotFoundResponse,
 	IRestRoute,
@@ -16,7 +17,7 @@ import type {
 } from "@gtsc/blob-storage-models";
 import { Converter, Guards } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import { ServiceFactory, type IServiceRequestContext } from "@gtsc/services";
+import { ServiceFactory } from "@gtsc/services";
 import { HttpStatusCode } from "@gtsc/web";
 
 /**
@@ -50,8 +51,8 @@ export function generateRestRoutesBlobStorage(
 		tag: tagsBlobStorage[0].name,
 		method: "POST",
 		path: `${baseRouteName}/`,
-		handler: async (requestContext, request) =>
-			blobStorageSet(requestContext, factoryServiceName, request),
+		handler: async (httpRequestContext, request) =>
+			blobStorageSet(httpRequestContext, factoryServiceName, request),
 		requestType: {
 			type: nameof<IBlobStorageSetRequest>(),
 			examples: [
@@ -90,8 +91,8 @@ export function generateRestRoutesBlobStorage(
 		tag: tagsBlobStorage[0].name,
 		method: "GET",
 		path: `${baseRouteName}/:id`,
-		handler: async (requestContext, request) =>
-			blobStorageGet(requestContext, factoryServiceName, request),
+		handler: async (httpRequestContext, request) =>
+			blobStorageGet(httpRequestContext, factoryServiceName, request),
 		requestType: {
 			type: nameof<IBlobStorageGetRequest>(),
 			examples: [
@@ -131,8 +132,8 @@ export function generateRestRoutesBlobStorage(
 		tag: tagsBlobStorage[0].name,
 		method: "DELETE",
 		path: `${baseRouteName}/:id`,
-		handler: async (requestContext, request) =>
-			blobStorageRemove(requestContext, factoryServiceName, request),
+		handler: async (httpRequestContext, request) =>
+			blobStorageRemove(httpRequestContext, factoryServiceName, request),
 		requestType: {
 			type: nameof<IBlobStorageRemoveRequest>(),
 			examples: [
@@ -161,13 +162,13 @@ export function generateRestRoutesBlobStorage(
 
 /**
  * Set a blob in storage.
- * @param requestContext The request context for the API.
+ * @param httpRequestContext The request context for the API.
  * @param factoryServiceName The name of the service to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function blobStorageSet(
-	requestContext: IServiceRequestContext,
+	httpRequestContext: IHttpRequestContext,
 	factoryServiceName: string,
 	request: IBlobStorageSetRequest
 ): Promise<ICreatedResponse> {
@@ -176,13 +177,9 @@ export async function blobStorageSet(
 	Guards.stringBase64(ROUTES_SOURCE, nameof(request.body.blob), request.body.blob);
 
 	const service = ServiceFactory.get<IBlobStorage>(factoryServiceName);
-	const id = await service.set(
-		Converter.base64ToBytes(request.body.blob),
-		{
-			namespace: request.body.namespace
-		},
-		requestContext
-	);
+	const id = await service.set(Converter.base64ToBytes(request.body.blob), {
+		namespace: request.body.namespace
+	});
 
 	return {
 		statusCode: HttpStatusCode.created,
@@ -194,13 +191,13 @@ export async function blobStorageSet(
 
 /**
  * Get the blob from storage.
- * @param requestContext The request context for the API.
+ * @param httpRequestContext The request context for the API.
  * @param serviceName The name of the service to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function blobStorageGet(
-	requestContext: IServiceRequestContext,
+	httpRequestContext: IHttpRequestContext,
 	serviceName: string,
 	request: IBlobStorageGetRequest
 ): Promise<IBlobStorageGetResponse> {
@@ -214,7 +211,7 @@ export async function blobStorageGet(
 
 	const service = ServiceFactory.get<IBlobStorage>(serviceName);
 
-	const result = await service.get(request.pathParams.id, requestContext);
+	const result = await service.get(request.pathParams.id);
 
 	return {
 		body: {
@@ -225,13 +222,13 @@ export async function blobStorageGet(
 
 /**
  * Remove the blob from storage.
- * @param requestContext The request context for the API.
+ * @param httpRequestContext The request context for the API.
  * @param serviceName The name of the service to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function blobStorageRemove(
-	requestContext: IServiceRequestContext,
+	httpRequestContext: IHttpRequestContext,
 	serviceName: string,
 	request: IBlobStorageRemoveRequest
 ): Promise<INoContentResponse> {
@@ -245,7 +242,7 @@ export async function blobStorageRemove(
 
 	const service = ServiceFactory.get<IBlobStorage>(serviceName);
 
-	await service.remove(request.pathParams.id, requestContext);
+	await service.remove(request.pathParams.id);
 
 	return {
 		statusCode: HttpStatusCode.noContent

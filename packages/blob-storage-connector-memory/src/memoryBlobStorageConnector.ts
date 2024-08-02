@@ -4,7 +4,6 @@ import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
 import { Converter, GeneralError, Guards, Urn } from "@gtsc/core";
 import { Sha256 } from "@gtsc/crypto";
 import { nameof } from "@gtsc/nameof";
-import type { IServiceRequestContext } from "@gtsc/services";
 
 /**
  * Class for performing blob storage operations in-memory.
@@ -24,7 +23,7 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 	 * The storage for the in-memory items.
 	 * @internal
 	 */
-	private readonly _store: { [partitionId: string]: { [id: string]: Uint8Array } };
+	private readonly _store: { [id: string]: Uint8Array };
 
 	/**
 	 * Create a new instance of MemoryBlobStorageConnector.
@@ -36,21 +35,14 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Set the blob.
 	 * @param blob The data for the blob.
-	 * @param requestContext The context for the request.
 	 * @returns The id of the stored blob in urn format.
 	 */
-	public async set(blob: Uint8Array, requestContext?: IServiceRequestContext): Promise<string> {
+	public async set(blob: Uint8Array): Promise<string> {
 		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
-		Guards.stringValue(
-			this.CLASS_NAME,
-			nameof(requestContext?.partitionId),
-			requestContext?.partitionId
-		);
 
 		const id = Converter.bytesToHex(Sha256.sum256(blob));
 
-		this._store[requestContext.partitionId] ??= {};
-		this._store[requestContext.partitionId][id] = blob;
+		this._store[id] = blob;
 
 		return `blob:${new Urn(MemoryBlobStorageConnector.NAMESPACE, id).toString()}`;
 	}
@@ -58,19 +50,10 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Get the blob.
 	 * @param id The id of the blob to get in urn format.
-	 * @param requestContext The context for the request.
 	 * @returns The data for the blob if it can be found or undefined.
 	 */
-	public async get(
-		id: string,
-		requestContext?: IServiceRequestContext
-	): Promise<Uint8Array | undefined> {
+	public async get(id: string): Promise<Uint8Array | undefined> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
-		Guards.stringValue(
-			this.CLASS_NAME,
-			nameof(requestContext?.partitionId),
-			requestContext?.partitionId
-		);
 
 		const urnParsed = Urn.fromValidString(id);
 
@@ -81,22 +64,16 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 			});
 		}
 
-		return this._store[requestContext?.partitionId]?.[urnParsed.namespaceSpecific(1)];
+		return this._store[urnParsed.namespaceSpecific(1)];
 	}
 
 	/**
 	 * Remove the blob.
 	 * @param id The id of the blob to remove in urn format.
-	 * @param requestContext The context for the request.
 	 * @returns True if the blob was found.
 	 */
-	public async remove(id: string, requestContext?: IServiceRequestContext): Promise<boolean> {
+	public async remove(id: string): Promise<boolean> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
-		Guards.stringValue(
-			this.CLASS_NAME,
-			nameof(requestContext?.partitionId),
-			requestContext?.partitionId
-		);
 
 		const urnParsed = Urn.fromValidString(id);
 
@@ -108,19 +85,18 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 		}
 
 		const namespaceId = urnParsed.namespaceSpecific(1);
-		if (this._store[requestContext.partitionId]?.[namespaceId]) {
-			delete this._store[requestContext.partitionId][namespaceId];
+		if (this._store[namespaceId]) {
+			delete this._store[namespaceId];
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Get the memory store for the specified partition.
-	 * @param partitionId The partition id.
+	 * Get the memory store.
 	 * @returns The store.
 	 */
-	public getStore(partitionId: string): { [id: string]: Uint8Array } | undefined {
-		return this._store[partitionId];
+	public getStore(): { [id: string]: Uint8Array } | undefined {
+		return this._store;
 	}
 }

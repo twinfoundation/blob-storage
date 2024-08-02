@@ -3,7 +3,6 @@
 import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
 import { GeneralError, Guards, StringHelper, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import type { IServiceRequestContext } from "@gtsc/services";
 import type { IIpfsBlobStorageConnectorConfig } from "./models/IIpfsBlobStorageConnectorConfig";
 
 /**
@@ -48,10 +47,9 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Set the blob.
 	 * @param blob The data for the blob.
-	 * @param requestContext The context for the request.
 	 * @returns The id of the stored blob in urn format.
 	 */
-	public async set(blob: Uint8Array, requestContext?: IServiceRequestContext): Promise<string> {
+	public async set(blob: Uint8Array): Promise<string> {
 		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
 
 		try {
@@ -97,13 +95,9 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Get the blob.
 	 * @param id The id of the blob to get in urn format.
-	 * @param requestContext The context for the request.
 	 * @returns The data for the blob if it can be found or undefined.
 	 */
-	public async get(
-		id: string,
-		requestContext?: IServiceRequestContext
-	): Promise<Uint8Array | undefined> {
+	public async get(id: string): Promise<Uint8Array | undefined> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		const urnParsed = Urn.fromValidString(id);
 
@@ -148,10 +142,9 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Remove the blob.
 	 * @param id The id of the blob to remove in urn format.
-	 * @param requestContext The context for the request.
 	 * @returns True if the blob was found.
 	 */
-	public async remove(id: string, requestContext?: IServiceRequestContext): Promise<boolean> {
+	public async remove(id: string): Promise<boolean> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		const urnParsed = Urn.fromValidString(id);
 

@@ -3,8 +3,6 @@
 import { I18n, Urn } from "@gtsc/core";
 import { MemoryBlobStorageConnector } from "../src/memoryBlobStorageConnector";
 
-const TEST_PARTITION_ID = "test-partition";
-
 describe("MemoryBlobStorageConnector", () => {
 	beforeAll(async () => {
 		I18n.addDictionary("en", await import("../locales/en.json"));
@@ -27,28 +25,14 @@ describe("MemoryBlobStorageConnector", () => {
 		});
 	});
 
-	test("can fail to set an item with no partition id", async () => {
-		const blobStorage = new MemoryBlobStorageConnector();
-		await expect(blobStorage.set(new Uint8Array())).rejects.toMatchObject({
-			name: "GuardError",
-			message: "guard.string",
-			properties: {
-				property: "requestContext.partitionId",
-				value: "undefined"
-			}
-		});
-	});
-
 	test("can set an item", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]), {
-			partitionId: TEST_PARTITION_ID
-		});
+		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]));
 		expect(idUrn).toBeDefined();
 
 		const urn = Urn.fromValidString(idUrn);
 		const id = urn.namespaceSpecific(1);
-		const store = blobStorage.getStore(TEST_PARTITION_ID);
+		const store = blobStorage.getStore();
 		expect(store).toBeDefined();
 		expect(store?.[id]).toBeDefined();
 		expect(store?.[id]?.length).toEqual(3);
@@ -59,9 +43,7 @@ describe("MemoryBlobStorageConnector", () => {
 
 	test("can fail to get an item with no id", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		await expect(
-			blobStorage.get(undefined as unknown as string, { partitionId: TEST_PARTITION_ID })
-		).rejects.toMatchObject({
+		await expect(blobStorage.get(undefined as unknown as string)).rejects.toMatchObject({
 			name: "GuardError",
 			message: "guard.string",
 			properties: {
@@ -71,23 +53,9 @@ describe("MemoryBlobStorageConnector", () => {
 		});
 	});
 
-	test("can fail to get an item with no partition id", async () => {
-		const blobStorage = new MemoryBlobStorageConnector();
-		await expect(blobStorage.get("urn:foo:1234")).rejects.toMatchObject({
-			name: "GuardError",
-			message: "guard.string",
-			properties: {
-				property: "requestContext.partitionId",
-				value: "undefined"
-			}
-		});
-	});
-
 	test("can fail to get an item with mismatched urn namespace", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		await expect(
-			blobStorage.get("urn:foo:1234", { partitionId: TEST_PARTITION_ID })
-		).rejects.toMatchObject({
+		await expect(blobStorage.get("urn:foo:1234")).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "memoryBlobStorageConnector.namespaceMismatch",
 			properties: {
@@ -99,20 +67,16 @@ describe("MemoryBlobStorageConnector", () => {
 
 	test("can not get an item", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]), {
-			partitionId: TEST_PARTITION_ID
-		});
-		const item = await blobStorage.get(`${idUrn}-2`, { partitionId: TEST_PARTITION_ID });
+		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]));
+		const item = await blobStorage.get(`${idUrn}-2`);
 
 		expect(item).toBeUndefined();
 	});
 
 	test("can get an item", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]), {
-			partitionId: TEST_PARTITION_ID
-		});
-		const item = await blobStorage.get(idUrn, { partitionId: TEST_PARTITION_ID });
+		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]));
+		const item = await blobStorage.get(idUrn);
 
 		expect(item).toBeDefined();
 		expect(item?.length).toEqual(3);
@@ -133,23 +97,9 @@ describe("MemoryBlobStorageConnector", () => {
 		});
 	});
 
-	test("can fail to remove an item with no partition id", async () => {
-		const blobStorage = new MemoryBlobStorageConnector();
-		await expect(blobStorage.remove("urn:foo:1234")).rejects.toMatchObject({
-			name: "GuardError",
-			message: "guard.string",
-			properties: {
-				property: "requestContext.partitionId",
-				value: "undefined"
-			}
-		});
-	});
-
 	test("can fail to remove an item with mismatched urn namespace", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		await expect(
-			blobStorage.remove("urn:foo:1234", { partitionId: TEST_PARTITION_ID })
-		).rejects.toMatchObject({
+		await expect(blobStorage.remove("urn:foo:1234")).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "memoryBlobStorageConnector.namespaceMismatch",
 			properties: {
@@ -161,30 +111,26 @@ describe("MemoryBlobStorageConnector", () => {
 
 	test("can not remove an item", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]), {
-			partitionId: TEST_PARTITION_ID
-		});
+		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]));
 		const urn = Urn.fromValidString(idUrn);
 		const id = urn.namespaceSpecific(1);
 
-		await blobStorage.remove(`${idUrn}-2`, { partitionId: TEST_PARTITION_ID });
+		await blobStorage.remove(`${idUrn}-2`);
 
-		const store = blobStorage.getStore(TEST_PARTITION_ID);
+		const store = blobStorage.getStore();
 		expect(store).toBeDefined();
 		expect(store?.[id]).toBeDefined();
 	});
 
 	test("can remove an item", async () => {
 		const blobStorage = new MemoryBlobStorageConnector();
-		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]), {
-			partitionId: TEST_PARTITION_ID
-		});
+		const idUrn = await blobStorage.set(new Uint8Array([1, 2, 3]));
 		const urn = Urn.fromValidString(idUrn);
 		const id = urn.namespaceSpecific(1);
 
-		await blobStorage.remove(idUrn, { partitionId: TEST_PARTITION_ID });
+		await blobStorage.remove(idUrn);
 
-		const store = blobStorage.getStore(TEST_PARTITION_ID);
+		const store = blobStorage.getStore();
 		expect(store).toBeDefined();
 		expect(store?.[id]).toBeUndefined();
 	});
