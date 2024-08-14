@@ -1,6 +1,6 @@
 # Function: blobStorageGetContent()
 
-> **blobStorageGetContent**(`httpRequestContext`, `serviceName`, `request`): `Promise`\<`IBlobStorageGetContentResponse` & `IRestRouteResponseOptions`\>
+> **blobStorageGetContent**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`IBlobStorageGetContentResponse` & `IRestRouteResponseOptions`\>
 
 Get the blob from storage.
 
@@ -10,9 +10,9 @@ Get the blob from storage.
 
 The request context for the API.
 
-• **serviceName**: `string`
+• **componentName**: `string`
 
-The name of the service to use in the routes.
+The name of the component to use in the routes.
 
 • **request**: `IBlobStorageGetContentRequest`
 

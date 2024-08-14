@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	BlobStorageConnectorFactory,
-	type IBlobStorage,
+	type IBlobStorageComponent,
 	type IBlobStorageConnector
 } from "@gtsc/blob-storage-models";
 import {
@@ -32,7 +32,7 @@ import type { IBlobStorageServiceConfig } from "./models/IBlobStorageServiceConf
 /**
  * Service for performing blob storage operations to a connector.
  */
-export class BlobStorageService implements IBlobStorage {
+export class BlobStorageService implements IBlobStorageComponent {
 	/**
 	 * The namespace supported by the blob storage service.
 	 */
@@ -100,8 +100,8 @@ export class BlobStorageService implements IBlobStorage {
 	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
 	 * @param metadata Metadata to associate with the blob.
-	 * @param options Additional options for the blob service.
-	 * @param options.namespace The namespace to use for storing, defaults to service configured namespace.
+	 * @param options Additional options for the blob component.
+	 * @param options.namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async create(

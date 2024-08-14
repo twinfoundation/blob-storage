@@ -5,7 +5,7 @@ import { nameof } from "@gtsc/nameof";
 import { BlobMetadata } from "./entities/blobMetadata";
 
 /**
- * Initialize the schema for the blob storage service.
+ * Initialize the schema for the blob storage entities.
  */
 export function initSchema(): void {
 	EntitySchemaFactory.register(nameof<BlobMetadata>(), () =>

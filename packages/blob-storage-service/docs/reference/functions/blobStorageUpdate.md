@@ -1,6 +1,6 @@
 # Function: blobStorageUpdate()
 
-> **blobStorageUpdate**(`httpRequestContext`, `serviceName`, `request`): `Promise`\<`INoContentResponse`\>
+> **blobStorageUpdate**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`INoContentResponse`\>
 
 Update the blob storage metadata.
 
@@ -10,9 +10,9 @@ Update the blob storage metadata.
 
 The request context for the API.
 
-• **serviceName**: `string`
+• **componentName**: `string`
 
-The name of the service to use in the routes.
+The name of the component to use in the routes.
 
 • **request**: `IBlobStorageUpdateRequest`
 

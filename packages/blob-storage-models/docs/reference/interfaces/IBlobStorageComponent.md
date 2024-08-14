@@ -1,10 +1,10 @@
-# Interface: IBlobStorage
+# Interface: IBlobStorageComponent
 
-Interface describing an blob storage service.
+Interface describing an blob storage component.
 
 ## Extends
 
-- `IService`
+- `IComponent`
 
 ## Properties
 
@@ -12,11 +12,11 @@ Interface describing an blob storage service.
 
 > `readonly` **CLASS\_NAME**: `string`
 
-The name of the service.
+The name of the component.
 
 #### Inherited from
 
-`IService.CLASS_NAME`
+`IComponent.CLASS_NAME`
 
 ## Methods
 
@@ -24,7 +24,7 @@ The name of the service.
 
 > `optional` **bootstrap**(`nodeLoggingConnectorType`?): `Promise`\<`boolean`\>
 
-Bootstrap the service by creating and initializing any resources it needs.
+Bootstrap the component by creating and initializing any resources it needs.
 
 #### Parameters
 
@@ -40,7 +40,7 @@ True if the bootstrapping process was successful.
 
 #### Inherited from
 
-`IService.bootstrap`
+`IComponent.bootstrap`
 
 ***
 
@@ -48,13 +48,13 @@ True if the bootstrapping process was successful.
 
 > `optional` **start**(`nodeIdentity`, `nodeLoggingConnectorType`?): `Promise`\<`void`\>
 
-The service needs to be started when the node is initialized.
+The component needs to be started when the node is initialized.
 
 #### Parameters
 
 • **nodeIdentity**: `string`
 
-The identity of the node starting the service.
+The identity of the node starting the component.
 
 • **nodeLoggingConnectorType?**: `string`
 
@@ -68,7 +68,7 @@ Nothing.
 
 #### Inherited from
 
-`IService.start`
+`IComponent.start`
 
 ***
 
@@ -76,13 +76,13 @@ Nothing.
 
 > `optional` **stop**(`nodeIdentity`, `nodeLoggingConnectorType`?): `Promise`\<`void`\>
 
-The service needs to be stopped when the node is closed.
+The component needs to be stopped when the node is closed.
 
 #### Parameters
 
 • **nodeIdentity**: `string`
 
-The identity of the node stopping the service.
+The identity of the node stopping the component.
 
 • **nodeLoggingConnectorType?**: `string`
 
@@ -96,7 +96,7 @@ Nothing.
 
 #### Inherited from
 
-`IService.stop`
+`IComponent.stop`
 
 ***
 
@@ -118,11 +118,11 @@ Metadata to associate with the blob.
 
 • **options?**
 
-Additional options for the blob service.
+Additional options for the blob component.
 
 • **options.namespace?**: `string`
 
-The namespace to use for storing, defaults to service configured namespace.
+The namespace to use for storing, defaults to component configured namespace.
 
 #### Returns
 

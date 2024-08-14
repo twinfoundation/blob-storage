@@ -2,7 +2,7 @@
 
 > **initSchema**(): `void`
 
-Initialize the schema for the blob storage service.
+Initialize the schema for the blob storage entities.
 
 ## Returns
 

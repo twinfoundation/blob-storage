@@ -3,11 +3,11 @@
 import { BaseRestClient } from "@gtsc/api-core";
 import type { IBaseRestClientConfig, ICreatedResponse, INoContentResponse } from "@gtsc/api-models";
 import type {
-	IBlobStorage,
+	IBlobStorageComponent,
+	IBlobStorageCreateRequest,
 	IBlobStorageGetRequest,
 	IBlobStorageGetResponse,
 	IBlobStorageRemoveRequest,
-	IBlobStorageCreateRequest,
 	IBlobStorageUpdateRequest
 } from "@gtsc/blob-storage-models";
 import { Converter, Guards, Is, StringHelper, Urn } from "@gtsc/core";
@@ -17,7 +17,7 @@ import type { IProperty } from "@gtsc/schema";
 /**
  * Client for performing blob storage through to REST endpoints.
  */
-export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
+export class BlobStorageClient extends BaseRestClient implements IBlobStorageComponent {
 	/**
 	 * Runtime name for the class.
 	 * @internal
@@ -34,15 +34,19 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
-		super(BlobStorageClient._CLASS_NAME, config, StringHelper.kebabCase(nameof<IBlobStorage>()));
+		super(
+			BlobStorageClient._CLASS_NAME,
+			config,
+			StringHelper.kebabCase(nameof<IBlobStorageComponent>())
+		);
 	}
 
 	/**
 	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
 	 * @param metadata Metadata to associate with the blob.
-	 * @param options Additional options for the blob service.
-	 * @param options.namespace The namespace to use for storing, defaults to service configured namespace.
+	 * @param options Additional options for the blob component.
+	 * @param options.namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async create(

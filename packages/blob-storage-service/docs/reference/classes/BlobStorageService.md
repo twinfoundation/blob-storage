@@ -4,7 +4,7 @@ Service for performing blob storage operations to a connector.
 
 ## Implements
 
-- `IBlobStorage`
+- `IBlobStorageComponent`
 
 ## Constructors
 
@@ -54,7 +54,7 @@ Runtime name for the class.
 
 #### Implementation of
 
-`IBlobStorage.CLASS_NAME`
+`IBlobStorageComponent.CLASS_NAME`
 
 ## Methods
 
@@ -76,11 +76,11 @@ Metadata to associate with the blob.
 
 • **options?**
 
-Additional options for the blob service.
+Additional options for the blob component.
 
 • **options.namespace?**: `string`
 
-The namespace to use for storing, defaults to service configured namespace.
+The namespace to use for storing, defaults to component configured namespace.
 
 #### Returns
 
@@ -90,7 +90,7 @@ The id of the stored blob in urn format.
 
 #### Implementation of
 
-`IBlobStorage.create`
+`IBlobStorageComponent.create`
 
 ***
 
@@ -126,7 +126,7 @@ The metadata and data for the blob if it can be found.
 
 #### Implementation of
 
-`IBlobStorage.get`
+`IBlobStorageComponent.get`
 
 #### Throws
 
@@ -158,7 +158,7 @@ Nothing.
 
 #### Implementation of
 
-`IBlobStorage.update`
+`IBlobStorageComponent.update`
 
 #### Throws
 
@@ -186,4 +186,4 @@ Nothing.
 
 #### Implementation of
 
-`IBlobStorage.remove`
+`IBlobStorageComponent.remove`

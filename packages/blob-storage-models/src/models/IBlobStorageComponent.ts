@@ -1,18 +1,18 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IComponent } from "@gtsc/core";
 import type { IProperty } from "@gtsc/schema";
-import type { IService } from "@gtsc/services";
 
 /**
- * Interface describing an blob storage service.
+ * Interface describing an blob storage component.
  */
-export interface IBlobStorage extends IService {
+export interface IBlobStorageComponent extends IComponent {
 	/**
 	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
 	 * @param metadata Metadata to associate with the blob.
-	 * @param options Additional options for the blob service.
-	 * @param options.namespace The namespace to use for storing, defaults to service configured namespace.
+	 * @param options Additional options for the blob component.
+	 * @param options.namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	create(

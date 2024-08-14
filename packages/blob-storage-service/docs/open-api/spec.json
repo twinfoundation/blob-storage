@@ -701,7 +701,7 @@
                     },
                     "namespace": {
                         "type": "string",
-                        "description": "The namespace to store the data in, defaults to service configured namespace."
+                        "description": "The namespace to store the data in, defaults to component configured namespace."
                     }
                 },
                 "required": [

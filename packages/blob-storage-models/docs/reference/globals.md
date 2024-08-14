@@ -2,7 +2,7 @@
 
 ## Interfaces
 
-- [IBlobStorage](interfaces/IBlobStorage.md)
+- [IBlobStorageComponent](interfaces/IBlobStorageComponent.md)
 - [IBlobStorageConnector](interfaces/IBlobStorageConnector.md)
 - [IBlobStorageCreateRequest](interfaces/IBlobStorageCreateRequest.md)
 - [IBlobStorageGetContentRequest](interfaces/IBlobStorageGetContentRequest.md)

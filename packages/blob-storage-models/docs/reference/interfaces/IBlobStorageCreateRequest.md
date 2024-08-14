@@ -26,4 +26,4 @@ Metadata to associate with the blob.
 
 > `optional` **namespace**: `string`
 
-The namespace to store the data in, defaults to service configured namespace.
+The namespace to store the data in, defaults to component configured namespace.

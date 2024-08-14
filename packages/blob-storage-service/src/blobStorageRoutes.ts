@@ -10,19 +10,18 @@ import type {
 	ITag
 } from "@gtsc/api-models";
 import type {
-	IBlobStorage,
-	IBlobStorageGetRequest,
+	IBlobStorageComponent,
+	IBlobStorageCreateRequest,
 	IBlobStorageGetContentRequest,
+	IBlobStorageGetContentResponse,
+	IBlobStorageGetRequest,
 	IBlobStorageGetResponse,
 	IBlobStorageRemoveRequest,
-	IBlobStorageCreateRequest,
-	IBlobStorageUpdateRequest,
-	IBlobStorageGetContentResponse
+	IBlobStorageUpdateRequest
 } from "@gtsc/blob-storage-models";
-import { Converter, Guards, Is } from "@gtsc/core";
+import { ComponentFactory, Converter, Guards, Is } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import { PropertyHelper } from "@gtsc/schema";
-import { ServiceFactory } from "@gtsc/services";
 import { HttpStatusCode } from "@gtsc/web";
 
 /**
@@ -43,12 +42,12 @@ export const tagsBlobStorage: ITag[] = [
 /**
  * The REST routes for blob storage.
  * @param baseRouteName Prefix to prepend to the paths.
- * @param factoryServiceName The name of the service to use in the routes store in the ServiceFactory.
+ * @param componentName The name of the component to use in the routes stored in the ComponentFactory.
  * @returns The generated routes.
  */
 export function generateRestRoutesBlobStorage(
 	baseRouteName: string,
-	factoryServiceName: string
+	componentName: string
 ): IRestRoute[] {
 	const blobStorageCreateRoute: IRestRoute<IBlobStorageCreateRequest, ICreatedResponse> = {
 		operationId: "blobStorageCreate",
@@ -57,7 +56,7 @@ export function generateRestRoutesBlobStorage(
 		method: "POST",
 		path: `${baseRouteName}/`,
 		handler: async (httpRequestContext, request) =>
-			blobStorageCreate(httpRequestContext, factoryServiceName, request),
+			blobStorageCreate(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<IBlobStorageCreateRequest>(),
 			examples: [
@@ -104,7 +103,7 @@ export function generateRestRoutesBlobStorage(
 		method: "GET",
 		path: `${baseRouteName}/:id`,
 		handler: async (httpRequestContext, request) =>
-			blobStorageGet(httpRequestContext, factoryServiceName, request),
+			blobStorageGet(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<IBlobStorageGetRequest>(),
 			examples: [
@@ -158,7 +157,7 @@ export function generateRestRoutesBlobStorage(
 		method: "GET",
 		path: `${baseRouteName}/:id/content`,
 		handler: async (httpRequestContext, request) =>
-			blobStorageGetContent(httpRequestContext, factoryServiceName, request),
+			blobStorageGetContent(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<IBlobStorageGetRequest>(),
 			examples: [
@@ -197,7 +196,7 @@ export function generateRestRoutesBlobStorage(
 		method: "PUT",
 		path: `${baseRouteName}/:id`,
 		handler: async (httpRequestContext, request) =>
-			blobStorageUpdate(httpRequestContext, factoryServiceName, request),
+			blobStorageUpdate(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<IBlobStorageUpdateRequest>(),
 			examples: [
@@ -234,7 +233,7 @@ export function generateRestRoutesBlobStorage(
 		method: "DELETE",
 		path: `${baseRouteName}/:id`,
 		handler: async (httpRequestContext, request) =>
-			blobStorageRemove(httpRequestContext, factoryServiceName, request),
+			blobStorageRemove(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<IBlobStorageRemoveRequest>(),
 			examples: [
@@ -270,13 +269,13 @@ export function generateRestRoutesBlobStorage(
 /**
  * Create a blob in storage.
  * @param httpRequestContext The request context for the API.
- * @param factoryServiceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function blobStorageCreate(
 	httpRequestContext: IHttpRequestContext,
-	factoryServiceName: string,
+	componentName: string,
 	request: IBlobStorageCreateRequest
 ): Promise<ICreatedResponse> {
 	Guards.object<IBlobStorageCreateRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -287,8 +286,8 @@ export async function blobStorageCreate(
 	);
 	Guards.stringBase64(ROUTES_SOURCE, nameof(request.body.blob), request.body.blob);
 
-	const service = ServiceFactory.get<IBlobStorage>(factoryServiceName);
-	const id = await service.create(request.body.blob, request.body.metadata, {
+	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
+	const id = await component.create(request.body.blob, request.body.metadata, {
 		namespace: request.body.namespace
 	});
 
@@ -303,13 +302,13 @@ export async function blobStorageCreate(
 /**
  * Get the blob from storage.
  * @param httpRequestContext The request context for the API.
- * @param serviceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function blobStorageGet(
 	httpRequestContext: IHttpRequestContext,
-	serviceName: string,
+	componentName: string,
 	request: IBlobStorageGetRequest
 ): Promise<IBlobStorageGetResponse> {
 	Guards.object<IBlobStorageGetRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -320,9 +319,9 @@ export async function blobStorageGet(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const service = ServiceFactory.get<IBlobStorage>(serviceName);
+	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
-	const result = await service.get(request.pathParams.id, request.query?.includeContent ?? false);
+	const result = await component.get(request.pathParams.id, request.query?.includeContent ?? false);
 
 	return {
 		body: {
@@ -335,13 +334,13 @@ export async function blobStorageGet(
 /**
  * Get the blob from storage.
  * @param httpRequestContext The request context for the API.
- * @param serviceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function blobStorageGetContent(
 	httpRequestContext: IHttpRequestContext,
-	serviceName: string,
+	componentName: string,
 	request: IBlobStorageGetContentRequest
 ): Promise<IBlobStorageGetContentResponse & IRestRouteResponseOptions> {
 	Guards.object<IBlobStorageGetContentRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -352,9 +351,9 @@ export async function blobStorageGetContent(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const service = ServiceFactory.get<IBlobStorage>(serviceName);
+	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
-	const result = await service.get(request.pathParams.id, true);
+	const result = await component.get(request.pathParams.id, true);
 
 	let filename = request.query?.filename;
 	if (!Is.stringValue(filename)) {
@@ -375,13 +374,13 @@ export async function blobStorageGetContent(
 /**
  * Update the blob storage metadata.
  * @param httpRequestContext The request context for the API.
- * @param serviceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function blobStorageUpdate(
 	httpRequestContext: IHttpRequestContext,
-	serviceName: string,
+	componentName: string,
 	request: IBlobStorageUpdateRequest
 ): Promise<INoContentResponse> {
 	Guards.object<IBlobStorageUpdateRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -392,9 +391,9 @@ export async function blobStorageUpdate(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const service = ServiceFactory.get<IBlobStorage>(serviceName);
+	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
-	await service.update(request.pathParams.id, request.body.metadata);
+	await component.update(request.pathParams.id, request.body.metadata);
 
 	return {
 		statusCode: HttpStatusCode.noContent
@@ -404,13 +403,13 @@ export async function blobStorageUpdate(
 /**
  * Remove the blob from storage.
  * @param httpRequestContext The request context for the API.
- * @param serviceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function blobStorageRemove(
 	httpRequestContext: IHttpRequestContext,
-	serviceName: string,
+	componentName: string,
 	request: IBlobStorageRemoveRequest
 ): Promise<INoContentResponse> {
 	Guards.object<IBlobStorageRemoveRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -421,9 +420,9 @@ export async function blobStorageRemove(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const service = ServiceFactory.get<IBlobStorage>(serviceName);
+	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
-	await service.remove(request.pathParams.id);
+	await component.remove(request.pathParams.id);
 
 	return {
 		statusCode: HttpStatusCode.noContent

@@ -1,11 +1,11 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IService } from "@gtsc/services";
+import type { IComponent } from "@gtsc/core";
 
 /**
  * Interface describing an blob storage connector.
  */
-export interface IBlobStorageConnector extends IService {
+export interface IBlobStorageConnector extends IComponent {
 	/**
 	 * Set the blob.
 	 * @param blob The data for the blob.
