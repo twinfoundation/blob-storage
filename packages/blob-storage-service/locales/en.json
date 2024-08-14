@@ -2,8 +2,9 @@
 	"error": {
 		"blobStorageService": {
 			"noConnectors": "There are no connectors registered with the blob storage factory",
-			"setFailed": "There was a problem storing the blob",
+			"createFailed": "There was a problem storing the blob",
 			"getFailed": "There was a problem getting the blob",
+			"updateFailed": "There was a problem updating the blob",
 			"removeFailed": "There was a problem removing the blob",
 			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage service \"{namespace}\""
 		}

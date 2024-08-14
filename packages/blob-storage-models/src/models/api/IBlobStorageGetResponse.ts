@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IProperty } from "@gtsc/schema";
 
 /**
  * Response to get an entry from blob storage.
@@ -10,8 +11,13 @@ export interface IBlobStorageGetResponse {
 	 */
 	body: {
 		/**
-		 * The blob in base64 format.
+		 * Metadata associated with the blob.
 		 */
-		blob: string;
+		metadata: IProperty[];
+
+		/**
+		 * The blob in base64 format, if the includeContent flag was set in the request.
+		 */
+		blob?: string;
 	};
 }

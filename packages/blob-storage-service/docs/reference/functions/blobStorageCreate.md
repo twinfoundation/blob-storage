@@ -1,8 +1,8 @@
-# Function: blobStorageSet()
+# Function: blobStorageCreate()
 
-> **blobStorageSet**(`httpRequestContext`, `factoryServiceName`, `request`): `Promise`\<`ICreatedResponse`\>
+> **blobStorageCreate**(`httpRequestContext`, `factoryServiceName`, `request`): `Promise`\<`ICreatedResponse`\>
 
-Set a blob in storage.
+Create a blob in storage.
 
 ## Parameters
 
@@ -14,7 +14,7 @@ The request context for the API.
 
 The name of the service to use in the routes.
 
-• **request**: `IBlobStorageSetRequest`
+• **request**: `IBlobStorageCreateRequest`
 
 The request.
 

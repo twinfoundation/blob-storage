@@ -1,6 +1,6 @@
-# Interface: IBlobStorageSetRequest
+# Interface: IBlobStorageCreateRequest
 
-Request to set an entry in blob storage.
+Request to create an entry in blob storage.
 
 ## Properties
 
@@ -15,6 +15,12 @@ The body parameters.
 > **blob**: `string`
 
 The data to store in base64 encoding.
+
+#### metadata?
+
+> `optional` **metadata**: `IProperty`[]
+
+Metadata to associate with the blob.
 
 #### namespace?
 

@@ -1,10 +1,11 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IProperty } from "@gtsc/schema";
 
 /**
- * Request to set an entry in blob storage.
+ * Request to create an entry in blob storage.
  */
-export interface IBlobStorageSetRequest {
+export interface IBlobStorageCreateRequest {
 	/**
 	 * The body parameters.
 	 */
@@ -13,6 +14,11 @@ export interface IBlobStorageSetRequest {
 		 * The data to store in base64 encoding.
 		 */
 		blob: string;
+
+		/**
+		 * Metadata to associate with the blob.
+		 */
+		metadata?: IProperty[];
 
 		/**
 		 * The namespace to store the data in, defaults to service configured namespace.

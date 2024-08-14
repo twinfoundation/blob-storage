@@ -100,17 +100,21 @@ Nothing.
 
 ***
 
-### set()
+### create()
 
-> **set**(`blob`, `options`?): `Promise`\<`string`\>
+> **create**(`blob`, `metadata`?, `options`?): `Promise`\<`string`\>
 
-Set the blob.
+Create the blob with some metadata.
 
 #### Parameters
 
-• **blob**: `Uint8Array`
+• **blob**: `string`
 
-The data for the blob.
+The data for the blob in base64 format.
+
+• **metadata?**: `IProperty`[]
+
+Metadata to associate with the blob.
 
 • **options?**
 
@@ -130,9 +134,9 @@ The id of the stored blob in urn format.
 
 ### get()
 
-> **get**(`id`): `Promise`\<`Uint8Array`\>
+> **get**(`id`, `includeContent`): `Promise`\<`object`\>
 
-Get the blob.
+Get the blob and metadata.
 
 #### Parameters
 
@@ -140,11 +144,51 @@ Get the blob.
 
 The id of the blob to get in urn format.
 
+• **includeContent**: `boolean`
+
+Include the content, or just get the metadata.
+
 #### Returns
 
-`Promise`\<`Uint8Array`\>
+`Promise`\<`object`\>
 
-The data for the blob if it can be found.
+The metadata and data for the blob if it can be found.
+
+##### blob?
+
+> `optional` **blob**: `string`
+
+##### metadata
+
+> **metadata**: `IProperty`[]
+
+#### Throws
+
+Not found error if the blob cannot be found.
+
+***
+
+### update()
+
+> **update**(`id`, `metadata`): `Promise`\<`void`\>
+
+Update the blob with metadata.
+
+#### Parameters
+
+• **id**: `string`
+
+The id of the blob metadata to update.
+
+• **metadata**: `IProperty`[]
+
+Metadata to associate with the blob.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
 
 #### Throws
 

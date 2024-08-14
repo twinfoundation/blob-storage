@@ -10,13 +10,25 @@ Service for performing blob storage operations to a connector.
 
 ### new BlobStorageService()
 
-> **new BlobStorageService**(`config`?): [`BlobStorageService`](BlobStorageService.md)
+> **new BlobStorageService**(`options`?): [`BlobStorageService`](BlobStorageService.md)
 
 Create a new instance of BlobStorageService.
 
 #### Parameters
 
-• **config?**: [`IBlobStorageServiceConfig`](../interfaces/IBlobStorageServiceConfig.md)
+• **options?**
+
+The dependencies for the service.
+
+• **options.metadataEntityStorageType?**: `string`
+
+The type of the storage connector for the metadata, defaults to "blob-metadata".
+
+• **options.vaultConnectorType?**: `string`
+
+The type of the vault connector for encryption, if undefined no encryption will be performed.
+
+• **options.config?**: [`IBlobStorageServiceConfig`](../interfaces/IBlobStorageServiceConfig.md)
 
 The configuration for the service.
 
@@ -46,21 +58,25 @@ Runtime name for the class.
 
 ## Methods
 
-### set()
+### create()
 
-> **set**(`blob`, `options`?): `Promise`\<`string`\>
+> **create**(`blob`, `metadata`?, `options`?): `Promise`\<`string`\>
 
-Set the blob.
+Create the blob with some metadata.
 
 #### Parameters
 
-• **blob**: `Uint8Array`
+• **blob**: `string`
 
-The data for the blob.
+The data for the blob in base64 format.
+
+• **metadata?**: `IProperty`[]
+
+Metadata to associate with the blob.
 
 • **options?**
 
-Additional options for the blob.
+Additional options for the blob service.
 
 • **options.namespace?**: `string`
 
@@ -74,15 +90,15 @@ The id of the stored blob in urn format.
 
 #### Implementation of
 
-`IBlobStorage.set`
+`IBlobStorage.create`
 
 ***
 
 ### get()
 
-> **get**(`id`): `Promise`\<`Uint8Array`\>
+> **get**(`id`, `includeContent`): `Promise`\<`object`\>
 
-Get the blob.
+Get the blob and metadata.
 
 #### Parameters
 
@@ -90,15 +106,59 @@ Get the blob.
 
 The id of the blob to get in urn format.
 
+• **includeContent**: `boolean`
+
+Include the content, or just get the metadata.
+
 #### Returns
 
-`Promise`\<`Uint8Array`\>
+`Promise`\<`object`\>
 
-The data for the blob if it can be found.
+The metadata and data for the blob if it can be found.
+
+##### blob?
+
+> `optional` **blob**: `string`
+
+##### metadata
+
+> **metadata**: `IProperty`[]
 
 #### Implementation of
 
 `IBlobStorage.get`
+
+#### Throws
+
+Not found error if the blob cannot be found.
+
+***
+
+### update()
+
+> **update**(`id`, `metadata`): `Promise`\<`void`\>
+
+Update the blob with metadata.
+
+#### Parameters
+
+• **id**: `string`
+
+The id of the blob metadata to update.
+
+• **metadata**: `IProperty`[]
+
+Metadata to associate with the blob.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`IBlobStorage.update`
 
 #### Throws
 

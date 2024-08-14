@@ -7,10 +7,12 @@ import type {
 	IBlobStorageGetRequest,
 	IBlobStorageGetResponse,
 	IBlobStorageRemoveRequest,
-	IBlobStorageSetRequest
+	IBlobStorageCreateRequest,
+	IBlobStorageUpdateRequest
 } from "@gtsc/blob-storage-models";
-import { Converter, Guards, StringHelper, Urn } from "@gtsc/core";
+import { Converter, Guards, Is, StringHelper, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
+import type { IProperty } from "@gtsc/schema";
 
 /**
  * Client for performing blob storage through to REST endpoints.
@@ -36,23 +38,26 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 	}
 
 	/**
-	 * Set the blob.
-	 * @param blob The data for the blob.
-	 * @param options Additional options for the blob.
+	 * Create the blob with some metadata.
+	 * @param blob The data for the blob in base64 format.
+	 * @param metadata Metadata to associate with the blob.
+	 * @param options Additional options for the blob service.
 	 * @param options.namespace The namespace to use for storing, defaults to service configured namespace.
 	 * @returns The id of the stored blob in urn format.
 	 */
-	public async set(
-		blob: Uint8Array,
+	public async create(
+		blob: string,
+		metadata?: IProperty[],
 		options?: {
 			namespace?: string;
 		}
 	): Promise<string> {
 		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
 
-		const response = await this.fetch<IBlobStorageSetRequest, ICreatedResponse>("/", "POST", {
+		const response = await this.fetch<IBlobStorageCreateRequest, ICreatedResponse>("/", "POST", {
 			body: {
 				blob: Converter.bytesToBase64(blob),
+				metadata,
 				namespace: options?.namespace
 			}
 		});
@@ -61,12 +66,19 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 	}
 
 	/**
-	 * Get the blob.
+	 * Get the blob and metadata.
 	 * @param id The id of the blob to get in urn format.
-	 * @returns The data for the blob if it can be found.
+	 * @param includeContent Include the content, or just get the metadata.
+	 * @returns The metadata and data for the blob if it can be found.
 	 * @throws Not found error if the blob cannot be found.
 	 */
-	public async get(id: string): Promise<Uint8Array> {
+	public async get(
+		id: string,
+		includeContent: boolean
+	): Promise<{
+		blob?: string;
+		metadata: IProperty[];
+	}> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		const response = await this.fetch<IBlobStorageGetRequest, IBlobStorageGetResponse>(
@@ -75,11 +87,34 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 			{
 				pathParams: {
 					id
+				},
+				query: {
+					includeContent
 				}
 			}
 		);
 
-		return Converter.base64ToBytes(response.body.blob);
+		return response.body;
+	}
+
+	/**
+	 * Update the blob with metadata.
+	 * @param id The id of the blob metadata to update.
+	 * @param metadata Metadata to associate with the blob.
+	 * @returns Nothing.
+	 * @throws Not found error if the blob cannot be found.
+	 */
+	public async update(id: string, metadata: IProperty[]): Promise<void> {
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
+
+		await this.fetch<IBlobStorageUpdateRequest, INoContentResponse>("/:id", "PUT", {
+			pathParams: {
+				id
+			},
+			body: {
+				metadata
+			}
+		});
 	}
 
 	/**
@@ -95,5 +130,32 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorage {
 				id
 			}
 		});
+	}
+
+	/**
+	 * Create a download link for the blob.
+	 * @param id The id of the blob to get in urn format.
+	 * @param download Should the content disposition be set to download.
+	 * @param filename The filename to use for the download.
+	 * @returns The download link.
+	 */
+	public createDownloadLink(id: string, download?: boolean, filename?: string): string {
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
+
+		let link = StringHelper.trimTrailingSlashes(this.getEndpointWithPrefix());
+		link += `/${id}/content`;
+
+		const downloadQuery: string[] = [];
+		if (download) {
+			downloadQuery.push("download=true");
+		}
+		if (Is.stringValue(filename)) {
+			downloadQuery.push(`filename=${encodeURIComponent(filename)}`);
+		}
+		if (downloadQuery.length > 0) {
+			link += `?${downloadQuery.join("&")}`;
+		}
+
+		return link;
 	}
 }

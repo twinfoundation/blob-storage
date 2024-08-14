@@ -14,4 +14,15 @@ export interface IBlobStorageGetRequest {
 		 */
 		id: string;
 	};
+
+	/**
+	 * The query parameters.
+	 */
+	query?: {
+		/**
+		 * Include the content in the response, otherwise only metadata is returned.
+		 * @default false
+		 */
+		includeContent?: boolean;
+	};
 }
