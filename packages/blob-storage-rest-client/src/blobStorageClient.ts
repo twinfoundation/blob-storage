@@ -34,11 +34,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
-		super(
-			BlobStorageClient._CLASS_NAME,
-			config,
-			StringHelper.kebabCase(nameof<IBlobStorageComponent>())
-		);
+		super(BlobStorageClient._CLASS_NAME, config, "blob");
 	}
 
 	/**

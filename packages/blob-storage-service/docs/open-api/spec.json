@@ -21,7 +21,7 @@
         }
     ],
     "paths": {
-        "/blob-storage": {
+        "/blob": {
             "post": {
                 "operationId": "blobStorageCreate",
                 "summary": "Create a blob in to storage",
@@ -130,7 +130,7 @@
                 }
             }
         },
-        "/blob-storage/{id}": {
+        "/blob/{id}": {
             "get": {
                 "operationId": "blobStorageGet",
                 "summary": "Get the blob metadata from storage",
@@ -490,7 +490,7 @@
                 }
             }
         },
-        "/blob-storage/{id}/content": {
+        "/blob/{id}/content": {
             "get": {
                 "operationId": "blobStorageGetContent",
                 "summary": "Get the blob from storage",
