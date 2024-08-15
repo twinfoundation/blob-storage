@@ -100,21 +100,23 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
 	 * @param metadata Metadata to associate with the blob.
-	 * @param options Additional options for the blob component.
-	 * @param options.namespace The namespace to use for storing, defaults to component configured namespace.
+	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
+	 * @param nodeIdentity The node identity which controls the vault key.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async create(
 		blob: string,
 		metadata?: IProperty[],
-		options?: {
-			namespace?: string;
-		}
+		namespace?: string,
+		nodeIdentity?: string
 	): Promise<string> {
 		Guards.stringBase64(this.CLASS_NAME, nameof(blob), blob);
+		if (this._vaultConnector) {
+			Guards.stringValue(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
+		}
 
 		try {
-			const connectorNamespace = options?.namespace ?? this._defaultNamespace;
+			const connectorNamespace = namespace ?? this._defaultNamespace;
 
 			const blobStorageConnector =
 				BlobStorageConnectorFactory.get<IBlobStorageConnector>(connectorNamespace);
@@ -142,7 +144,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 			// If we have a vault connector then encrypt the data.
 			if (this._vaultConnector) {
 				storeBlob = await this._vaultConnector.encrypt(
-					this._vaultKeyId,
+					`${nodeIdentity}/${this._vaultKeyId}`,
 					VaultEncryptionType.ChaCha20Poly1305,
 					storeBlob
 				);
@@ -175,17 +177,22 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 * Get the blob and metadata.
 	 * @param id The id of the blob to get in urn format.
 	 * @param includeContent Include the content, or just get the metadata.
+	 * @param nodeIdentity The node identity which controls the vault key.
 	 * @returns The metadata and data for the blob if it can be found.
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	public async get(
 		id: string,
-		includeContent: boolean
+		includeContent: boolean,
+		nodeIdentity?: string
 	): Promise<{
 		blob?: string;
 		metadata: IProperty[];
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
+		if (this._vaultConnector && includeContent) {
+			Guards.stringValue(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
+		}
 
 		try {
 			// Get the metadata
@@ -215,7 +222,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 				// If we have a vault connector then decrypt the data.
 				if (this._vaultConnector) {
 					returnBlob = await this._vaultConnector.decrypt(
-						this._vaultKeyId,
+						`${nodeIdentity}/${this._vaultKeyId}`,
 						VaultEncryptionType.ChaCha20Poly1305,
 						returnBlob
 					);

@@ -11,28 +11,29 @@ export interface IBlobStorageComponent extends IComponent {
 	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
 	 * @param metadata Metadata to associate with the blob.
-	 * @param options Additional options for the blob component.
-	 * @param options.namespace The namespace to use for storing, defaults to component configured namespace.
+	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
+	 * @param nodeIdentity The node identity which controls the vault key.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	create(
 		blob: string,
 		metadata?: IProperty[],
-		options?: {
-			namespace?: string;
-		}
+		namespace?: string,
+		nodeIdentity?: string
 	): Promise<string>;
 
 	/**
 	 * Get the blob and metadata.
 	 * @param id The id of the blob to get in urn format.
 	 * @param includeContent Include the content, or just get the metadata.
+	 * @param nodeIdentity The node identity which controls the vault key.
 	 * @returns The metadata and data for the blob if it can be found.
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	get(
 		id: string,
-		includeContent: boolean
+		includeContent: boolean,
+		nodeIdentity?: string
 	): Promise<{
 		blob?: string;
 		metadata: IProperty[];

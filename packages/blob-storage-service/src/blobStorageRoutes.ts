@@ -287,9 +287,12 @@ export async function blobStorageCreate(
 	Guards.stringBase64(ROUTES_SOURCE, nameof(request.body.blob), request.body.blob);
 
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
-	const id = await component.create(request.body.blob, request.body.metadata, {
-		namespace: request.body.namespace
-	});
+	const id = await component.create(
+		request.body.blob,
+		request.body.metadata,
+		request.body.namespace,
+		httpRequestContext.nodeIdentity
+	);
 
 	return {
 		statusCode: HttpStatusCode.created,
@@ -321,7 +324,11 @@ export async function blobStorageGet(
 
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
-	const result = await component.get(request.pathParams.id, request.query?.includeContent ?? false);
+	const result = await component.get(
+		request.pathParams.id,
+		request.query?.includeContent ?? false,
+		httpRequestContext.nodeIdentity
+	);
 
 	return {
 		body: {
@@ -353,7 +360,7 @@ export async function blobStorageGetContent(
 
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
-	const result = await component.get(request.pathParams.id, true);
+	const result = await component.get(request.pathParams.id, true, httpRequestContext.nodeIdentity);
 
 	let filename = request.query?.filename;
 	if (!Is.stringValue(filename)) {

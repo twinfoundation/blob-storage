@@ -10,7 +10,7 @@ import type {
 	IBlobStorageRemoveRequest,
 	IBlobStorageUpdateRequest
 } from "@gtsc/blob-storage-models";
-import { Converter, Guards, Is, StringHelper, Urn } from "@gtsc/core";
+import { Guards, Is, StringHelper, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import type { IProperty } from "@gtsc/schema";
 
@@ -41,24 +41,17 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
 	 * @param metadata Metadata to associate with the blob.
-	 * @param options Additional options for the blob component.
-	 * @param options.namespace The namespace to use for storing, defaults to component configured namespace.
+	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @returns The id of the stored blob in urn format.
 	 */
-	public async create(
-		blob: string,
-		metadata?: IProperty[],
-		options?: {
-			namespace?: string;
-		}
-	): Promise<string> {
-		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
+	public async create(blob: string, metadata?: IProperty[], namespace?: string): Promise<string> {
+		Guards.stringBase64(this.CLASS_NAME, nameof(blob), blob);
 
 		const response = await this.fetch<IBlobStorageCreateRequest, ICreatedResponse>("/", "POST", {
 			body: {
-				blob: Converter.bytesToBase64(blob),
+				blob,
 				metadata,
-				namespace: options?.namespace
+				namespace
 			}
 		});
 
