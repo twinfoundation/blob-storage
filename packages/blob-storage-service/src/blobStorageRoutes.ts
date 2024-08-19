@@ -177,14 +177,21 @@ export function generateRestRoutesBlobStorage(
 		},
 		responseType: [
 			{
-				type: nameof<INotFoundResponse>()
-			}
-		],
-		responseContentType: [
-			{
+				type: nameof<Uint8Array>(),
 				mimeType: "application/octet-stream",
-				description:
-					"The content of the blob, which will be a specific mime type if one can be detected from the content (or set as mimeType in the metadata), or defaults to application/octet-stream."
+				examples: [
+					{
+						id: "blobStorageGetContentResponseExample",
+						description:
+							"The content of the blob, which will be a specific mime type if one can be detected from the content (or set as mimeType in the metadata), or defaults to application/octet-stream.",
+						response: {
+							body: new Uint8Array()
+						}
+					}
+				]
+			},
+			{
+				type: nameof<INotFoundResponse>()
 			}
 		]
 	};
