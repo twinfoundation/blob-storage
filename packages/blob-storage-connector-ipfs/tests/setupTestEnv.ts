@@ -10,7 +10,6 @@ dotenv.config({ path: [path.join(__dirname, ".env"), path.join(__dirname, ".env.
 console.debug("Setting up test environment from .env and .env.dev files");
 
 Guards.stringValue("TestEnv", "TEST_IPFS_API_URL", process.env.TEST_IPFS_API_URL);
-Guards.stringValue("TestEnv", "TEST_IPFS_BEARER_TOKEN", process.env.TEST_IPFS_BEARER_TOKEN);
 Guards.stringValue("TestEnv", "TEST_IPFS_PUBLIC_GATEWAY", process.env.TEST_IPFS_PUBLIC_GATEWAY);
 
 export const TEST_IPFS_CONFIG: IIpfsBlobStorageConnectorConfig = {

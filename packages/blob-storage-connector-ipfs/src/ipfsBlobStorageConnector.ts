@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
-import { GeneralError, Guards, StringHelper, Urn } from "@gtsc/core";
+import { GeneralError, Guards, Is, StringHelper, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import type { IIpfsBlobStorageConnectorConfig } from "./models/IIpfsBlobStorageConnectorConfig";
 
@@ -66,11 +66,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 				}
 			};
 
-			if (this._config.bearerToken) {
-				fetchOptions.headers = {
-					Authorization: `Bearer ${this._config.bearerToken}`
-				};
-			}
+			this.addSecurity(fetchOptions);
 
 			const response = await fetch(`${this._config.apiUrl}/add?pin=true`, fetchOptions);
 
@@ -116,11 +112,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 				}
 			};
 
-			if (this._config.bearerToken) {
-				fetchOptions.headers = {
-					Authorization: `Bearer ${this._config.bearerToken}`
-				};
-			}
+			this.addSecurity(fetchOptions);
 
 			const response = await fetch(
 				`${this._config.apiUrl}/cat?arg=${urnParsed.namespaceSpecific(1)}`,
@@ -132,10 +124,6 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 
 				return new Uint8Array(result);
 			}
-
-			throw new GeneralError(this.CLASS_NAME, "fetchFail", {
-				message: response.statusText
-			});
 		} catch {}
 	}
 
@@ -163,11 +151,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 				}
 			};
 
-			if (this._config.bearerToken) {
-				fetchOptions.headers = {
-					Authorization: `Bearer ${this._config.bearerToken}`
-				};
-			}
+			this.addSecurity(fetchOptions);
 
 			const response = await fetch(
 				`${this._config.apiUrl}/pin/rm?arg=${urnParsed.namespaceSpecific(1)}`,
@@ -177,12 +161,20 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 			if (response.ok) {
 				return true;
 			}
+		} catch {}
+		return false;
+	}
 
-			throw new GeneralError(this.CLASS_NAME, "fetchFail", {
-				message: response.statusText
-			});
-		} catch {
-			return false;
+	/**
+	 * Add the security to the request.
+	 * @param requestInit The request options.
+	 */
+	private addSecurity(requestInit: RequestInit): void {
+		if (Is.stringValue(this._config.bearerToken)) {
+			requestInit.headers = {
+				...requestInit.headers,
+				Authorization: `Bearer ${this._config.bearerToken}`
+			};
 		}
 	}
 }
