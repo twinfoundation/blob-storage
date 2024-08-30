@@ -168,6 +168,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Add the security to the request.
 	 * @param requestInit The request options.
+	 * @internal
 	 */
 	private addSecurity(requestInit: RequestInit): void {
 		if (Is.stringValue(this._config.bearerToken)) {
