@@ -11,8 +11,8 @@ import type {
 	IBlobStorageUpdateRequest
 } from "@gtsc/blob-storage-models";
 import { Guards, Is, StringHelper, Urn } from "@gtsc/core";
+import type { IProperty } from "@gtsc/data-core";
 import { nameof } from "@gtsc/nameof";
-import type { IProperty } from "@gtsc/schema";
 
 /**
  * Client for performing blob storage through to REST endpoints.

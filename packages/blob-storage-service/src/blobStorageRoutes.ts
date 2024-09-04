@@ -20,8 +20,8 @@ import type {
 	IBlobStorageUpdateRequest
 } from "@gtsc/blob-storage-models";
 import { ComponentFactory, Converter, Guards, Is } from "@gtsc/core";
+import { SchemaOrgPropertyHelper } from "@gtsc/data-schema-org";
 import { nameof } from "@gtsc/nameof";
-import { PropertyHelper } from "@gtsc/schema";
 import { HttpStatusCode } from "@gtsc/web";
 
 /**
@@ -371,14 +371,14 @@ export async function blobStorageGetContent(
 
 	let filename = request.query?.filename;
 	if (!Is.stringValue(filename)) {
-		const defaultExtension = PropertyHelper.getText(result.metadata, "defaultExtension");
+		const defaultExtension = SchemaOrgPropertyHelper.getText(result.metadata, "defaultExtension");
 		filename = `file.${defaultExtension ?? "bin"}`;
 	}
 
 	return {
 		body: Is.stringBase64(result.blob) ? Converter.base64ToBytes(result.blob) : new Uint8Array(),
 		attachment: {
-			mimeType: PropertyHelper.getText(result.metadata, "mimeType") ?? "application/octet-stream",
+			mimeType: SchemaOrgPropertyHelper.getText(result.metadata, "mimeType") ?? "application/octet-stream",
 			filename,
 			inline: !(request.query?.download ?? false)
 		}

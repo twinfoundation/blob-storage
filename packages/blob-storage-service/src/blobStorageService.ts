@@ -14,12 +14,13 @@ import {
 	NotFoundError,
 	Urn
 } from "@gtsc/core";
+import type { IProperty } from "@gtsc/data-core";
+import { SchemaOrgPropertyHelper } from "@gtsc/data-schema-org";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
 } from "@gtsc/entity-storage-models";
 import { nameof } from "@gtsc/nameof";
-import { PropertyHelper, type IProperty } from "@gtsc/schema";
 import {
 	VaultConnectorFactory,
 	VaultEncryptionType,
@@ -129,16 +130,16 @@ export class BlobStorageService implements IBlobStorageComponent {
 			// See if we can detect the mime type and default extension for the data.
 			// If not already supplied by the caller. We have to perform this operation
 			// on the unencrypted data.
-			let mimeType = PropertyHelper.getText(metadata, "mimeType");
+			let mimeType = SchemaOrgPropertyHelper.getText(metadata, "mimeType");
 			if (!Is.stringValue(mimeType)) {
 				mimeType = await MimeTypeHelper.detect(storeBlob);
-				PropertyHelper.setText(metadata, "mimeType", mimeType);
+				SchemaOrgPropertyHelper.setText(metadata, "mimeType", mimeType);
 			}
 
-			let defaultExtension = PropertyHelper.getText(metadata, "defaultExtension");
+			let defaultExtension = SchemaOrgPropertyHelper.getText(metadata, "defaultExtension");
 			if (!Is.stringValue(defaultExtension) && Is.stringValue(mimeType)) {
 				defaultExtension = await MimeTypeHelper.defaultExtension(mimeType);
-				PropertyHelper.setText(metadata, "defaultExtension", defaultExtension);
+				SchemaOrgPropertyHelper.setText(metadata, "defaultExtension", defaultExtension);
 			}
 
 			// If we have a vault connector then encrypt the data.
