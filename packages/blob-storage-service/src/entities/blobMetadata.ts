@@ -26,13 +26,7 @@ export class BlobMetadata {
 	public extension?: string;
 
 	/**
-	 * The metadata type for the blob.
-	 */
-	@property({ type: "string" })
-	public metadataType?: string;
-
-	/**
-	 * The metadata for the blob.
+	 * The metadata for the blob as JSON-LD.
 	 */
 	@property({ type: "object" })
 	public metadata?: unknown;

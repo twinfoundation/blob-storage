@@ -45,13 +45,11 @@
                                 "blobStorageCreateExample": {
                                     "value": {
                                         "blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
-                                        "metadata": [
-                                            {
-                                                "key": "filename",
-                                                "type": "https://schema.org/Text",
-                                                "value": "my-file.pdf"
-                                            }
-                                        ]
+                                        "metadata": {
+                                            "@context": "http://schema.org/",
+                                            "@type": "DigitalDocument",
+                                            "name": "myfile.pdf"
+                                        }
                                     }
                                 }
                             }
@@ -176,13 +174,11 @@
                                 "examples": {
                                     "blobStorageGetResponseExample": {
                                         "value": {
-                                            "metadata": [
-                                                {
-                                                    "key": "filename",
-                                                    "type": "https://schema.org/Text",
-                                                    "value": "my-file.pdf"
-                                                }
-                                            ],
+                                            "metadata": {
+                                                "@context": "http://schema.org/",
+                                                "@type": "DigitalDocument",
+                                                "name": "myfile.pdf"
+                                            },
                                             "blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
                                         }
                                     }
@@ -305,13 +301,11 @@
                             "examples": {
                                 "blobStorageUpdateExample": {
                                     "value": {
-                                        "metadata": [
-                                            {
-                                                "key": "filename",
-                                                "type": "https://schema.org/Text",
-                                                "value": "my-file.pdf"
-                                            }
-                                        ]
+                                        "metadata": {
+                                            "@context": "http://schema.org/",
+                                            "@type": "DigitalDocument",
+                                            "name": "myfile.pdf"
+                                        }
                                     }
                                 }
                             }
@@ -706,12 +700,8 @@
                         "type": "string",
                         "description": "The extension of the blob, will be detected if left undefined."
                     },
-                    "metadataType": {
-                        "type": "string",
-                        "description": "The metadata type of the blob."
-                    },
                     "metadata": {
-                        "description": "Custom metadata to associate with the blob."
+                        "description": "Custom metadata to associate with the blob as JSON-LD."
                     },
                     "namespace": {
                         "type": "string",
@@ -735,12 +725,8 @@
                         "type": "string",
                         "description": "The extension of the blob."
                     },
-                    "metadataType": {
-                        "type": "string",
-                        "description": "The metadata type of the blob."
-                    },
                     "metadata": {
-                        "description": "Custom metadata to associate with the blob."
+                        "description": "Custom metadata to associate with the blob as JSON-LD."
                     },
                     "blob": {
                         "type": "string",
@@ -803,12 +789,8 @@
                         "type": "string",
                         "description": "The extension of the blob, will be detected if left undefined."
                     },
-                    "metadataType": {
-                        "type": "string",
-                        "description": "The metadata type of the blob."
-                    },
                     "metadata": {
-                        "description": "Custom metadata to associate with the blob."
+                        "description": "Custom metadata to associate with the blob as JSON-LD."
                     }
                 },
                 "additionalProperties": false,

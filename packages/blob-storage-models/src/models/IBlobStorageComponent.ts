@@ -9,23 +9,18 @@ export interface IBlobStorageComponent extends IComponent {
 	/**
 	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
-	 * @param metadata Metadata to associate with the blob.
-	 * @param metadata.mimeType Mime type for the blob, will be detected if left undefined.
-	 * @param metadata.extension Extension for the blob, will be detected if left undefined.
-	 * @param metadata.type Type for the custom metadata.
-	 * @param metadata.data Data for the custom metadata.
+	 * @param mimeType Mime type for the blob, will be detected if left undefined.
+	 * @param extension Extension for the blob, will be detected if left undefined.
+	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @param nodeIdentity The node identity which controls the vault key.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	create(
 		blob: string,
-		metadata?: {
-			mimeType?: string;
-			extension?: string;
-			type?: string;
-			data?: unknown;
-		},
+		mimeType?: string,
+		extension?: string,
+		metadata?: unknown,
 		namespace?: string,
 		nodeIdentity?: string
 	): Promise<string>;
@@ -44,34 +39,21 @@ export interface IBlobStorageComponent extends IComponent {
 		nodeIdentity?: string
 	): Promise<{
 		blob?: string;
-		metadata?: {
-			mimeType?: string;
-			extension?: string;
-			type?: string;
-			data?: unknown;
-		};
+		mimeType?: string;
+		extension?: string;
+		metadata?: unknown;
 	}>;
 
 	/**
 	 * Update the blob with metadata.
 	 * @param id The id of the blob metadata to update.
-	 * @param metadata Metadata to associate with the blob.
-	 * @param metadata.mimeType Mime type for the blob, will be detected if left undefined.
-	 * @param metadata.extension Extension for the blob, will be detected if left undefined.
-	 * @param metadata.type Type for the custom metadata.
-	 * @param metadata.data Data for the custom metadata.
+	 * @param mimeType Mime type for the blob, will be detected if left undefined.
+	 * @param extension Extension for the blob, will be detected if left undefined.
+	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @returns Nothing.
 	 * @throws Not found error if the blob cannot be found.
 	 */
-	update(
-		id: string,
-		metadata?: {
-			mimeType?: string;
-			extension?: string;
-			type?: string;
-			data?: unknown;
-		}
-	): Promise<void>;
+	update(id: string, mimeType?: string, extension?: string, metadata?: unknown): Promise<void>;
 
 	/**
 	 * Remove the blob.

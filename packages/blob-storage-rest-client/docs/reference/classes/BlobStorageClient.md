@@ -104,7 +104,7 @@ The response.
 
 ### create()
 
-> **create**(`blob`, `metadata`?, `namespace`?): `Promise`\<`string`\>
+> **create**(`blob`, `mimeType`?, `extension`?, `metadata`?, `namespace`?): `Promise`\<`string`\>
 
 Create the blob with some metadata.
 
@@ -114,25 +114,17 @@ Create the blob with some metadata.
 
 The data for the blob in base64 format.
 
-• **metadata?**
-
-Metadata to associate with the blob.
-
-• **metadata.mimeType?**: `string`
+• **mimeType?**: `string`
 
 Mime type for the blob, will be detected if left undefined.
 
-• **metadata.extension?**: `string`
+• **extension?**: `string`
 
 Extension for the blob, will be detected if left undefined.
 
-• **metadata.type?**: `string`
+• **metadata?**: `unknown`
 
-Type for the custom metadata.
-
-• **metadata.data?**: `unknown`
-
-Data for the custom metadata.
+Data for the custom metadata as JSON-LD.
 
 • **namespace?**: `string`
 
@@ -176,25 +168,17 @@ The metadata and data for the blob if it can be found.
 
 > `optional` **blob**: `string`
 
-##### metadata?
-
-> `optional` **metadata**: `object`
-
-##### metadata.mimeType?
+##### mimeType?
 
 > `optional` **mimeType**: `string`
 
-##### metadata.extension?
+##### extension?
 
 > `optional` **extension**: `string`
 
-##### metadata.type?
+##### metadata?
 
-> `optional` **type**: `string`
-
-##### metadata.data?
-
-> `optional` **data**: `unknown`
+> `optional` **metadata**: `unknown`
 
 #### Implementation of
 
@@ -208,7 +192,7 @@ Not found error if the blob cannot be found.
 
 ### update()
 
-> **update**(`id`, `metadata`?): `Promise`\<`void`\>
+> **update**(`id`, `mimeType`?, `extension`?, `metadata`?): `Promise`\<`void`\>
 
 Update the blob with metadata.
 
@@ -218,25 +202,17 @@ Update the blob with metadata.
 
 The id of the blob metadata to update.
 
-• **metadata?**
-
-Metadata to associate with the blob.
-
-• **metadata.mimeType?**: `string`
+• **mimeType?**: `string`
 
 Mime type for the blob, will be detected if left undefined.
 
-• **metadata.extension?**: `string`
+• **extension?**: `string`
 
 Extension for the blob, will be detected if left undefined.
 
-• **metadata.type?**: `string`
+• **metadata?**: `unknown`
 
-Type for the custom metadata.
-
-• **metadata.data?**: `unknown`
-
-Data for the custom metadata.
+Data for the custom metadata as JSON-LD.
 
 #### Returns
 

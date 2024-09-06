@@ -25,12 +25,7 @@ export interface IBlobStorageCreateRequest {
 		extension?: string;
 
 		/**
-		 * The metadata type of the blob.
-		 */
-		metadataType?: string;
-
-		/**
-		 * Custom metadata to associate with the blob.
+		 * Custom metadata to associate with the blob as JSON-LD.
 		 */
 		metadata?: unknown;
 

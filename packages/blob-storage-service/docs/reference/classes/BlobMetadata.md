@@ -38,16 +38,8 @@ The extension.
 
 ***
 
-### metadataType?
-
-> `optional` **metadataType**: `string`
-
-The metadata type for the blob.
-
-***
-
 ### metadata?
 
 > `optional` **metadata**: `unknown`
 
-The metadata for the blob.
+The metadata for the blob as JSON-LD.

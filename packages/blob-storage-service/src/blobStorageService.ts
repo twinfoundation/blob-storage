@@ -5,17 +5,7 @@ import {
 	type IBlobStorageComponent,
 	type IBlobStorageConnector
 } from "@gtsc/blob-storage-models";
-import {
-	Converter,
-	GeneralError,
-	Guards,
-	Is,
-	NotFoundError,
-	Urn,
-	Validation,
-	type IValidationFailure
-} from "@gtsc/core";
-import { DataTypeHelper } from "@gtsc/data-core";
+import { Converter, GeneralError, Guards, Is, NotFoundError, Urn } from "@gtsc/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -100,23 +90,18 @@ export class BlobStorageService implements IBlobStorageComponent {
 	/**
 	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
-	 * @param metadata Metadata to associate with the blob.
-	 * @param metadata.mimeType Mime type for the blob, will be detected if left undefined.
-	 * @param metadata.extension Extension for the blob, will be detected if left undefined.
-	 * @param metadata.type Type for the custom metadata.
-	 * @param metadata.data Data for the custom metadata.
+	 * @param mimeType Mime type for the blob, will be detected if left undefined.
+	 * @param extension Extension for the blob, will be detected if left undefined.
+	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @param nodeIdentity The node identity which controls the vault key.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async create(
 		blob: string,
-		metadata?: {
-			mimeType?: string;
-			extension?: string;
-			type?: string;
-			data?: unknown;
-		},
+		mimeType?: string,
+		extension?: string,
+		metadata?: unknown,
 		namespace?: string,
 		nodeIdentity?: string
 	): Promise<string> {
@@ -137,26 +122,12 @@ export class BlobStorageService implements IBlobStorageComponent {
 			// See if we can detect the mime type and default extension for the data.
 			// If not already supplied by the caller. We have to perform this operation
 			// on the unencrypted data.
-			let mimeType = metadata?.mimeType;
 			if (!Is.stringValue(mimeType)) {
 				mimeType = await MimeTypeHelper.detect(storeBlob);
 			}
 
-			let extension = metadata?.extension;
 			if (!Is.stringValue(extension) && Is.stringValue(mimeType)) {
 				extension = await MimeTypeHelper.defaultExtension(mimeType);
-			}
-
-			// Validate the metadata if it is supplied.
-			const validationFailures: IValidationFailure[] = [];
-			const isValid = await DataTypeHelper.validate(
-				"data",
-				metadata?.type,
-				metadata?.data,
-				validationFailures
-			);
-			if (!isValid) {
-				Validation.asValidationError(this.CLASS_NAME, "metadata", validationFailures);
 			}
 
 			// If we have a vault connector then encrypt the data.
@@ -175,8 +146,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 				id: blobId,
 				mimeType,
 				extension,
-				metadataType: metadata?.type,
-				metadata: metadata?.data
+				metadata
 			});
 
 			return blobId;
@@ -199,12 +169,9 @@ export class BlobStorageService implements IBlobStorageComponent {
 		nodeIdentity?: string
 	): Promise<{
 		blob?: string;
-		metadata?: {
-			mimeType?: string;
-			extension?: string;
-			type?: string;
-			data?: unknown;
-		};
+		mimeType?: string;
+		extension?: string;
+		metadata?: unknown;
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		if (this._vaultConnector && includeContent) {
@@ -238,7 +205,6 @@ export class BlobStorageService implements IBlobStorageComponent {
 				metadata: {
 					mimeType: blobMetadata?.mimeType,
 					extension: blobMetadata?.extension,
-					type: blobMetadata?.metadataType,
 					data: blobMetadata?.metadata
 				}
 			};
@@ -250,22 +216,17 @@ export class BlobStorageService implements IBlobStorageComponent {
 	/**
 	 * Update the blob with metadata.
 	 * @param id The id of the blob metadata to update.
-	 * @param metadata Metadata to associate with the blob.
-	 * @param metadata.mimeType Mime type for the blob, will be detected if left undefined.
-	 * @param metadata.extension Extension for the blob, will be detected if left undefined.
-	 * @param metadata.type Type for the custom metadata.
-	 * @param metadata.data Data for the custom metadata.
+	 * @param mimeType Mime type for the blob, will be detected if left undefined.
+	 * @param extension Extension for the blob, will be detected if left undefined.
+	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @returns Nothing.
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	public async update(
 		id: string,
-		metadata?: {
-			mimeType?: string;
-			extension?: string;
-			type?: string;
-			data?: unknown;
-		}
+		mimeType?: string,
+		extension?: string,
+		metadata?: unknown
 	): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
@@ -276,24 +237,11 @@ export class BlobStorageService implements IBlobStorageComponent {
 				throw new NotFoundError(this.CLASS_NAME, "blobNotFound", id);
 			}
 
-			// Validate the metadata if it is supplied.
-			const validationFailures: IValidationFailure[] = [];
-			const isValid = await DataTypeHelper.validate(
-				"data",
-				metadata?.type,
-				metadata?.data,
-				validationFailures
-			);
-			if (!isValid) {
-				Validation.asValidationError(this.CLASS_NAME, "metadata", validationFailures);
-			}
-
 			await this._metadataEntityStorage.set({
 				id: blobMetadata.id,
-				mimeType: metadata?.mimeType ?? blobMetadata.mimeType,
-				extension: metadata?.extension ?? blobMetadata.extension,
-				metadataType: metadata?.type,
-				metadata: metadata?.data
+				mimeType: mimeType ?? blobMetadata.mimeType,
+				extension: extension ?? blobMetadata.extension,
+				metadata: metadata ?? blobMetadata.metadata
 			});
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "updateFailed", undefined, error);

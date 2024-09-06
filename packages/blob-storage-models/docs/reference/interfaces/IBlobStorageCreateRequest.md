@@ -28,17 +28,11 @@ The mime type of the blob, will be detected if left undefined.
 
 The extension of the blob, will be detected if left undefined.
 
-#### metadataType?
-
-> `optional` **metadataType**: `string`
-
-The metadata type of the blob.
-
 #### metadata?
 
 > `optional` **metadata**: `unknown`
 
-Custom metadata to associate with the blob.
+Custom metadata to associate with the blob as JSON-LD.
 
 #### namespace?
 

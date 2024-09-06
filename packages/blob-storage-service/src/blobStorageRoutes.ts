@@ -64,13 +64,11 @@ export function generateRestRoutesBlobStorage(
 					request: {
 						body: {
 							blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
-							metadata: [
-								{
-									key: "filename",
-									type: "https://schema.org/Text",
-									value: "my-file.pdf"
-								}
-							]
+							metadata: {
+								"@context": "http://schema.org/",
+								"@type": "DigitalDocument",
+								name: "myfile.pdf"
+							}
 						}
 					}
 				}
@@ -127,13 +125,11 @@ export function generateRestRoutesBlobStorage(
 						id: "blobStorageGetResponseExample",
 						response: {
 							body: {
-								metadata: [
-									{
-										key: "filename",
-										type: "https://schema.org/Text",
-										value: "my-file.pdf"
-									}
-								],
+								metadata: {
+									"@context": "http://schema.org/",
+									"@type": "DigitalDocument",
+									name: "myfile.pdf"
+								},
 								blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
 							}
 						}
@@ -212,13 +208,11 @@ export function generateRestRoutesBlobStorage(
 							id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
 						},
 						body: {
-							metadata: [
-								{
-									key: "filename",
-									type: "https://schema.org/Text",
-									value: "my-file.pdf"
-								}
-							]
+							metadata: {
+								"@context": "http://schema.org/",
+								"@type": "DigitalDocument",
+								name: "myfile.pdf"
+							}
 						}
 					}
 				}
@@ -294,12 +288,9 @@ export async function blobStorageCreate(
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 	const id = await component.create(
 		request.body.blob,
-		{
-			mimeType: request.body.mimeType,
-			extension: request.body.extension,
-			type: request.body.metadataType,
-			data: request.body.metadata
-		},
+		request.body.mimeType,
+		request.body.extension,
+		request.body.metadata,
 		request.body.namespace,
 		httpRequestContext.nodeIdentity
 	);
@@ -341,13 +332,7 @@ export async function blobStorageGet(
 	);
 
 	return {
-		body: {
-			mimeType: result.metadata?.mimeType,
-			extension: result.metadata?.extension,
-			metadataType: result.metadata?.type,
-			metadata: result.metadata,
-			blob: result.blob
-		}
+		body: result
 	};
 }
 
@@ -375,10 +360,10 @@ export async function blobStorageGetContent(
 
 	const result = await component.get(request.pathParams.id, true, httpRequestContext.nodeIdentity);
 
-	const mimeType = result?.metadata?.mimeType ?? MimeTypes.OctetStream;
+	const mimeType = result?.mimeType ?? MimeTypes.OctetStream;
 	let filename = request.query?.filename;
 	if (!Is.stringValue(filename)) {
-		filename = `file.${result.metadata?.extension ?? MimeTypeHelper.defaultExtension(mimeType)}`;
+		filename = `file.${result.extension ?? MimeTypeHelper.defaultExtension(mimeType)}`;
 	}
 
 	return {
@@ -413,12 +398,12 @@ export async function blobStorageUpdate(
 
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
-	await component.update(request.pathParams.id, {
-		mimeType: request.body.mimeType,
-		extension: request.body.extension,
-		type: request.body.metadataType,
-		data: request.body.metadata
-	});
+	await component.update(
+		request.pathParams.id,
+		request.body.mimeType,
+		request.body.extension,
+		request.body.metadata
+	);
 
 	return {
 		statusCode: HttpStatusCode.noContent

@@ -22,17 +22,11 @@ The mime type of the blob.
 
 The extension of the blob.
 
-#### metadataType?
-
-> `optional` **metadataType**: `string`
-
-The metadata type of the blob.
-
 #### metadata?
 
 > `optional` **metadata**: `unknown`
 
-Custom metadata to associate with the blob.
+Custom metadata to associate with the blob as JSON-LD.
 
 #### blob?
 
