@@ -698,12 +698,20 @@
                         "type": "string",
                         "description": "The data to store in base64 encoding."
                     },
+                    "mimeType": {
+                        "type": "string",
+                        "description": "The mime type of the blob, will be detected if left undefined."
+                    },
+                    "extension": {
+                        "type": "string",
+                        "description": "The extension of the blob, will be detected if left undefined."
+                    },
+                    "metadataType": {
+                        "type": "string",
+                        "description": "The metadata type of the blob."
+                    },
                     "metadata": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/Property"
-                        },
-                        "description": "Metadata to associate with the blob."
+                        "description": "Custom metadata to associate with the blob."
                     },
                     "namespace": {
                         "type": "string",
@@ -716,47 +724,29 @@
                 "additionalProperties": false,
                 "description": "The body parameters."
             },
-            "Property": {
-                "type": "object",
-                "properties": {
-                    "key": {
-                        "type": "string",
-                        "description": "The key for the item."
-                    },
-                    "type": {
-                        "type": "string",
-                        "description": "The type for the item."
-                    },
-                    "value": {
-                        "description": "The value for the item."
-                    }
-                },
-                "required": [
-                    "key",
-                    "type",
-                    "value"
-                ],
-                "additionalProperties": false,
-                "description": "Interface describing a property."
-            },
             "BlobStorageGetResponse": {
                 "type": "object",
                 "properties": {
+                    "mimeType": {
+                        "type": "string",
+                        "description": "The mime type of the blob."
+                    },
+                    "extension": {
+                        "type": "string",
+                        "description": "The extension of the blob."
+                    },
+                    "metadataType": {
+                        "type": "string",
+                        "description": "The metadata type of the blob."
+                    },
                     "metadata": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/Property"
-                        },
-                        "description": "Metadata associated with the blob."
+                        "description": "Custom metadata to associate with the blob."
                     },
                     "blob": {
                         "type": "string",
                         "description": "The blob in base64 format, if the includeContent flag was set in the request."
                     }
                 },
-                "required": [
-                    "metadata"
-                ],
                 "additionalProperties": false,
                 "description": "The body parameters."
             },
@@ -805,17 +795,22 @@
             "BlobStorageUpdateRequest": {
                 "type": "object",
                 "properties": {
+                    "mimeType": {
+                        "type": "string",
+                        "description": "The mime type of the blob, will be detected if left undefined."
+                    },
+                    "extension": {
+                        "type": "string",
+                        "description": "The extension of the blob, will be detected if left undefined."
+                    },
+                    "metadataType": {
+                        "type": "string",
+                        "description": "The metadata type of the blob."
+                    },
                     "metadata": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/Property"
-                        },
-                        "description": "Metadata to associate with the blob."
+                        "description": "Custom metadata to associate with the blob."
                     }
                 },
-                "required": [
-                    "metadata"
-                ],
                 "additionalProperties": false,
                 "description": "The body parameters."
             }

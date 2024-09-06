@@ -11,7 +11,6 @@ import type {
 	IBlobStorageUpdateRequest
 } from "@gtsc/blob-storage-models";
 import { Guards, Is, StringHelper, Urn } from "@gtsc/core";
-import type { IProperty } from "@gtsc/data-core";
 import { nameof } from "@gtsc/nameof";
 
 /**
@@ -41,16 +40,32 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
 	 * @param metadata Metadata to associate with the blob.
+	 * @param metadata.mimeType Mime type for the blob, will be detected if left undefined.
+	 * @param metadata.extension Extension for the blob, will be detected if left undefined.
+	 * @param metadata.type Type for the custom metadata.
+	 * @param metadata.data Data for the custom metadata.
 	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @returns The id of the stored blob in urn format.
 	 */
-	public async create(blob: string, metadata?: IProperty[], namespace?: string): Promise<string> {
+	public async create(
+		blob: string,
+		metadata?: {
+			mimeType?: string;
+			extension?: string;
+			type?: string;
+			data?: unknown;
+		},
+		namespace?: string
+	): Promise<string> {
 		Guards.stringBase64(this.CLASS_NAME, nameof(blob), blob);
 
 		const response = await this.fetch<IBlobStorageCreateRequest, ICreatedResponse>("/", "POST", {
 			body: {
 				blob,
-				metadata,
+				mimeType: metadata?.mimeType,
+				extension: metadata?.extension,
+				metadataType: metadata?.type,
+				metadata: metadata?.data,
 				namespace
 			}
 		});
@@ -70,7 +85,12 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 		includeContent: boolean
 	): Promise<{
 		blob?: string;
-		metadata: IProperty[];
+		metadata?: {
+			mimeType?: string;
+			extension?: string;
+			type?: string;
+			data?: unknown;
+		};
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
@@ -87,17 +107,37 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 			}
 		);
 
-		return response.body;
+		return {
+			blob: response.body.blob,
+			metadata: {
+				mimeType: response.body.mimeType,
+				extension: response.body.extension,
+				type: response.body.metadataType,
+				data: response.body.metadata
+			}
+		};
 	}
 
 	/**
 	 * Update the blob with metadata.
 	 * @param id The id of the blob metadata to update.
 	 * @param metadata Metadata to associate with the blob.
+	 * @param metadata.mimeType Mime type for the blob, will be detected if left undefined.
+	 * @param metadata.extension Extension for the blob, will be detected if left undefined.
+	 * @param metadata.type Type for the custom metadata.
+	 * @param metadata.data Data for the custom metadata.
 	 * @returns Nothing.
 	 * @throws Not found error if the blob cannot be found.
 	 */
-	public async update(id: string, metadata: IProperty[]): Promise<void> {
+	public async update(
+		id: string,
+		metadata?: {
+			mimeType?: string;
+			extension?: string;
+			type?: string;
+			data?: unknown;
+		}
+	): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		await this.fetch<IBlobStorageUpdateRequest, INoContentResponse>("/:id", "PUT", {
@@ -105,7 +145,10 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 				id
 			},
 			body: {
-				metadata
+				mimeType: metadata?.mimeType,
+				extension: metadata?.extension,
+				metadataType: metadata?.type,
+				metadata: metadata?.data
 			}
 		});
 	}

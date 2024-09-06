@@ -1,6 +1,5 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IProperty } from "@gtsc/data-core";
 
 /**
  * Response to get an entry from blob storage.
@@ -11,9 +10,24 @@ export interface IBlobStorageGetResponse {
 	 */
 	body: {
 		/**
-		 * Metadata associated with the blob.
+		 * The mime type of the blob.
 		 */
-		metadata: IProperty[];
+		mimeType?: string;
+
+		/**
+		 * The extension of the blob.
+		 */
+		extension?: string;
+
+		/**
+		 * The metadata type of the blob.
+		 */
+		metadataType?: string;
+
+		/**
+		 * Custom metadata to associate with the blob.
+		 */
+		metadata?: unknown;
 
 		/**
 		 * The blob in base64 format, if the includeContent flag was set in the request.

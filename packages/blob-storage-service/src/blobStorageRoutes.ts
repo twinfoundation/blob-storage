@@ -20,9 +20,8 @@ import type {
 	IBlobStorageUpdateRequest
 } from "@gtsc/blob-storage-models";
 import { ComponentFactory, Converter, Guards, Is } from "@gtsc/core";
-import { SchemaOrgPropertyHelper } from "@gtsc/data-schema-org";
 import { nameof } from "@gtsc/nameof";
-import { HttpStatusCode } from "@gtsc/web";
+import { HttpStatusCode, MimeTypeHelper, MimeTypes } from "@gtsc/web";
 
 /**
  * The source used when communicating about these routes.
@@ -178,12 +177,11 @@ export function generateRestRoutesBlobStorage(
 		responseType: [
 			{
 				type: nameof<Uint8Array>(),
-				mimeType: "application/octet-stream",
+				mimeType: MimeTypes.OctetStream,
 				examples: [
 					{
 						id: "blobStorageGetContentResponseExample",
-						description:
-							"The content of the blob, which will be a specific mime type if one can be detected from the content (or set as mimeType in the metadata), or defaults to application/octet-stream.",
+						description: `The content of the blob, which will be a specific mime type if one can be detected from the content (or set as mimeType in the metadata), or defaults to ${MimeTypes.OctetStream}.`,
 						response: {
 							body: new Uint8Array()
 						}
@@ -296,7 +294,12 @@ export async function blobStorageCreate(
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 	const id = await component.create(
 		request.body.blob,
-		request.body.metadata,
+		{
+			mimeType: request.body.mimeType,
+			extension: request.body.extension,
+			type: request.body.metadataType,
+			data: request.body.metadata
+		},
 		request.body.namespace,
 		httpRequestContext.nodeIdentity
 	);
@@ -339,6 +342,9 @@ export async function blobStorageGet(
 
 	return {
 		body: {
+			mimeType: result.metadata?.mimeType,
+			extension: result.metadata?.extension,
+			metadataType: result.metadata?.type,
 			metadata: result.metadata,
 			blob: result.blob
 		}
@@ -369,16 +375,16 @@ export async function blobStorageGetContent(
 
 	const result = await component.get(request.pathParams.id, true, httpRequestContext.nodeIdentity);
 
+	const mimeType = result?.metadata?.mimeType ?? MimeTypes.OctetStream;
 	let filename = request.query?.filename;
 	if (!Is.stringValue(filename)) {
-		const defaultExtension = SchemaOrgPropertyHelper.getText(result.metadata, "defaultExtension");
-		filename = `file.${defaultExtension ?? "bin"}`;
+		filename = `file.${result.metadata?.extension ?? MimeTypeHelper.defaultExtension(mimeType)}`;
 	}
 
 	return {
 		body: Is.stringBase64(result.blob) ? Converter.base64ToBytes(result.blob) : new Uint8Array(),
 		attachment: {
-			mimeType: SchemaOrgPropertyHelper.getText(result.metadata, "mimeType") ?? "application/octet-stream",
+			mimeType,
 			filename,
 			inline: !(request.query?.download ?? false)
 		}
@@ -407,7 +413,12 @@ export async function blobStorageUpdate(
 
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
-	await component.update(request.pathParams.id, request.body.metadata);
+	await component.update(request.pathParams.id, {
+		mimeType: request.body.mimeType,
+		extension: request.body.extension,
+		type: request.body.metadataType,
+		data: request.body.metadata
+	});
 
 	return {
 		statusCode: HttpStatusCode.noContent

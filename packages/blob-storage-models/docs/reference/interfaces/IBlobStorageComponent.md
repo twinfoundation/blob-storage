@@ -112,9 +112,25 @@ Create the blob with some metadata.
 
 The data for the blob in base64 format.
 
-• **metadata?**: `IProperty`[]
+• **metadata?**
 
 Metadata to associate with the blob.
+
+• **metadata.mimeType?**: `string`
+
+Mime type for the blob, will be detected if left undefined.
+
+• **metadata.extension?**: `string`
+
+Extension for the blob, will be detected if left undefined.
+
+• **metadata.type?**: `string`
+
+Type for the custom metadata.
+
+• **metadata.data?**: `unknown`
+
+Data for the custom metadata.
 
 • **namespace?**: `string`
 
@@ -156,15 +172,31 @@ The node identity which controls the vault key.
 
 `Promise`\<`object`\>
 
-The metadata and data for the blob if it can be found.
+The data and metadata for the blob if it can be found.
 
 ##### blob?
 
 > `optional` **blob**: `string`
 
-##### metadata
+##### metadata?
 
-> **metadata**: `IProperty`[]
+> `optional` **metadata**: `object`
+
+##### metadata.mimeType?
+
+> `optional` **mimeType**: `string`
+
+##### metadata.extension?
+
+> `optional` **extension**: `string`
+
+##### metadata.type?
+
+> `optional` **type**: `string`
+
+##### metadata.data?
+
+> `optional` **data**: `unknown`
 
 #### Throws
 
@@ -174,7 +206,7 @@ Not found error if the blob cannot be found.
 
 ### update()
 
-> **update**(`id`, `metadata`): `Promise`\<`void`\>
+> **update**(`id`, `metadata`?): `Promise`\<`void`\>
 
 Update the blob with metadata.
 
@@ -184,9 +216,25 @@ Update the blob with metadata.
 
 The id of the blob metadata to update.
 
-• **metadata**: `IProperty`[]
+• **metadata?**
 
 Metadata to associate with the blob.
+
+• **metadata.mimeType?**: `string`
+
+Mime type for the blob, will be detected if left undefined.
+
+• **metadata.extension?**: `string`
+
+Extension for the blob, will be detected if left undefined.
+
+• **metadata.type?**: `string`
+
+Type for the custom metadata.
+
+• **metadata.data?**: `unknown`
+
+Data for the custom metadata.
 
 #### Returns
 

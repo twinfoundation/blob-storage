@@ -3,6 +3,7 @@
 import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
 import { GeneralError, Guards, Is, StringHelper, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
+import { MimeTypes } from "@gtsc/web";
 import type { IIpfsBlobStorageConnectorConfig } from "./models/IIpfsBlobStorageConnectorConfig";
 
 /**
@@ -53,7 +54,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
 
 		try {
-			const formBlob = new Blob([blob], { type: "application/octet-stream" });
+			const formBlob = new Blob([blob], { type: MimeTypes.OctetStream });
 			const formData = new FormData();
 			formData.append("file", formBlob);
 
@@ -61,7 +62,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 				method: "POST",
 				body: formData,
 				headers: {
-					accept: "application/json",
+					accept: MimeTypes.Json,
 					"Content-Disposition": "form-data"
 				}
 			};
@@ -108,7 +109,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 			const fetchOptions: RequestInit = {
 				method: "POST",
 				headers: {
-					accept: "application/json"
+					accept: MimeTypes.Json
 				}
 			};
 
@@ -147,7 +148,7 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 			const fetchOptions: RequestInit = {
 				method: "POST",
 				headers: {
-					accept: "application/json"
+					accept: MimeTypes.Json
 				}
 			};
 

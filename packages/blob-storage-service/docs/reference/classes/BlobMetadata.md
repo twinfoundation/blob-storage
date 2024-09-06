@@ -22,12 +22,32 @@ The id for the blob.
 
 ***
 
+### mimeType?
+
+> `optional` **mimeType**: `string`
+
+The mime type for the blob.
+
+***
+
+### extension?
+
+> `optional` **extension**: `string`
+
+The extension.
+
+***
+
+### metadataType?
+
+> `optional` **metadataType**: `string`
+
+The metadata type for the blob.
+
+***
+
 ### metadata?
 
-> `optional` **metadata**: `object`
+> `optional` **metadata**: `unknown`
 
 The metadata for the blob.
-
-#### Index signature
-
- \[`key`: `string`\]: [`BlobMetadataProperty`](BlobMetadataProperty.md)

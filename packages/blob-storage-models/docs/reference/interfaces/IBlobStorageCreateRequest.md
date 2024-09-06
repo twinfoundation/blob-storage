@@ -16,11 +16,29 @@ The body parameters.
 
 The data to store in base64 encoding.
 
+#### mimeType?
+
+> `optional` **mimeType**: `string`
+
+The mime type of the blob, will be detected if left undefined.
+
+#### extension?
+
+> `optional` **extension**: `string`
+
+The extension of the blob, will be detected if left undefined.
+
+#### metadataType?
+
+> `optional` **metadataType**: `string`
+
+The metadata type of the blob.
+
 #### metadata?
 
-> `optional` **metadata**: `IProperty`[]
+> `optional` **metadata**: `unknown`
 
-Metadata to associate with the blob.
+Custom metadata to associate with the blob.
 
 #### namespace?
 

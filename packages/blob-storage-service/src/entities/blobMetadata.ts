@@ -1,7 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { entity, property } from "@gtsc/entity";
-import type { BlobMetadataProperty } from "./blobMetadataProperty";
 
 /**
  * Class representing metadata for the blob storage.
@@ -15,10 +14,26 @@ export class BlobMetadata {
 	public id!: string;
 
 	/**
+	 * The mime type for the blob.
+	 */
+	@property({ type: "string" })
+	public mimeType?: string;
+
+	/**
+	 * The extension.
+	 */
+	@property({ type: "string" })
+	public extension?: string;
+
+	/**
+	 * The metadata type for the blob.
+	 */
+	@property({ type: "string" })
+	public metadataType?: string;
+
+	/**
 	 * The metadata for the blob.
 	 */
-	@property({ type: "object", itemTypeRef: "BlobMetadataProperty" })
-	public metadata?: {
-		[key: string]: BlobMetadataProperty;
-	};
+	@property({ type: "object" })
+	public metadata?: unknown;
 }

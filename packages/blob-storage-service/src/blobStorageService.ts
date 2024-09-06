@@ -10,12 +10,12 @@ import {
 	GeneralError,
 	Guards,
 	Is,
-	MimeTypeHelper,
 	NotFoundError,
-	Urn
+	Urn,
+	Validation,
+	type IValidationFailure
 } from "@gtsc/core";
-import type { IProperty } from "@gtsc/data-core";
-import { SchemaOrgPropertyHelper } from "@gtsc/data-schema-org";
+import { DataTypeHelper } from "@gtsc/data-core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -26,8 +26,8 @@ import {
 	VaultEncryptionType,
 	type IVaultConnector
 } from "@gtsc/vault-models";
+import { MimeTypeHelper } from "@gtsc/web";
 import type { BlobMetadata } from "./entities/blobMetadata";
-import type { BlobMetadataProperty } from "./entities/blobMetadataProperty";
 import type { IBlobStorageServiceConfig } from "./models/IBlobStorageServiceConfig";
 
 /**
@@ -101,13 +101,22 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
 	 * @param metadata Metadata to associate with the blob.
+	 * @param metadata.mimeType Mime type for the blob, will be detected if left undefined.
+	 * @param metadata.extension Extension for the blob, will be detected if left undefined.
+	 * @param metadata.type Type for the custom metadata.
+	 * @param metadata.data Data for the custom metadata.
 	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @param nodeIdentity The node identity which controls the vault key.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async create(
 		blob: string,
-		metadata?: IProperty[],
+		metadata?: {
+			mimeType?: string;
+			extension?: string;
+			type?: string;
+			data?: unknown;
+		},
 		namespace?: string,
 		nodeIdentity?: string
 	): Promise<string> {
@@ -125,21 +134,29 @@ export class BlobStorageService implements IBlobStorageComponent {
 			// Convert the base64 data into bytes
 			let storeBlob = Converter.base64ToBytes(blob);
 
-			metadata ??= [];
-
 			// See if we can detect the mime type and default extension for the data.
 			// If not already supplied by the caller. We have to perform this operation
 			// on the unencrypted data.
-			let mimeType = SchemaOrgPropertyHelper.getText(metadata, "mimeType");
+			let mimeType = metadata?.mimeType;
 			if (!Is.stringValue(mimeType)) {
 				mimeType = await MimeTypeHelper.detect(storeBlob);
-				SchemaOrgPropertyHelper.setText(metadata, "mimeType", mimeType);
 			}
 
-			let defaultExtension = SchemaOrgPropertyHelper.getText(metadata, "defaultExtension");
-			if (!Is.stringValue(defaultExtension) && Is.stringValue(mimeType)) {
-				defaultExtension = await MimeTypeHelper.defaultExtension(mimeType);
-				SchemaOrgPropertyHelper.setText(metadata, "defaultExtension", defaultExtension);
+			let extension = metadata?.extension;
+			if (!Is.stringValue(extension) && Is.stringValue(mimeType)) {
+				extension = await MimeTypeHelper.defaultExtension(mimeType);
+			}
+
+			// Validate the metadata if it is supplied.
+			const validationFailures: IValidationFailure[] = [];
+			const isValid = await DataTypeHelper.validate(
+				"data",
+				metadata?.type,
+				metadata?.data,
+				validationFailures
+			);
+			if (!isValid) {
+				Validation.asValidationError(this.CLASS_NAME, "metadata", validationFailures);
 			}
 
 			// If we have a vault connector then encrypt the data.
@@ -154,18 +171,12 @@ export class BlobStorageService implements IBlobStorageComponent {
 			// Set the blob in the storage connector, which may now be encrypted
 			const blobId = await blobStorageConnector.set(storeBlob);
 
-			// Convert the property list to a map to store it.
-			const blobMetadata: { [key: string]: BlobMetadataProperty } = {};
-			for (const item of metadata) {
-				blobMetadata[item.key] = {
-					type: item.type,
-					value: item.value
-				};
-			}
-
 			await this._metadataEntityStorage.set({
 				id: blobId,
-				metadata: blobMetadata
+				mimeType,
+				extension,
+				metadataType: metadata?.type,
+				metadata: metadata?.data
 			});
 
 			return blobId;
@@ -188,7 +199,12 @@ export class BlobStorageService implements IBlobStorageComponent {
 		nodeIdentity?: string
 	): Promise<{
 		blob?: string;
-		metadata: IProperty[];
+		metadata?: {
+			mimeType?: string;
+			extension?: string;
+			type?: string;
+			data?: unknown;
+		};
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		if (this._vaultConnector && includeContent) {
@@ -198,19 +214,6 @@ export class BlobStorageService implements IBlobStorageComponent {
 		try {
 			// Get the metadata
 			const blobMetadata = await this._metadataEntityStorage.get(id);
-
-			// Convert the metadata map to a property list.
-			const metadataList: IProperty[] = [];
-			if (Is.objectValue(blobMetadata?.metadata)) {
-				for (const key of Object.keys(blobMetadata.metadata)) {
-					const item = blobMetadata.metadata[key];
-					metadataList.push({
-						key,
-						type: item.type,
-						value: item.value
-					});
-				}
-			}
 
 			let returnBlob: Uint8Array | undefined;
 			if (includeContent) {
@@ -232,7 +235,12 @@ export class BlobStorageService implements IBlobStorageComponent {
 
 			return {
 				blob: Is.uint8Array(returnBlob) ? Converter.bytesToBase64(returnBlob) : undefined,
-				metadata: metadataList
+				metadata: {
+					mimeType: blobMetadata?.mimeType,
+					extension: blobMetadata?.extension,
+					type: blobMetadata?.metadataType,
+					data: blobMetadata?.metadata
+				}
 			};
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "getFailed", undefined, error);
@@ -243,10 +251,22 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 * Update the blob with metadata.
 	 * @param id The id of the blob metadata to update.
 	 * @param metadata Metadata to associate with the blob.
+	 * @param metadata.mimeType Mime type for the blob, will be detected if left undefined.
+	 * @param metadata.extension Extension for the blob, will be detected if left undefined.
+	 * @param metadata.type Type for the custom metadata.
+	 * @param metadata.data Data for the custom metadata.
 	 * @returns Nothing.
 	 * @throws Not found error if the blob cannot be found.
 	 */
-	public async update(id: string, metadata: IProperty[]): Promise<void> {
+	public async update(
+		id: string,
+		metadata?: {
+			mimeType?: string;
+			extension?: string;
+			type?: string;
+			data?: unknown;
+		}
+	): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		try {
@@ -256,18 +276,24 @@ export class BlobStorageService implements IBlobStorageComponent {
 				throw new NotFoundError(this.CLASS_NAME, "blobNotFound", id);
 			}
 
-			// Convert the property list to a map to store it.
-			const metadataMap: { [key: string]: BlobMetadataProperty } = {};
-			for (const item of metadata) {
-				metadataMap[item.key] = {
-					type: item.type,
-					value: item.value
-				};
+			// Validate the metadata if it is supplied.
+			const validationFailures: IValidationFailure[] = [];
+			const isValid = await DataTypeHelper.validate(
+				"data",
+				metadata?.type,
+				metadata?.data,
+				validationFailures
+			);
+			if (!isValid) {
+				Validation.asValidationError(this.CLASS_NAME, "metadata", validationFailures);
 			}
 
 			await this._metadataEntityStorage.set({
 				id: blobMetadata.id,
-				metadata: metadataMap
+				mimeType: metadata?.mimeType ?? blobMetadata.mimeType,
+				extension: metadata?.extension ?? blobMetadata.extension,
+				metadataType: metadata?.type,
+				metadata: metadata?.data
 			});
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "updateFailed", undefined, error);
