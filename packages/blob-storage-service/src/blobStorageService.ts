@@ -5,7 +5,17 @@ import {
 	type IBlobStorageComponent,
 	type IBlobStorageConnector
 } from "@gtsc/blob-storage-models";
-import { Converter, GeneralError, Guards, Is, NotFoundError, Urn } from "@gtsc/core";
+import {
+	Converter,
+	GeneralError,
+	Guards,
+	Is,
+	type IValidationFailure,
+	NotFoundError,
+	Urn,
+	Validation
+} from "@gtsc/core";
+import { JsonLdHelper, JsonLdProcessor, type IJsonLdDocument } from "@gtsc/data-json-ld";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -101,7 +111,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 		blob: string,
 		mimeType?: string,
 		extension?: string,
-		metadata?: unknown,
+		metadata?: IJsonLdDocument,
 		namespace?: string,
 		nodeIdentity?: string
 	): Promise<string> {
@@ -128,6 +138,14 @@ export class BlobStorageService implements IBlobStorageComponent {
 
 			if (!Is.stringValue(extension) && Is.stringValue(mimeType)) {
 				extension = await MimeTypeHelper.defaultExtension(mimeType);
+			}
+
+			if (Is.object(metadata)) {
+				const validationFailures: IValidationFailure[] = [];
+				JsonLdHelper.validate(metadata, validationFailures);
+				Validation.asValidationError(this.CLASS_NAME, "metadata", validationFailures);
+
+				metadata = await JsonLdProcessor.compact(metadata);
 			}
 
 			// If we have a vault connector then encrypt the data.
@@ -171,7 +189,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 		blob?: string;
 		mimeType?: string;
 		extension?: string;
-		metadata?: unknown;
+		metadata?: IJsonLdDocument;
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		if (this._vaultConnector && includeContent) {
@@ -200,13 +218,16 @@ export class BlobStorageService implements IBlobStorageComponent {
 				}
 			}
 
+			let metadata = blobMetadata?.metadata;
+			if (Is.object(metadata)) {
+				metadata = await JsonLdProcessor.expand(metadata);
+			}
+
 			return {
 				blob: Is.uint8Array(returnBlob) ? Converter.bytesToBase64(returnBlob) : undefined,
-				metadata: {
-					mimeType: blobMetadata?.mimeType,
-					extension: blobMetadata?.extension,
-					data: blobMetadata?.metadata
-				}
+				mimeType: blobMetadata?.mimeType,
+				extension: blobMetadata?.extension,
+				metadata
 			};
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "getFailed", undefined, error);
@@ -226,7 +247,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 		id: string,
 		mimeType?: string,
 		extension?: string,
-		metadata?: unknown
+		metadata?: IJsonLdDocument
 	): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
@@ -235,6 +256,14 @@ export class BlobStorageService implements IBlobStorageComponent {
 
 			if (Is.undefined(blobMetadata)) {
 				throw new NotFoundError(this.CLASS_NAME, "blobNotFound", id);
+			}
+
+			if (Is.object(metadata)) {
+				const validationFailures: IValidationFailure[] = [];
+				await JsonLdHelper.validate(metadata, validationFailures);
+				Validation.asValidationError(this.CLASS_NAME, "metadata", validationFailures);
+
+				metadata = await JsonLdProcessor.compact(metadata);
 			}
 
 			await this._metadataEntityStorage.set({
@@ -264,6 +293,8 @@ export class BlobStorageService implements IBlobStorageComponent {
 			if (!removed) {
 				throw new NotFoundError(this.CLASS_NAME, "blobNotFound", id);
 			}
+
+			await this._metadataEntityStorage.remove(id);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "removeFailed", undefined, error);
 		}

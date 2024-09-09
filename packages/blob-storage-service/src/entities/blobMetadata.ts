@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IJsonLdDocument } from "@gtsc/data-json-ld";
 import { entity, property } from "@gtsc/entity";
 
 /**
@@ -28,6 +29,6 @@ export class BlobMetadata {
 	/**
 	 * The metadata for the blob as JSON-LD.
 	 */
-	@property({ type: "object" })
-	public metadata?: unknown;
+	@property({ type: "object", itemTypeRef: "IJsonLdDocument" })
+	public metadata?: IJsonLdDocument;
 }

@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IComponent } from "@gtsc/core";
+import type { IJsonLdDocument } from "@gtsc/data-json-ld";
 
 /**
  * Interface describing an blob storage component.
@@ -20,7 +21,7 @@ export interface IBlobStorageComponent extends IComponent {
 		blob: string,
 		mimeType?: string,
 		extension?: string,
-		metadata?: unknown,
+		metadata?: IJsonLdDocument,
 		namespace?: string,
 		nodeIdentity?: string
 	): Promise<string>;
@@ -41,7 +42,7 @@ export interface IBlobStorageComponent extends IComponent {
 		blob?: string;
 		mimeType?: string;
 		extension?: string;
-		metadata?: unknown;
+		metadata?: IJsonLdDocument;
 	}>;
 
 	/**
@@ -53,7 +54,12 @@ export interface IBlobStorageComponent extends IComponent {
 	 * @returns Nothing.
 	 * @throws Not found error if the blob cannot be found.
 	 */
-	update(id: string, mimeType?: string, extension?: string, metadata?: unknown): Promise<void>;
+	update(
+		id: string,
+		mimeType?: string,
+		extension?: string,
+		metadata?: IJsonLdDocument
+	): Promise<void>;
 
 	/**
 	 * Remove the blob.

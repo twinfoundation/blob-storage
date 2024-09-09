@@ -40,6 +40,6 @@ The extension.
 
 ### metadata?
 
-> `optional` **metadata**: `unknown`
+> `optional` **metadata**: `IJsonLdDocument`
 
 The metadata for the blob as JSON-LD.

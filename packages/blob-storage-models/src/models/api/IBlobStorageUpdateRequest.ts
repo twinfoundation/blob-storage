@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IJsonLdDocument } from "@gtsc/data-json-ld";
 
 /**
  * Request to update a blob entry.
@@ -32,6 +33,6 @@ export interface IBlobStorageUpdateRequest {
 		/**
 		 * Custom metadata to associate with the blob as JSON-LD.
 		 */
-		metadata?: unknown;
+		metadata?: IJsonLdDocument;
 	};
 }
