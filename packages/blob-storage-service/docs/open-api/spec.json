@@ -701,7 +701,7 @@
                         "description": "The extension of the blob, will be detected if left undefined."
                     },
                     "metadata": {
-                        "$ref": "#/components/schemas/JsonLdDocument"
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
                     },
                     "namespace": {
                         "type": "string",
@@ -714,79 +714,7 @@
                 "additionalProperties": false,
                 "description": "The body parameters."
             },
-            "JsonLdDocument": {
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/NodeObject"
-                    },
-                    {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NodeObject"
-                        }
-                    },
-                    {
-                        "type": "object",
-                        "properties": {
-                            "@context": {
-                                "anyOf": [
-                                    {
-                                        "type": "null"
-                                    },
-                                    {
-                                        "type": "string"
-                                    },
-                                    {
-                                        "$ref": "#/components/schemas/ContextDefinition"
-                                    },
-                                    {
-                                        "type": "array",
-                                        "items": {
-                                            "anyOf": [
-                                                {
-                                                    "type": "null"
-                                                },
-                                                {
-                                                    "type": "string"
-                                                },
-                                                {
-                                                    "$ref": "#/components/schemas/ContextDefinition"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "@graph": {
-                                "anyOf": [
-                                    {
-                                        "$ref": "#/components/schemas/ValueObject"
-                                    },
-                                    {
-                                        "$ref": "#/components/schemas/NodeObject"
-                                    },
-                                    {
-                                        "type": "array",
-                                        "items": {
-                                            "anyOf": [
-                                                {
-                                                    "$ref": "#/components/schemas/ValueObject"
-                                                },
-                                                {
-                                                    "$ref": "#/components/schemas/NodeObject"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            }
-                        },
-                        "additionalProperties": false
-                    }
-                ],
-                "description": "A JSON-LD document MUST be valid JSON text as described in [RFC8259], or some format that can be represented in the JSON-LD internal representation that is equivalent to valid JSON text."
-            },
-            "NodeObject": {
+            "JsonLdNodeObject": {
                 "type": "object",
                 "properties": {
                     "@context": {
@@ -798,7 +726,7 @@
                                 "type": "string"
                             },
                             {
-                                "$ref": "#/components/schemas/ContextDefinition"
+                                "$ref": "#/components/schemas/JsonLdContextDefinition"
                             },
                             {
                                 "type": "array",
@@ -811,7 +739,7 @@
                                             "type": "string"
                                         },
                                         {
-                                            "$ref": "#/components/schemas/ContextDefinition"
+                                            "$ref": "#/components/schemas/JsonLdContextDefinition"
                                         }
                                     ]
                                 }
@@ -832,17 +760,17 @@
                         ]
                     },
                     "@included": {
-                        "$ref": "#/components/schemas/IncludedBlock"
+                        "$ref": "#/components/schemas/JsonLdIncludedBlock"
                     },
                     "@graph": {
                         "anyOf": [
                             {
-                                "$ref": "#/components/schemas/NodeObject"
+                                "$ref": "#/components/schemas/JsonLdNodeObject"
                             },
                             {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/NodeObject"
+                                    "$ref": "#/components/schemas/JsonLdNodeObject"
                                 }
                             }
                         ]
@@ -850,12 +778,12 @@
                     "@nest": {
                         "anyOf": [
                             {
-                                "$ref": "#/components/schemas/JsonObject"
+                                "$ref": "#/components/schemas/JsonLdJsonObject"
                             },
                             {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/JsonObject"
+                                    "$ref": "#/components/schemas/JsonLdJsonObject"
                                 }
                             }
                         ]
@@ -886,53 +814,53 @@
                 "additionalProperties": {
                     "anyOf": [
                         {
-                            "$ref": "#/components/schemas/NodePrimitive"
+                            "$ref": "#/components/schemas/JsonLdNodePrimitive"
                         },
                         {
                             "type": "array",
                             "items": {
-                                "$ref": "#/components/schemas/NodePrimitive"
+                                "$ref": "#/components/schemas/JsonLdNodePrimitive"
                             }
                         },
                         {
-                            "$ref": "#/components/schemas/LanguageMap"
+                            "$ref": "#/components/schemas/JsonLdLanguageMap"
                         },
                         {
-                            "$ref": "#/components/schemas/IndexMap"
+                            "$ref": "#/components/schemas/JsonLdIndexMap"
                         },
                         {
-                            "$ref": "#/components/schemas/IncludedBlock"
+                            "$ref": "#/components/schemas/JsonLdIncludedBlock"
                         },
                         {
-                            "$ref": "#/components/schemas/IdMap"
+                            "$ref": "#/components/schemas/JsonLdIdMap"
                         },
                         {
-                            "$ref": "#/components/schemas/TypeMap"
+                            "$ref": "#/components/schemas/JsonLdTypeMap"
                         }
                     ]
                 },
                 "description": "A node object represents zero or more properties of a node in the graph serialized by the JSON-LD document."
             },
-            "ContextDefinition": {
+            "JsonLdContextDefinition": {
                 "type": "object",
                 "properties": {
                     "@base": {
-                        "$ref": "#/components/schemas/Keyword"
+                        "$ref": "#/components/schemas/JsonLdKeyword"
                     },
                     "@direction": {
-                        "$ref": "#/components/schemas/Keyword"
+                        "$ref": "#/components/schemas/JsonLdKeyword"
                     },
                     "@import": {
-                        "$ref": "#/components/schemas/Keyword"
+                        "$ref": "#/components/schemas/JsonLdKeyword"
                     },
                     "@language": {
-                        "$ref": "#/components/schemas/Keyword"
+                        "$ref": "#/components/schemas/JsonLdKeyword"
                     },
                     "@propagate": {
-                        "$ref": "#/components/schemas/Keyword"
+                        "$ref": "#/components/schemas/JsonLdKeyword"
                     },
                     "@protected": {
-                        "$ref": "#/components/schemas/Keyword"
+                        "$ref": "#/components/schemas/JsonLdKeyword"
                     },
                     "@type": {
                         "type": "object",
@@ -942,7 +870,7 @@
                                 "const": "@set"
                             },
                             "@protected": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             }
                         },
                         "required": [
@@ -951,10 +879,10 @@
                         "additionalProperties": false
                     },
                     "@version": {
-                        "$ref": "#/components/schemas/Keyword"
+                        "$ref": "#/components/schemas/JsonLdKeyword"
                     },
                     "@vocab": {
-                        "$ref": "#/components/schemas/Keyword"
+                        "$ref": "#/components/schemas/JsonLdKeyword"
                     }
                 },
                 "additionalProperties": {
@@ -966,13 +894,13 @@
                             "type": "string"
                         },
                         {
-                            "$ref": "#/components/schemas/ExpandedTermDefinition"
+                            "$ref": "#/components/schemas/JsonLdExpandedTermDefinition"
                         }
                     ]
                 },
                 "description": "A context definition defines a local context in a node object."
             },
-            "Keyword": {
+            "JsonLdKeyword": {
                 "type": "object",
                 "properties": {
                     "@base": {
@@ -992,7 +920,7 @@
                                 "const": "@set"
                             },
                             {
-                                "$ref": "#/components/schemas/ContainerType"
+                                "$ref": "#/components/schemas/JsonLdContainerType"
                             },
                             {
                                 "type": "array",
@@ -1007,13 +935,13 @@
                                             "const": "@set"
                                         },
                                         {
-                                            "$ref": "#/components/schemas/ContainerType"
+                                            "$ref": "#/components/schemas/JsonLdContainerType"
                                         }
                                     ]
                                 }
                             },
                             {
-                                "$ref": "#/components/schemas/ContainerTypeArray"
+                                "$ref": "#/components/schemas/JsonLdContainerTypeArray"
                             },
                             {
                                 "type": "null"
@@ -1029,7 +957,7 @@
                                 "type": "string"
                             },
                             {
-                                "$ref": "#/components/schemas/ContextDefinition"
+                                "$ref": "#/components/schemas/JsonLdContextDefinition"
                             },
                             {
                                 "type": "array",
@@ -1042,7 +970,7 @@
                                             "type": "string"
                                         },
                                         {
-                                            "$ref": "#/components/schemas/ContextDefinition"
+                                            "$ref": "#/components/schemas/JsonLdContextDefinition"
                                         }
                                     ]
                                 }
@@ -1063,20 +991,20 @@
                     "@graph": {
                         "anyOf": [
                             {
-                                "$ref": "#/components/schemas/ValueObject"
+                                "$ref": "#/components/schemas/JsonLdValueObject"
                             },
                             {
-                                "$ref": "#/components/schemas/NodeObject"
+                                "$ref": "#/components/schemas/JsonLdNodeObject"
                             },
                             {
                                 "type": "array",
                                 "items": {
                                     "anyOf": [
                                         {
-                                            "$ref": "#/components/schemas/ValueObject"
+                                            "$ref": "#/components/schemas/JsonLdValueObject"
                                         },
                                         {
-                                            "$ref": "#/components/schemas/NodeObject"
+                                            "$ref": "#/components/schemas/JsonLdNodeObject"
                                         }
                                     ]
                                 }
@@ -1100,7 +1028,7 @@
                         "type": "string"
                     },
                     "@included": {
-                        "$ref": "#/components/schemas/IncludedBlock"
+                        "$ref": "#/components/schemas/JsonLdIncludedBlock"
                     },
                     "@index": {
                         "type": "string"
@@ -1115,12 +1043,12 @@
                     "@list": {
                         "anyOf": [
                             {
-                                "$ref": "#/components/schemas/ListOrSetItem"
+                                "$ref": "#/components/schemas/JsonLdListOrSetItem"
                             },
                             {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/ListOrSetItem"
+                                    "$ref": "#/components/schemas/JsonLdListOrSetItem"
                                 }
                             }
                         ]
@@ -1147,12 +1075,12 @@
                     "@set": {
                         "anyOf": [
                             {
-                                "$ref": "#/components/schemas/ListOrSetItem"
+                                "$ref": "#/components/schemas/JsonLdListOrSetItem"
                             },
                             {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/ListOrSetItem"
+                                    "$ref": "#/components/schemas/JsonLdListOrSetItem"
                                 }
                             }
                         ]
@@ -1207,7 +1135,7 @@
                 "additionalProperties": false,
                 "description": "A list of keywords and their types. Only used for internal reference; not an actual interface. Not for export."
             },
-            "ContainerType": {
+            "JsonLdContainerType": {
                 "type": "string",
                 "enum": [
                     "@language",
@@ -1217,7 +1145,7 @@
                     "@type"
                 ]
             },
-            "ContainerTypeArray": {
+            "JsonLdContainerTypeArray": {
                 "anyOf": [
                     {
                         "type": "array",
@@ -1372,7 +1300,7 @@
                                 "const": "@set"
                             },
                             {
-                                "$ref": "#/components/schemas/ContainerType"
+                                "$ref": "#/components/schemas/JsonLdContainerType"
                             }
                         ],
                         "maxItems": 2
@@ -1382,7 +1310,7 @@
                         "minItems": 2,
                         "items": [
                             {
-                                "$ref": "#/components/schemas/ContainerType"
+                                "$ref": "#/components/schemas/JsonLdContainerType"
                             },
                             {
                                 "type": "string",
@@ -1393,26 +1321,26 @@
                     }
                 ]
             },
-            "ValueObject": {
+            "JsonLdValueObject": {
                 "anyOf": [
                     {
                         "type": "object",
                         "additionalProperties": false,
                         "properties": {
                             "@value": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@language": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@direction": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@index": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@context": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             }
                         },
                         "required": [
@@ -1424,16 +1352,16 @@
                         "additionalProperties": false,
                         "properties": {
                             "@value": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@type": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@index": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@context": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             }
                         },
                         "required": [
@@ -1448,13 +1376,13 @@
                             "@value": {
                                 "anyOf": [
                                     {
-                                        "$ref": "#/components/schemas/Keyword"
+                                        "$ref": "#/components/schemas/JsonLdKeyword"
                                     },
                                     {
-                                        "$ref": "#/components/schemas/JsonObject"
+                                        "$ref": "#/components/schemas/JsonLdJsonObject"
                                     },
                                     {
-                                        "$ref": "#/components/schemas/JsonArray"
+                                        "$ref": "#/components/schemas/JsonLdJsonArray"
                                     }
                                 ]
                             },
@@ -1463,10 +1391,10 @@
                                 "const": "@json"
                             },
                             "@index": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@context": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             }
                         },
                         "required": [
@@ -1477,12 +1405,12 @@
                 ],
                 "description": "A value object is used to explicitly associate a type or a language with a value to create a typed value or a language-tagged string and possibly associate a base direction."
             },
-            "JsonObject": {
+            "JsonLdJsonObject": {
                 "type": "object",
                 "additionalProperties": {
                     "anyOf": [
                         {
-                            "$ref": "#/components/schemas/JsonValue"
+                            "$ref": "#/components/schemas/JsonLdJsonValue"
                         },
                         {
                             "not": {}
@@ -1490,20 +1418,20 @@
                     ]
                 }
             },
-            "JsonValue": {
+            "JsonLdJsonValue": {
                 "anyOf": [
                     {
-                        "$ref": "#/components/schemas/JsonPrimitive"
+                        "$ref": "#/components/schemas/JsonLdJsonPrimitive"
                     },
                     {
-                        "$ref": "#/components/schemas/JsonArray"
+                        "$ref": "#/components/schemas/JsonLdJsonArray"
                     },
                     {
-                        "$ref": "#/components/schemas/JsonObject"
+                        "$ref": "#/components/schemas/JsonLdJsonObject"
                     }
                 ]
             },
-            "JsonPrimitive": {
+            "JsonLdJsonPrimitive": {
                 "type": [
                     "string",
                     "number",
@@ -1511,27 +1439,27 @@
                     "null"
                 ]
             },
-            "JsonArray": {
+            "JsonLdJsonArray": {
                 "type": "array",
                 "items": {
-                    "$ref": "#/components/schemas/JsonValue"
+                    "$ref": "#/components/schemas/JsonLdJsonValue"
                 }
             },
-            "IncludedBlock": {
+            "JsonLdIncludedBlock": {
                 "anyOf": [
                     {
-                        "$ref": "#/components/schemas/NodeObject"
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
                     },
                     {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/NodeObject"
+                            "$ref": "#/components/schemas/JsonLdNodeObject"
                         }
                     }
                 ],
                 "description": "An included block is used to provide a set of node objects."
             },
-            "ListOrSetItem": {
+            "JsonLdListOrSetItem": {
                 "anyOf": [
                     {
                         "type": "null"
@@ -1546,15 +1474,15 @@
                         "type": "string"
                     },
                     {
-                        "$ref": "#/components/schemas/NodeObject"
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
                     },
                     {
-                        "$ref": "#/components/schemas/ValueObject"
+                        "$ref": "#/components/schemas/JsonLdValueObject"
                     }
                 ],
                 "description": "A list or set item can be a null, boolean, number, string, node object, or value object."
             },
-            "ExpandedTermDefinition": {
+            "JsonLdExpandedTermDefinition": {
                 "anyOf": [
                     {
                         "type": "object",
@@ -1563,7 +1491,7 @@
                             "@id": {
                                 "anyOf": [
                                     {
-                                        "$ref": "#/components/schemas/Keyword"
+                                        "$ref": "#/components/schemas/JsonLdKeyword"
                                     },
                                     {
                                         "type": "null"
@@ -1574,28 +1502,28 @@
                                 "type": "string"
                             },
                             "@container": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@type": {
                                 "type": "string"
                             },
                             "@language": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@index": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@context": {
-                                "$ref": "#/components/schemas/ContextDefinition"
+                                "$ref": "#/components/schemas/JsonLdContextDefinition"
                             },
                             "@prefix": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@propagate": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@protected": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             }
                         }
                     },
@@ -1604,7 +1532,7 @@
                         "additionalProperties": false,
                         "properties": {
                             "@reverse": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@container": {
                                 "type": [
@@ -1621,22 +1549,22 @@
                                 "type": "string"
                             },
                             "@language": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@index": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@context": {
-                                "$ref": "#/components/schemas/ContextDefinition"
+                                "$ref": "#/components/schemas/JsonLdContextDefinition"
                             },
                             "@prefix": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@propagate": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             },
                             "@protected": {
-                                "$ref": "#/components/schemas/Keyword"
+                                "$ref": "#/components/schemas/JsonLdKeyword"
                             }
                         },
                         "required": [
@@ -1646,7 +1574,7 @@
                 ],
                 "description": "An expanded term definition is used to describe the mapping between a term and its expanded identifier, as well as other properties of the value associated with the term when it is used as key in a node object."
             },
-            "NodePrimitive": {
+            "JsonLdNodePrimitive": {
                 "anyOf": [
                     {
                         "type": "null"
@@ -1661,34 +1589,35 @@
                         "type": "string"
                     },
                     {
-                        "$ref": "#/components/schemas/NodeObject"
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
                     },
                     {
-                        "$ref": "#/components/schemas/GraphObject"
+                        "$ref": "#/components/schemas/JsonLdGraphObject"
                     },
                     {
-                        "$ref": "#/components/schemas/ValueObject"
+                        "$ref": "#/components/schemas/JsonLdValueObject"
                     },
                     {
-                        "$ref": "#/components/schemas/ListObject"
+                        "$ref": "#/components/schemas/JsonLdListObject"
                     },
                     {
-                        "$ref": "#/components/schemas/SetObject"
+                        "$ref": "#/components/schemas/JsonLdSetObject"
                     }
-                ]
+                ],
+                "description": "A node primitive is a JSON-LD value which is not one of the defined NodeObject properties."
             },
-            "GraphObject": {
+            "JsonLdGraphObject": {
                 "type": "object",
                 "properties": {
                     "@graph": {
                         "anyOf": [
                             {
-                                "$ref": "#/components/schemas/NodeObject"
+                                "$ref": "#/components/schemas/JsonLdNodeObject"
                             },
                             {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/NodeObject"
+                                    "$ref": "#/components/schemas/JsonLdNodeObject"
                                 }
                             }
                         ]
@@ -1718,7 +1647,7 @@
                                 "type": "string"
                             },
                             {
-                                "$ref": "#/components/schemas/ContextDefinition"
+                                "$ref": "#/components/schemas/JsonLdContextDefinition"
                             },
                             {
                                 "type": "array",
@@ -1731,7 +1660,7 @@
                                             "type": "string"
                                         },
                                         {
-                                            "$ref": "#/components/schemas/ContextDefinition"
+                                            "$ref": "#/components/schemas/JsonLdContextDefinition"
                                         }
                                     ]
                                 }
@@ -1745,18 +1674,18 @@
                 "additionalProperties": false,
                 "description": "A graph object represents a named graph, which MAY include an explicit graph name."
             },
-            "ListObject": {
+            "JsonLdListObject": {
                 "type": "object",
                 "properties": {
                     "@list": {
                         "anyOf": [
                             {
-                                "$ref": "#/components/schemas/ListOrSetItem"
+                                "$ref": "#/components/schemas/JsonLdListOrSetItem"
                             },
                             {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/ListOrSetItem"
+                                    "$ref": "#/components/schemas/JsonLdListOrSetItem"
                                 }
                             }
                         ]
@@ -1771,18 +1700,18 @@
                 "additionalProperties": false,
                 "description": "A list represents an ordered set of values."
             },
-            "SetObject": {
+            "JsonLdSetObject": {
                 "type": "object",
                 "properties": {
                     "@set": {
                         "anyOf": [
                             {
-                                "$ref": "#/components/schemas/ListOrSetItem"
+                                "$ref": "#/components/schemas/JsonLdListOrSetItem"
                             },
                             {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/ListOrSetItem"
+                                    "$ref": "#/components/schemas/JsonLdListOrSetItem"
                                 }
                             }
                         ]
@@ -1797,7 +1726,7 @@
                 "additionalProperties": false,
                 "description": "A set represents an unordered set of values."
             },
-            "LanguageMap": {
+            "JsonLdLanguageMap": {
                 "type": "object",
                 "additionalProperties": {
                     "anyOf": [
@@ -1817,24 +1746,24 @@
                 },
                 "description": "A language map is used to associate a language with a value in a way that allows easy programmatic access."
             },
-            "IndexMap": {
+            "JsonLdIndexMap": {
                 "type": "object",
                 "additionalProperties": {
                     "anyOf": [
                         {
-                            "$ref": "#/components/schemas/IndexMapItem"
+                            "$ref": "#/components/schemas/JsonLdIndexMapItem"
                         },
                         {
                             "type": "array",
                             "items": {
-                                "$ref": "#/components/schemas/IndexMapItem"
+                                "$ref": "#/components/schemas/JsonLdIndexMapItem"
                             }
                         }
                     ]
                 },
                 "description": "An index map allows keys that have no semantic meaning, but should be preserved regardless, to be used in JSON-LD documents."
             },
-            "IndexMapItem": {
+            "JsonLdIndexMapItem": {
                 "anyOf": [
                     {
                         "type": "null"
@@ -1849,28 +1778,28 @@
                         "type": "string"
                     },
                     {
-                        "$ref": "#/components/schemas/NodeObject"
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
                     },
                     {
-                        "$ref": "#/components/schemas/ValueObject"
+                        "$ref": "#/components/schemas/JsonLdValueObject"
                     },
                     {
-                        "$ref": "#/components/schemas/ListObject"
+                        "$ref": "#/components/schemas/JsonLdListObject"
                     },
                     {
-                        "$ref": "#/components/schemas/SetObject"
+                        "$ref": "#/components/schemas/JsonLdSetObject"
                     }
                 ],
                 "description": "The items that can be stored in an index map."
             },
-            "IdMap": {
+            "JsonLdIdMap": {
                 "type": "object",
                 "additionalProperties": {
-                    "$ref": "#/components/schemas/NodeObject"
+                    "$ref": "#/components/schemas/JsonLdNodeObject"
                 },
                 "description": "An id map is used to associate an IRI with a value that allows easy programmatic access."
             },
-            "TypeMap": {
+            "JsonLdTypeMap": {
                 "type": "object",
                 "additionalProperties": {
                     "anyOf": [
@@ -1878,7 +1807,7 @@
                             "type": "string"
                         },
                         {
-                            "$ref": "#/components/schemas/NodeObject"
+                            "$ref": "#/components/schemas/JsonLdNodeObject"
                         }
                     ]
                 },
@@ -1896,7 +1825,7 @@
                         "description": "The extension of the blob."
                     },
                     "metadata": {
-                        "$ref": "#/components/schemas/JsonLdDocument"
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
                     },
                     "blob": {
                         "type": "string",
@@ -1960,7 +1889,7 @@
                         "description": "The extension of the blob, will be detected if left undefined."
                     },
                     "metadata": {
-                        "$ref": "#/components/schemas/JsonLdDocument"
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
                     }
                 },
                 "additionalProperties": false,

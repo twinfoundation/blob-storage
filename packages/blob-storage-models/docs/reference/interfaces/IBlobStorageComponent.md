@@ -28,7 +28,7 @@ Mime type for the blob, will be detected if left undefined.
 
 Extension for the blob, will be detected if left undefined.
 
-• **metadata?**: `IJsonLdDocument`
+• **metadata?**: `IJsonLdNodeObject`
 
 Data for the custom metadata as JSON-LD.
 
@@ -88,7 +88,7 @@ The data and metadata for the blob if it can be found.
 
 ##### metadata?
 
-> `optional` **metadata**: `IJsonLdDocument`
+> `optional` **metadata**: `IJsonLdNodeObject`
 
 #### Throws
 
@@ -116,7 +116,7 @@ Mime type for the blob, will be detected if left undefined.
 
 Extension for the blob, will be detected if left undefined.
 
-• **metadata?**: `IJsonLdDocument`
+• **metadata?**: `IJsonLdNodeObject`
 
 Data for the custom metadata as JSON-LD.
 

@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IJsonLdDocument } from "@gtsc/data-json-ld";
+import type { IJsonLdNodeObject } from "@gtsc/data-json-ld";
 
 /**
  * Response to get an entry from blob storage.
@@ -23,7 +23,7 @@ export interface IBlobStorageGetResponse {
 		/**
 		 * Custom metadata to associate with the blob as JSON-LD.
 		 */
-		metadata?: IJsonLdDocument;
+		metadata?: IJsonLdNodeObject;
 
 		/**
 		 * The blob in base64 format, if the includeContent flag was set in the request.

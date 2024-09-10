@@ -11,7 +11,7 @@ import type {
 	IBlobStorageUpdateRequest
 } from "@gtsc/blob-storage-models";
 import { Guards, Is, StringHelper, Urn } from "@gtsc/core";
-import type { IJsonLdDocument } from "@gtsc/data-json-ld";
+import type { IJsonLdNodeObject } from "@gtsc/data-json-ld";
 import { nameof } from "@gtsc/nameof";
 
 /**
@@ -50,7 +50,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 		blob: string,
 		mimeType?: string,
 		extension?: string,
-		metadata?: IJsonLdDocument,
+		metadata?: IJsonLdNodeObject,
 		namespace?: string
 	): Promise<string> {
 		Guards.stringBase64(this.CLASS_NAME, nameof(blob), blob);
@@ -82,7 +82,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 		blob?: string;
 		mimeType?: string;
 		extension?: string;
-		metadata?: IJsonLdDocument;
+		metadata?: IJsonLdNodeObject;
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
@@ -120,7 +120,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 		id: string,
 		mimeType?: string,
 		extension?: string,
-		metadata?: IJsonLdDocument
+		metadata?: IJsonLdNodeObject
 	): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 

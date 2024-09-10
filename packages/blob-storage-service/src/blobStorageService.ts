@@ -15,7 +15,7 @@ import {
 	Urn,
 	Validation
 } from "@gtsc/core";
-import { JsonLdHelper, JsonLdProcessor, type IJsonLdDocument } from "@gtsc/data-json-ld";
+import { JsonLdHelper, type IJsonLdNodeObject } from "@gtsc/data-json-ld";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -111,7 +111,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 		blob: string,
 		mimeType?: string,
 		extension?: string,
-		metadata?: IJsonLdDocument,
+		metadata?: IJsonLdNodeObject,
 		namespace?: string,
 		nodeIdentity?: string
 	): Promise<string> {
@@ -144,8 +144,6 @@ export class BlobStorageService implements IBlobStorageComponent {
 				const validationFailures: IValidationFailure[] = [];
 				JsonLdHelper.validate(metadata, validationFailures);
 				Validation.asValidationError(this.CLASS_NAME, "metadata", validationFailures);
-
-				metadata = await JsonLdProcessor.compact(metadata);
 			}
 
 			// If we have a vault connector then encrypt the data.
@@ -189,7 +187,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 		blob?: string;
 		mimeType?: string;
 		extension?: string;
-		metadata?: IJsonLdDocument;
+		metadata?: IJsonLdNodeObject;
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		if (this._vaultConnector && includeContent) {
@@ -218,16 +216,11 @@ export class BlobStorageService implements IBlobStorageComponent {
 				}
 			}
 
-			let metadata = blobMetadata?.metadata;
-			if (Is.object(metadata)) {
-				metadata = await JsonLdProcessor.expand(metadata);
-			}
-
 			return {
 				blob: Is.uint8Array(returnBlob) ? Converter.bytesToBase64(returnBlob) : undefined,
 				mimeType: blobMetadata?.mimeType,
 				extension: blobMetadata?.extension,
-				metadata
+				metadata: blobMetadata?.metadata
 			};
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "getFailed", undefined, error);
@@ -247,7 +240,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 		id: string,
 		mimeType?: string,
 		extension?: string,
-		metadata?: IJsonLdDocument
+		metadata?: IJsonLdNodeObject
 	): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
@@ -262,8 +255,6 @@ export class BlobStorageService implements IBlobStorageComponent {
 				const validationFailures: IValidationFailure[] = [];
 				await JsonLdHelper.validate(metadata, validationFailures);
 				Validation.asValidationError(this.CLASS_NAME, "metadata", validationFailures);
-
-				metadata = await JsonLdProcessor.compact(metadata);
 			}
 
 			await this._metadataEntityStorage.set({
