@@ -60,7 +60,7 @@
                     "201": {
                         "description": "The rest request ended in created response.",
                         "headers": {
-                            "location": {
+                            "Location": {
                                 "schema": {
                                     "type": "string"
                                 },

@@ -3,7 +3,7 @@
 import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
 import { GeneralError, Guards, Is, StringHelper, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import { MimeTypes } from "@gtsc/web";
+import { HeaderTypes, MimeTypes } from "@gtsc/web";
 import type { IIpfsBlobStorageConnectorConfig } from "./models/IIpfsBlobStorageConnectorConfig";
 
 /**
@@ -62,8 +62,8 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 				method: "POST",
 				body: formData,
 				headers: {
-					accept: MimeTypes.Json,
-					"Content-Disposition": "form-data"
+					[HeaderTypes.Accept]: MimeTypes.Json,
+					[HeaderTypes.ContentDisposition]: "form-data"
 				}
 			};
 

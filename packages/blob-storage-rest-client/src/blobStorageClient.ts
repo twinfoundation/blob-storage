@@ -65,7 +65,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 			}
 		});
 
-		return response.headers.location;
+		return response.headers.Location;
 	}
 
 	/**

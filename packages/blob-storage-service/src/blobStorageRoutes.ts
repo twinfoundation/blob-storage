@@ -21,7 +21,7 @@ import type {
 } from "@gtsc/blob-storage-models";
 import { ComponentFactory, Converter, Guards, Is } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import { HttpStatusCode, MimeTypeHelper, MimeTypes } from "@gtsc/web";
+import { HeaderTypes, HttpStatusCode, MimeTypeHelper, MimeTypes } from "@gtsc/web";
 
 /**
  * The source used when communicating about these routes.
@@ -83,7 +83,7 @@ export function generateRestRoutesBlobStorage(
 						response: {
 							statusCode: HttpStatusCode.created,
 							headers: {
-								location:
+								[HeaderTypes.Location]:
 									"blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
 							}
 						}
@@ -298,7 +298,7 @@ export async function blobStorageCreate(
 	return {
 		statusCode: HttpStatusCode.created,
 		headers: {
-			location: id
+			Location: id
 		}
 	};
 }
