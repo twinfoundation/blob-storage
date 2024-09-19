@@ -1,1 +1,1 @@
-# @gtsc/blob-storage-rest-client - Examples
+# @twin.org/blob-storage-rest-client - Examples

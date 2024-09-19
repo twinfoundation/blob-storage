@@ -1,11 +1,11 @@
-# GTSC Blob Storage Connector IPFS
+# TWIN Blob Storage Connector IPFS
 
 Blob Storage connector implementation using [IPFS](https://ipfs.tech/).
 
 ## Installation
 
 ```shell
-npm install @gtsc/blob-storage-connector-ipfs
+npm install @twin.org/blob-storage-connector-ipfs
 ```
 
 ## Testing
@@ -28,7 +28,7 @@ Usage of the APIs is shown in the examples [docs/examples.md](docs/examples.md)
 
 ## Reference
 
-Detailed reference documentation for the API can be found in [docs/reference/globals.md](docs/reference/globals.md)
+Detailed reference documentation for the API can be found in [docs/reference/index.md](docs/reference/index.md)
 
 ## Changelog
 

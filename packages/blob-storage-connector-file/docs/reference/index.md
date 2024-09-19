@@ -1,4 +1,4 @@
-# @gtsc/blob-storage-connector-file
+# @twin.org/blob-storage-connector-file
 
 ## Classes
 

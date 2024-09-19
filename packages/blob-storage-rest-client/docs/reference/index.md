@@ -1,4 +1,4 @@
-# @gtsc/blob-storage-rest-client
+# @twin.org/blob-storage-rest-client
 
 ## Classes
 

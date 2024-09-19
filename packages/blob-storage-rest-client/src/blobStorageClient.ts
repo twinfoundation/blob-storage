@@ -1,7 +1,11 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { BaseRestClient } from "@gtsc/api-core";
-import type { IBaseRestClientConfig, ICreatedResponse, INoContentResponse } from "@gtsc/api-models";
+import { BaseRestClient } from "@twin.org/api-core";
+import type {
+	IBaseRestClientConfig,
+	ICreatedResponse,
+	INoContentResponse
+} from "@twin.org/api-models";
 import type {
 	IBlobStorageComponent,
 	IBlobStorageCreateRequest,
@@ -9,10 +13,10 @@ import type {
 	IBlobStorageGetResponse,
 	IBlobStorageRemoveRequest,
 	IBlobStorageUpdateRequest
-} from "@gtsc/blob-storage-models";
-import { Guards, Is, StringHelper, Urn } from "@gtsc/core";
-import type { IJsonLdNodeObject } from "@gtsc/data-json-ld";
-import { nameof } from "@gtsc/nameof";
+} from "@twin.org/blob-storage-models";
+import { Guards, Is, StringHelper, Urn } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import { nameof } from "@twin.org/nameof";
 
 /**
  * Client for performing blob storage through to REST endpoints.

@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { I18n, RandomHelper, Urn } from "@gtsc/core";
+import { I18n, RandomHelper, Urn } from "@twin.org/core";
 import { TEST_IPFS_CONFIG, TEST_IPFS_PUBLIC_GATEWAY } from "./setupTestEnv";
 import { IpfsBlobStorageConnector } from "../src/ipfsBlobStorageConnector";
 

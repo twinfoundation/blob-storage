@@ -1,8 +1,8 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "Global Trade and Supply Chain - Test Endpoints",
-        "description": "REST API for Global Trade and Supply Chain - Test Endpoints.",
+        "title": "TWIN - Test Endpoints",
+        "description": "REST API for TWIN - Test Endpoints.",
         "version": "1.0.0",
         "license": {
             "name": "Apache 2.0 License",
@@ -69,7 +69,7 @@
                         }
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -90,7 +90,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -108,7 +108,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -187,7 +187,7 @@
                         }
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -208,7 +208,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -226,7 +226,7 @@
                         }
                     },
                     "404": {
-                        "description": "The resource you tried to access does not exist, see the error field for more details.",
+                        "description": "The resource you tried to access does not exist, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -247,7 +247,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -317,7 +317,7 @@
                         "description": "The rest request ended in success with no data."
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -338,7 +338,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -356,7 +356,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -404,7 +404,7 @@
                         "description": "The rest request ended in success with no data."
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -425,7 +425,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -443,7 +443,7 @@
                         }
                     },
                     "404": {
-                        "description": "The resource you tried to access does not exist, see the error field for more details.",
+                        "description": "The resource you tried to access does not exist, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -464,7 +464,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -528,7 +528,7 @@
                         }
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -549,7 +549,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -567,7 +567,7 @@
                         }
                     },
                     "404": {
-                        "description": "The resource you tried to access does not exist, see the error field for more details.",
+                        "description": "The resource you tried to access does not exist, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -588,7 +588,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -611,6 +611,87 @@
     },
     "components": {
         "schemas": {
+            "ArrayBuffer": {
+                "type": "object",
+                "properties": {
+                    "byteLength": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "byteLength"
+                ],
+                "additionalProperties": false
+            },
+            "BlobStorageCreateRequest": {
+                "type": "object",
+                "properties": {
+                    "blob": {
+                        "type": "string",
+                        "description": "The data to store in base64 encoding."
+                    },
+                    "mimeType": {
+                        "type": "string",
+                        "description": "The mime type of the blob, will be detected if left undefined."
+                    },
+                    "extension": {
+                        "type": "string",
+                        "description": "The extension of the blob, will be detected if left undefined."
+                    },
+                    "metadata": {
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
+                    },
+                    "namespace": {
+                        "type": "string",
+                        "description": "The namespace to store the data in, defaults to component configured namespace."
+                    }
+                },
+                "required": [
+                    "blob"
+                ],
+                "additionalProperties": false,
+                "description": "The body parameters."
+            },
+            "BlobStorageGetResponse": {
+                "type": "object",
+                "properties": {
+                    "mimeType": {
+                        "type": "string",
+                        "description": "The mime type of the blob."
+                    },
+                    "extension": {
+                        "type": "string",
+                        "description": "The extension of the blob."
+                    },
+                    "metadata": {
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
+                    },
+                    "blob": {
+                        "type": "string",
+                        "description": "The blob in base64 format, if the includeContent flag was set in the request."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "The body parameters."
+            },
+            "BlobStorageUpdateRequest": {
+                "type": "object",
+                "properties": {
+                    "mimeType": {
+                        "type": "string",
+                        "description": "The mime type of the blob, will be detected if left undefined."
+                    },
+                    "extension": {
+                        "type": "string",
+                        "description": "The extension of the blob, will be detected if left undefined."
+                    },
+                    "metadata": {
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "The body parameters."
+            },
             "Error": {
                 "type": "object",
                 "properties": {
@@ -646,200 +727,191 @@
                 "additionalProperties": false,
                 "description": "Model to describe serialized error."
             },
-            "NotFoundResponse": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                    "notFoundId": {
-                        "type": "string",
-                        "description": "The id if the item that was not found."
-                    },
-                    "name": {
-                        "type": "string",
-                        "description": "The name for the error."
-                    },
-                    "message": {
-                        "type": "string",
-                        "description": "The message for the error."
-                    },
-                    "source": {
-                        "type": "string",
-                        "description": "The source of the error."
-                    },
-                    "properties": {
-                        "type": "object",
-                        "additionalProperties": {},
-                        "description": "Any additional information for the error."
-                    },
-                    "stack": {
-                        "type": "string",
-                        "description": "The stack trace for the error."
-                    },
-                    "inner": {
-                        "$ref": "#/components/schemas/Error"
-                    }
-                },
-                "required": [
-                    "message",
-                    "name"
-                ],
-                "description": "The body which contains the error."
+            "JsonLdContainerType": {
+                "type": "string",
+                "enum": [
+                    "@language",
+                    "@index",
+                    "@id",
+                    "@graph",
+                    "@type"
+                ]
             },
-            "BlobStorageCreateRequest": {
-                "type": "object",
-                "properties": {
-                    "blob": {
-                        "type": "string",
-                        "description": "The data to store in base64 encoding."
+            "JsonLdContainerTypeArray": {
+                "anyOf": [
+                    {
+                        "type": "array",
+                        "minItems": 2,
+                        "items": [
+                            {
+                                "type": "string",
+                                "const": "@graph"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@id"
+                            }
+                        ],
+                        "maxItems": 2
                     },
-                    "mimeType": {
-                        "type": "string",
-                        "description": "The mime type of the blob, will be detected if left undefined."
+                    {
+                        "type": "array",
+                        "minItems": 2,
+                        "items": [
+                            {
+                                "type": "string",
+                                "const": "@id"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@graph"
+                            }
+                        ],
+                        "maxItems": 2
                     },
-                    "extension": {
-                        "type": "string",
-                        "description": "The extension of the blob, will be detected if left undefined."
+                    {
+                        "type": "array",
+                        "minItems": 3,
+                        "items": [
+                            {
+                                "type": "string",
+                                "const": "@set"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@graph"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@id"
+                            }
+                        ],
+                        "maxItems": 3
                     },
-                    "metadata": {
-                        "$ref": "#/components/schemas/JsonLdNodeObject"
+                    {
+                        "type": "array",
+                        "minItems": 3,
+                        "items": [
+                            {
+                                "type": "string",
+                                "const": "@set"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@id"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@graph"
+                            }
+                        ],
+                        "maxItems": 3
                     },
-                    "namespace": {
-                        "type": "string",
-                        "description": "The namespace to store the data in, defaults to component configured namespace."
+                    {
+                        "type": "array",
+                        "minItems": 3,
+                        "items": [
+                            {
+                                "type": "string",
+                                "const": "@graph"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@set"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@id"
+                            }
+                        ],
+                        "maxItems": 3
+                    },
+                    {
+                        "type": "array",
+                        "minItems": 3,
+                        "items": [
+                            {
+                                "type": "string",
+                                "const": "@id"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@set"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@graph"
+                            }
+                        ],
+                        "maxItems": 3
+                    },
+                    {
+                        "type": "array",
+                        "minItems": 3,
+                        "items": [
+                            {
+                                "type": "string",
+                                "const": "@graph"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@id"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@set"
+                            }
+                        ],
+                        "maxItems": 3
+                    },
+                    {
+                        "type": "array",
+                        "minItems": 3,
+                        "items": [
+                            {
+                                "type": "string",
+                                "const": "@id"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@graph"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@set"
+                            }
+                        ],
+                        "maxItems": 3
+                    },
+                    {
+                        "type": "array",
+                        "minItems": 2,
+                        "items": [
+                            {
+                                "type": "string",
+                                "const": "@set"
+                            },
+                            {
+                                "$ref": "#/components/schemas/JsonLdContainerType"
+                            }
+                        ],
+                        "maxItems": 2
+                    },
+                    {
+                        "type": "array",
+                        "minItems": 2,
+                        "items": [
+                            {
+                                "$ref": "#/components/schemas/JsonLdContainerType"
+                            },
+                            {
+                                "type": "string",
+                                "const": "@set"
+                            }
+                        ],
+                        "maxItems": 2
                     }
-                },
-                "required": [
-                    "blob"
-                ],
-                "additionalProperties": false,
-                "description": "The body parameters."
-            },
-            "JsonLdNodeObject": {
-                "type": "object",
-                "properties": {
-                    "@context": {
-                        "anyOf": [
-                            {
-                                "type": "null"
-                            },
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "$ref": "#/components/schemas/JsonLdContextDefinition"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "anyOf": [
-                                        {
-                                            "type": "null"
-                                        },
-                                        {
-                                            "type": "string"
-                                        },
-                                        {
-                                            "$ref": "#/components/schemas/JsonLdContextDefinition"
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
-                    },
-                    "@id": {
-                        "anyOf": [
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            }
-                        ]
-                    },
-                    "@included": {
-                        "$ref": "#/components/schemas/JsonLdIncludedBlock"
-                    },
-                    "@graph": {
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/JsonLdNodeObject"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/JsonLdNodeObject"
-                                }
-                            }
-                        ]
-                    },
-                    "@nest": {
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/JsonLdJsonObject"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/JsonLdJsonObject"
-                                }
-                            }
-                        ]
-                    },
-                    "@type": {
-                        "anyOf": [
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            }
-                        ]
-                    },
-                    "@reverse": {
-                        "type": "object",
-                        "additionalProperties": {
-                            "type": "string"
-                        }
-                    },
-                    "@index": {
-                        "type": "string"
-                    }
-                },
-                "additionalProperties": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/components/schemas/JsonLdNodePrimitive"
-                        },
-                        {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/JsonLdNodePrimitive"
-                            }
-                        },
-                        {
-                            "$ref": "#/components/schemas/JsonLdLanguageMap"
-                        },
-                        {
-                            "$ref": "#/components/schemas/JsonLdIndexMap"
-                        },
-                        {
-                            "$ref": "#/components/schemas/JsonLdIncludedBlock"
-                        },
-                        {
-                            "$ref": "#/components/schemas/JsonLdIdMap"
-                        },
-                        {
-                            "$ref": "#/components/schemas/JsonLdTypeMap"
-                        }
-                    ]
-                },
-                "description": "A node object represents zero or more properties of a node in the graph serialized by the JSON-LD document."
+                ]
             },
             "JsonLdContextDefinition": {
                 "type": "object",
@@ -899,6 +971,273 @@
                     ]
                 },
                 "description": "A context definition defines a local context in a node object."
+            },
+            "JsonLdExpandedTermDefinition": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "@id": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/JsonLdKeyword"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "@nest": {
+                                "type": "string"
+                            },
+                            "@container": {
+                                "$ref": "#/components/schemas/JsonLdKeyword"
+                            },
+                            "@type": {
+                                "type": "string"
+                            },
+                            "@language": {
+                                "$ref": "#/components/schemas/JsonLdKeyword"
+                            },
+                            "@index": {
+                                "$ref": "#/components/schemas/JsonLdKeyword"
+                            },
+                            "@context": {
+                                "$ref": "#/components/schemas/JsonLdContextDefinition"
+                            },
+                            "@prefix": {
+                                "$ref": "#/components/schemas/JsonLdKeyword"
+                            },
+                            "@propagate": {
+                                "$ref": "#/components/schemas/JsonLdKeyword"
+                            },
+                            "@protected": {
+                                "$ref": "#/components/schemas/JsonLdKeyword"
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "@reverse": {
+                                "$ref": "#/components/schemas/JsonLdKeyword"
+                            },
+                            "@container": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "enum": [
+                                    "@set",
+                                    "@index",
+                                    null
+                                ]
+                            },
+                            "@type": {
+                                "type": "string"
+                            },
+                            "@language": {
+                                "$ref": "#/components/schemas/JsonLdKeyword"
+                            },
+                            "@index": {
+                                "$ref": "#/components/schemas/JsonLdKeyword"
+                            },
+                            "@context": {
+                                "$ref": "#/components/schemas/JsonLdContextDefinition"
+                            },
+                            "@prefix": {
+                                "$ref": "#/components/schemas/JsonLdKeyword"
+                            },
+                            "@propagate": {
+                                "$ref": "#/components/schemas/JsonLdKeyword"
+                            },
+                            "@protected": {
+                                "$ref": "#/components/schemas/JsonLdKeyword"
+                            }
+                        },
+                        "required": [
+                            "@reverse"
+                        ]
+                    }
+                ],
+                "description": "An expanded term definition is used to describe the mapping between a term and its expanded identifier, as well as other properties of the value associated with the term when it is used as key in a node object."
+            },
+            "JsonLdGraphObject": {
+                "type": "object",
+                "properties": {
+                    "@graph": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/JsonLdNodeObject"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/JsonLdNodeObject"
+                                }
+                            }
+                        ]
+                    },
+                    "@index": {
+                        "type": "string"
+                    },
+                    "@id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        ]
+                    },
+                    "@context": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "$ref": "#/components/schemas/JsonLdContextDefinition"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "null"
+                                        },
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/JsonLdContextDefinition"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "@graph"
+                ],
+                "additionalProperties": false,
+                "description": "A graph object represents a named graph, which MAY include an explicit graph name."
+            },
+            "JsonLdIdMap": {
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "#/components/schemas/JsonLdNodeObject"
+                },
+                "description": "An id map is used to associate an IRI with a value that allows easy programmatic access."
+            },
+            "JsonLdIncludedBlock": {
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/JsonLdNodeObject"
+                        }
+                    }
+                ],
+                "description": "An included block is used to provide a set of node objects."
+            },
+            "JsonLdIndexMap": {
+                "type": "object",
+                "additionalProperties": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/components/schemas/JsonLdIndexMapItem"
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/JsonLdIndexMapItem"
+                            }
+                        }
+                    ]
+                },
+                "description": "An index map allows keys that have no semantic meaning, but should be preserved regardless, to be used in JSON-LD documents."
+            },
+            "JsonLdIndexMapItem": {
+                "anyOf": [
+                    {
+                        "type": "null"
+                    },
+                    {
+                        "type": "boolean"
+                    },
+                    {
+                        "type": "number"
+                    },
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
+                    },
+                    {
+                        "$ref": "#/components/schemas/JsonLdValueObject"
+                    },
+                    {
+                        "$ref": "#/components/schemas/JsonLdListObject"
+                    },
+                    {
+                        "$ref": "#/components/schemas/JsonLdSetObject"
+                    }
+                ],
+                "description": "The items that can be stored in an index map."
+            },
+            "JsonLdJsonArray": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/JsonLdJsonValue"
+                }
+            },
+            "JsonLdJsonObject": {
+                "type": "object",
+                "additionalProperties": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/components/schemas/JsonLdJsonValue"
+                        },
+                        {
+                            "not": {}
+                        }
+                    ]
+                }
+            },
+            "JsonLdJsonPrimitive": {
+                "type": [
+                    "string",
+                    "number",
+                    "boolean",
+                    "null"
+                ]
+            },
+            "JsonLdJsonValue": {
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/JsonLdJsonPrimitive"
+                    },
+                    {
+                        "$ref": "#/components/schemas/JsonLdJsonArray"
+                    },
+                    {
+                        "$ref": "#/components/schemas/JsonLdJsonObject"
+                    }
+                ]
             },
             "JsonLdKeyword": {
                 "type": "object",
@@ -1135,191 +1474,273 @@
                 "additionalProperties": false,
                 "description": "A list of keywords and their types. Only used for internal reference; not an actual interface. Not for export."
             },
-            "JsonLdContainerType": {
-                "type": "string",
-                "enum": [
-                    "@language",
-                    "@index",
-                    "@id",
-                    "@graph",
-                    "@type"
-                ]
+            "JsonLdLanguageMap": {
+                "type": "object",
+                "additionalProperties": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                "description": "A language map is used to associate a language with a value in a way that allows easy programmatic access."
             },
-            "JsonLdContainerTypeArray": {
+            "JsonLdListObject": {
+                "type": "object",
+                "properties": {
+                    "@list": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/JsonLdListOrSetItem"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/JsonLdListOrSetItem"
+                                }
+                            }
+                        ]
+                    },
+                    "@index": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "@list"
+                ],
+                "additionalProperties": false,
+                "description": "A list represents an ordered set of values."
+            },
+            "JsonLdListOrSetItem": {
                 "anyOf": [
                     {
-                        "type": "array",
-                        "minItems": 2,
-                        "items": [
-                            {
-                                "type": "string",
-                                "const": "@graph"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@id"
-                            }
-                        ],
-                        "maxItems": 2
+                        "type": "null"
                     },
                     {
-                        "type": "array",
-                        "minItems": 2,
-                        "items": [
-                            {
-                                "type": "string",
-                                "const": "@id"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@graph"
-                            }
-                        ],
-                        "maxItems": 2
+                        "type": "boolean"
                     },
                     {
-                        "type": "array",
-                        "minItems": 3,
-                        "items": [
-                            {
-                                "type": "string",
-                                "const": "@set"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@graph"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@id"
-                            }
-                        ],
-                        "maxItems": 3
+                        "type": "number"
                     },
                     {
-                        "type": "array",
-                        "minItems": 3,
-                        "items": [
-                            {
-                                "type": "string",
-                                "const": "@set"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@id"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@graph"
-                            }
-                        ],
-                        "maxItems": 3
+                        "type": "string"
                     },
                     {
-                        "type": "array",
-                        "minItems": 3,
-                        "items": [
-                            {
-                                "type": "string",
-                                "const": "@graph"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@set"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@id"
-                            }
-                        ],
-                        "maxItems": 3
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
                     },
                     {
-                        "type": "array",
-                        "minItems": 3,
-                        "items": [
-                            {
-                                "type": "string",
-                                "const": "@id"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@set"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@graph"
-                            }
-                        ],
-                        "maxItems": 3
-                    },
-                    {
-                        "type": "array",
-                        "minItems": 3,
-                        "items": [
-                            {
-                                "type": "string",
-                                "const": "@graph"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@id"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@set"
-                            }
-                        ],
-                        "maxItems": 3
-                    },
-                    {
-                        "type": "array",
-                        "minItems": 3,
-                        "items": [
-                            {
-                                "type": "string",
-                                "const": "@id"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@graph"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@set"
-                            }
-                        ],
-                        "maxItems": 3
-                    },
-                    {
-                        "type": "array",
-                        "minItems": 2,
-                        "items": [
-                            {
-                                "type": "string",
-                                "const": "@set"
-                            },
-                            {
-                                "$ref": "#/components/schemas/JsonLdContainerType"
-                            }
-                        ],
-                        "maxItems": 2
-                    },
-                    {
-                        "type": "array",
-                        "minItems": 2,
-                        "items": [
-                            {
-                                "$ref": "#/components/schemas/JsonLdContainerType"
-                            },
-                            {
-                                "type": "string",
-                                "const": "@set"
-                            }
-                        ],
-                        "maxItems": 2
+                        "$ref": "#/components/schemas/JsonLdValueObject"
                     }
-                ]
+                ],
+                "description": "A list or set item can be a null, boolean, number, string, node object, or value object."
+            },
+            "JsonLdNodeObject": {
+                "type": "object",
+                "properties": {
+                    "@context": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "$ref": "#/components/schemas/JsonLdContextDefinition"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "null"
+                                        },
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/JsonLdContextDefinition"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        ]
+                    },
+                    "@included": {
+                        "$ref": "#/components/schemas/JsonLdIncludedBlock"
+                    },
+                    "@graph": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/JsonLdNodeObject"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/JsonLdNodeObject"
+                                }
+                            }
+                        ]
+                    },
+                    "@nest": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/JsonLdJsonObject"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/JsonLdJsonObject"
+                                }
+                            }
+                        ]
+                    },
+                    "@type": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        ]
+                    },
+                    "@reverse": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "@index": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/components/schemas/JsonLdNodePrimitive"
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/JsonLdNodePrimitive"
+                            }
+                        },
+                        {
+                            "$ref": "#/components/schemas/JsonLdLanguageMap"
+                        },
+                        {
+                            "$ref": "#/components/schemas/JsonLdIndexMap"
+                        },
+                        {
+                            "$ref": "#/components/schemas/JsonLdIncludedBlock"
+                        },
+                        {
+                            "$ref": "#/components/schemas/JsonLdIdMap"
+                        },
+                        {
+                            "$ref": "#/components/schemas/JsonLdTypeMap"
+                        }
+                    ]
+                },
+                "description": "A node object represents zero or more properties of a node in the graph serialized by the JSON-LD document."
+            },
+            "JsonLdNodePrimitive": {
+                "anyOf": [
+                    {
+                        "type": "null"
+                    },
+                    {
+                        "type": "boolean"
+                    },
+                    {
+                        "type": "number"
+                    },
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
+                    },
+                    {
+                        "$ref": "#/components/schemas/JsonLdGraphObject"
+                    },
+                    {
+                        "$ref": "#/components/schemas/JsonLdValueObject"
+                    },
+                    {
+                        "$ref": "#/components/schemas/JsonLdListObject"
+                    },
+                    {
+                        "$ref": "#/components/schemas/JsonLdSetObject"
+                    }
+                ],
+                "description": "A node primitive is a JSON-LD value which is not one of the defined NodeObject properties."
+            },
+            "JsonLdSetObject": {
+                "type": "object",
+                "properties": {
+                    "@set": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/JsonLdListOrSetItem"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/JsonLdListOrSetItem"
+                                }
+                            }
+                        ]
+                    },
+                    "@index": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "@set"
+                ],
+                "additionalProperties": false,
+                "description": "A set represents an unordered set of values."
+            },
+            "JsonLdTypeMap": {
+                "type": "object",
+                "additionalProperties": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/components/schemas/JsonLdNodeObject"
+                        }
+                    ]
+                },
+                "description": "A type map is used to associate an IRI with a value that allows easy programmatic access."
             },
             "JsonLdValueObject": {
                 "anyOf": [
@@ -1405,435 +1826,44 @@
                 ],
                 "description": "A value object is used to explicitly associate a type or a language with a value to create a typed value or a language-tagged string and possibly associate a base direction."
             },
-            "JsonLdJsonObject": {
+            "NotFoundResponse": {
                 "type": "object",
-                "additionalProperties": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/components/schemas/JsonLdJsonValue"
-                        },
-                        {
-                            "not": {}
-                        }
-                    ]
-                }
-            },
-            "JsonLdJsonValue": {
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/JsonLdJsonPrimitive"
+                "additionalProperties": false,
+                "properties": {
+                    "notFoundId": {
+                        "type": "string",
+                        "description": "The id if the item that was not found."
                     },
-                    {
-                        "$ref": "#/components/schemas/JsonLdJsonArray"
+                    "name": {
+                        "type": "string",
+                        "description": "The name for the error."
                     },
-                    {
-                        "$ref": "#/components/schemas/JsonLdJsonObject"
-                    }
-                ]
-            },
-            "JsonLdJsonPrimitive": {
-                "type": [
-                    "string",
-                    "number",
-                    "boolean",
-                    "null"
-                ]
-            },
-            "JsonLdJsonArray": {
-                "type": "array",
-                "items": {
-                    "$ref": "#/components/schemas/JsonLdJsonValue"
-                }
-            },
-            "JsonLdIncludedBlock": {
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/JsonLdNodeObject"
+                    "message": {
+                        "type": "string",
+                        "description": "The message for the error."
                     },
-                    {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/JsonLdNodeObject"
-                        }
-                    }
-                ],
-                "description": "An included block is used to provide a set of node objects."
-            },
-            "JsonLdListOrSetItem": {
-                "anyOf": [
-                    {
-                        "type": "null"
+                    "source": {
+                        "type": "string",
+                        "description": "The source of the error."
                     },
-                    {
-                        "type": "boolean"
-                    },
-                    {
-                        "type": "number"
-                    },
-                    {
-                        "type": "string"
-                    },
-                    {
-                        "$ref": "#/components/schemas/JsonLdNodeObject"
-                    },
-                    {
-                        "$ref": "#/components/schemas/JsonLdValueObject"
-                    }
-                ],
-                "description": "A list or set item can be a null, boolean, number, string, node object, or value object."
-            },
-            "JsonLdExpandedTermDefinition": {
-                "anyOf": [
-                    {
+                    "properties": {
                         "type": "object",
-                        "additionalProperties": false,
-                        "properties": {
-                            "@id": {
-                                "anyOf": [
-                                    {
-                                        "$ref": "#/components/schemas/JsonLdKeyword"
-                                    },
-                                    {
-                                        "type": "null"
-                                    }
-                                ]
-                            },
-                            "@nest": {
-                                "type": "string"
-                            },
-                            "@container": {
-                                "$ref": "#/components/schemas/JsonLdKeyword"
-                            },
-                            "@type": {
-                                "type": "string"
-                            },
-                            "@language": {
-                                "$ref": "#/components/schemas/JsonLdKeyword"
-                            },
-                            "@index": {
-                                "$ref": "#/components/schemas/JsonLdKeyword"
-                            },
-                            "@context": {
-                                "$ref": "#/components/schemas/JsonLdContextDefinition"
-                            },
-                            "@prefix": {
-                                "$ref": "#/components/schemas/JsonLdKeyword"
-                            },
-                            "@propagate": {
-                                "$ref": "#/components/schemas/JsonLdKeyword"
-                            },
-                            "@protected": {
-                                "$ref": "#/components/schemas/JsonLdKeyword"
-                            }
-                        }
+                        "additionalProperties": {},
+                        "description": "Any additional information for the error."
                     },
-                    {
-                        "type": "object",
-                        "additionalProperties": false,
-                        "properties": {
-                            "@reverse": {
-                                "$ref": "#/components/schemas/JsonLdKeyword"
-                            },
-                            "@container": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ],
-                                "enum": [
-                                    "@set",
-                                    "@index",
-                                    null
-                                ]
-                            },
-                            "@type": {
-                                "type": "string"
-                            },
-                            "@language": {
-                                "$ref": "#/components/schemas/JsonLdKeyword"
-                            },
-                            "@index": {
-                                "$ref": "#/components/schemas/JsonLdKeyword"
-                            },
-                            "@context": {
-                                "$ref": "#/components/schemas/JsonLdContextDefinition"
-                            },
-                            "@prefix": {
-                                "$ref": "#/components/schemas/JsonLdKeyword"
-                            },
-                            "@propagate": {
-                                "$ref": "#/components/schemas/JsonLdKeyword"
-                            },
-                            "@protected": {
-                                "$ref": "#/components/schemas/JsonLdKeyword"
-                            }
-                        },
-                        "required": [
-                            "@reverse"
-                        ]
-                    }
-                ],
-                "description": "An expanded term definition is used to describe the mapping between a term and its expanded identifier, as well as other properties of the value associated with the term when it is used as key in a node object."
-            },
-            "JsonLdNodePrimitive": {
-                "anyOf": [
-                    {
-                        "type": "null"
+                    "stack": {
+                        "type": "string",
+                        "description": "The stack trace for the error."
                     },
-                    {
-                        "type": "boolean"
-                    },
-                    {
-                        "type": "number"
-                    },
-                    {
-                        "type": "string"
-                    },
-                    {
-                        "$ref": "#/components/schemas/JsonLdNodeObject"
-                    },
-                    {
-                        "$ref": "#/components/schemas/JsonLdGraphObject"
-                    },
-                    {
-                        "$ref": "#/components/schemas/JsonLdValueObject"
-                    },
-                    {
-                        "$ref": "#/components/schemas/JsonLdListObject"
-                    },
-                    {
-                        "$ref": "#/components/schemas/JsonLdSetObject"
-                    }
-                ],
-                "description": "A node primitive is a JSON-LD value which is not one of the defined NodeObject properties."
-            },
-            "JsonLdGraphObject": {
-                "type": "object",
-                "properties": {
-                    "@graph": {
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/JsonLdNodeObject"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/JsonLdNodeObject"
-                                }
-                            }
-                        ]
-                    },
-                    "@index": {
-                        "type": "string"
-                    },
-                    "@id": {
-                        "anyOf": [
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            }
-                        ]
-                    },
-                    "@context": {
-                        "anyOf": [
-                            {
-                                "type": "null"
-                            },
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "$ref": "#/components/schemas/JsonLdContextDefinition"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "anyOf": [
-                                        {
-                                            "type": "null"
-                                        },
-                                        {
-                                            "type": "string"
-                                        },
-                                        {
-                                            "$ref": "#/components/schemas/JsonLdContextDefinition"
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
+                    "inner": {
+                        "$ref": "#/components/schemas/Error"
                     }
                 },
                 "required": [
-                    "@graph"
+                    "message",
+                    "name"
                 ],
-                "additionalProperties": false,
-                "description": "A graph object represents a named graph, which MAY include an explicit graph name."
-            },
-            "JsonLdListObject": {
-                "type": "object",
-                "properties": {
-                    "@list": {
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/JsonLdListOrSetItem"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/JsonLdListOrSetItem"
-                                }
-                            }
-                        ]
-                    },
-                    "@index": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "@list"
-                ],
-                "additionalProperties": false,
-                "description": "A list represents an ordered set of values."
-            },
-            "JsonLdSetObject": {
-                "type": "object",
-                "properties": {
-                    "@set": {
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/JsonLdListOrSetItem"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/JsonLdListOrSetItem"
-                                }
-                            }
-                        ]
-                    },
-                    "@index": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "@set"
-                ],
-                "additionalProperties": false,
-                "description": "A set represents an unordered set of values."
-            },
-            "JsonLdLanguageMap": {
-                "type": "object",
-                "additionalProperties": {
-                    "anyOf": [
-                        {
-                            "type": "null"
-                        },
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    ]
-                },
-                "description": "A language map is used to associate a language with a value in a way that allows easy programmatic access."
-            },
-            "JsonLdIndexMap": {
-                "type": "object",
-                "additionalProperties": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/components/schemas/JsonLdIndexMapItem"
-                        },
-                        {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/JsonLdIndexMapItem"
-                            }
-                        }
-                    ]
-                },
-                "description": "An index map allows keys that have no semantic meaning, but should be preserved regardless, to be used in JSON-LD documents."
-            },
-            "JsonLdIndexMapItem": {
-                "anyOf": [
-                    {
-                        "type": "null"
-                    },
-                    {
-                        "type": "boolean"
-                    },
-                    {
-                        "type": "number"
-                    },
-                    {
-                        "type": "string"
-                    },
-                    {
-                        "$ref": "#/components/schemas/JsonLdNodeObject"
-                    },
-                    {
-                        "$ref": "#/components/schemas/JsonLdValueObject"
-                    },
-                    {
-                        "$ref": "#/components/schemas/JsonLdListObject"
-                    },
-                    {
-                        "$ref": "#/components/schemas/JsonLdSetObject"
-                    }
-                ],
-                "description": "The items that can be stored in an index map."
-            },
-            "JsonLdIdMap": {
-                "type": "object",
-                "additionalProperties": {
-                    "$ref": "#/components/schemas/JsonLdNodeObject"
-                },
-                "description": "An id map is used to associate an IRI with a value that allows easy programmatic access."
-            },
-            "JsonLdTypeMap": {
-                "type": "object",
-                "additionalProperties": {
-                    "anyOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "$ref": "#/components/schemas/JsonLdNodeObject"
-                        }
-                    ]
-                },
-                "description": "A type map is used to associate an IRI with a value that allows easy programmatic access."
-            },
-            "BlobStorageGetResponse": {
-                "type": "object",
-                "properties": {
-                    "mimeType": {
-                        "type": "string",
-                        "description": "The mime type of the blob."
-                    },
-                    "extension": {
-                        "type": "string",
-                        "description": "The extension of the blob."
-                    },
-                    "metadata": {
-                        "$ref": "#/components/schemas/JsonLdNodeObject"
-                    },
-                    "blob": {
-                        "type": "string",
-                        "description": "The blob in base64 format, if the includeContent flag was set in the request."
-                    }
-                },
-                "additionalProperties": false,
-                "description": "The body parameters."
+                "description": "The body which contains the error."
             },
             "Uint8Array": {
                 "type": "object",
@@ -1864,36 +1894,6 @@
                 "additionalProperties": {
                     "type": "number"
                 }
-            },
-            "ArrayBuffer": {
-                "type": "object",
-                "properties": {
-                    "byteLength": {
-                        "type": "number"
-                    }
-                },
-                "required": [
-                    "byteLength"
-                ],
-                "additionalProperties": false
-            },
-            "BlobStorageUpdateRequest": {
-                "type": "object",
-                "properties": {
-                    "mimeType": {
-                        "type": "string",
-                        "description": "The mime type of the blob, will be detected if left undefined."
-                    },
-                    "extension": {
-                        "type": "string",
-                        "description": "The extension of the blob, will be detected if left undefined."
-                    },
-                    "metadata": {
-                        "$ref": "#/components/schemas/JsonLdNodeObject"
-                    }
-                },
-                "additionalProperties": false,
-                "description": "The body parameters."
             }
         },
         "securitySchemes": {

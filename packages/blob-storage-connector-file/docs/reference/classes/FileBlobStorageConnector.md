@@ -32,7 +32,7 @@ The configuration for the connector.
 
 ### NAMESPACE
 
-> `static` `readonly` **NAMESPACE**: `string` = `"file"`
+> `readonly` `static` **NAMESPACE**: `string` = `"file"`
 
 The namespace for the items.
 

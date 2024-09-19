@@ -1,1 +1,1 @@
-# @gtsc/blob-storage-service - Examples
+# @twin.org/blob-storage-service - Examples

@@ -8,7 +8,7 @@ import type {
 	IRestRoute,
 	IRestRouteResponseOptions,
 	ITag
-} from "@gtsc/api-models";
+} from "@twin.org/api-models";
 import type {
 	IBlobStorageComponent,
 	IBlobStorageCreateRequest,
@@ -18,10 +18,10 @@ import type {
 	IBlobStorageGetResponse,
 	IBlobStorageRemoveRequest,
 	IBlobStorageUpdateRequest
-} from "@gtsc/blob-storage-models";
-import { ComponentFactory, Converter, Guards, Is } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
-import { HeaderTypes, HttpStatusCode, MimeTypeHelper, MimeTypes } from "@gtsc/web";
+} from "@twin.org/blob-storage-models";
+import { ComponentFactory, Converter, Guards, Is } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
+import { HeaderTypes, HttpStatusCode, MimeTypeHelper, MimeTypes } from "@twin.org/web";
 
 /**
  * The source used when communicating about these routes.
