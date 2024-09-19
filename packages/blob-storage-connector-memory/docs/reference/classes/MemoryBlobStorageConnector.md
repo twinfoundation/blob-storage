@@ -22,7 +22,7 @@ Create a new instance of MemoryBlobStorageConnector.
 
 ### NAMESPACE
 
-> `static` `readonly` **NAMESPACE**: `string` = `"memory"`
+> `readonly` `static` **NAMESPACE**: `string` = `"memory"`
 
 The namespace for the items.
 

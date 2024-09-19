@@ -124,13 +124,13 @@ The metadata and data for the blob if it can be found.
 
 > `optional` **metadata**: `IJsonLdNodeObject`
 
-#### Implementation of
-
-`IBlobStorageComponent.get`
-
 #### Throws
 
 Not found error if the blob cannot be found.
+
+#### Implementation of
+
+`IBlobStorageComponent.get`
 
 ***
 
@@ -164,13 +164,13 @@ Data for the custom metadata as JSON-LD.
 
 Nothing.
 
-#### Implementation of
-
-`IBlobStorageComponent.update`
-
 #### Throws
 
 Not found error if the blob cannot be found.
+
+#### Implementation of
+
+`IBlobStorageComponent.update`
 
 ***
 

@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { I18n, Urn } from "@gtsc/core";
+import { I18n, Urn } from "@twin.org/core";
 import { MemoryBlobStorageConnector } from "../src/memoryBlobStorageConnector";
 
 describe("MemoryBlobStorageConnector", () => {

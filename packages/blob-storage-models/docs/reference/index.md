@@ -1,4 +1,4 @@
-# @gtsc/blob-storage-models
+# @twin.org/blob-storage-models
 
 ## Interfaces
 

@@ -1,1 +1,1 @@
-# @gtsc/blob-storage-connector-ipfs - Examples
+# @twin.org/blob-storage-connector-ipfs - Examples

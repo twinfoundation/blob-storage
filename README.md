@@ -1,6 +1,6 @@
-# GTSC Blob Storage
+# TWIN Blob Storage
 
-This mono-repository contains the packages to use with Blob Storage in GTSC applications.
+This mono-repository contains the packages to use with Blob Storage in TWIN applications.
 
 ## Packages
 

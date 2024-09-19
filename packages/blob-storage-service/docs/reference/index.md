@@ -1,4 +1,4 @@
-# @gtsc/blob-storage-service
+# @twin.org/blob-storage-service
 
 ## Classes
 

@@ -33,7 +33,7 @@ The configuration for the connector.
 
 ### NAMESPACE
 
-> `static` `readonly` **NAMESPACE**: `string` = `"ipfs"`
+> `readonly` `static` **NAMESPACE**: `string` = `"ipfs"`
 
 The namespace for the items.
 

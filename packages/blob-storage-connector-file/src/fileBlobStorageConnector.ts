@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { access, mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
-import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
-import { BaseError, Converter, GeneralError, Guards, Urn } from "@gtsc/core";
-import { Sha256 } from "@gtsc/crypto";
-import { LoggingConnectorFactory } from "@gtsc/logging-models";
-import { nameof } from "@gtsc/nameof";
+import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
+import { BaseError, Converter, GeneralError, Guards, Urn } from "@twin.org/core";
+import { Sha256 } from "@twin.org/crypto";
+import { LoggingConnectorFactory } from "@twin.org/logging-models";
+import { nameof } from "@twin.org/nameof";
 import type { IFileBlobStorageConnectorConfig } from "./models/IFileBlobStorageConnectorConfig";
 
 /**

@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IJsonLdNodeObject } from "@gtsc/data-json-ld";
-import { entity, property } from "@gtsc/entity";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import { entity, property } from "@twin.org/entity";
 
 /**
  * Class representing metadata for the blob storage.

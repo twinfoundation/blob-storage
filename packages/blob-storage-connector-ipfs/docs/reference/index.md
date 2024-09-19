@@ -1,4 +1,4 @@
-# @gtsc/blob-storage-connector-ipfs
+# @twin.org/blob-storage-connector-ipfs
 
 ## Classes
 

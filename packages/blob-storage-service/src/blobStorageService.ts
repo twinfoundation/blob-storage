@@ -4,7 +4,7 @@ import {
 	BlobStorageConnectorFactory,
 	type IBlobStorageComponent,
 	type IBlobStorageConnector
-} from "@gtsc/blob-storage-models";
+} from "@twin.org/blob-storage-models";
 import {
 	Converter,
 	GeneralError,
@@ -14,19 +14,19 @@ import {
 	NotFoundError,
 	Urn,
 	Validation
-} from "@gtsc/core";
-import { JsonLdHelper, type IJsonLdNodeObject } from "@gtsc/data-json-ld";
+} from "@twin.org/core";
+import { JsonLdHelper, type IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
-} from "@gtsc/entity-storage-models";
-import { nameof } from "@gtsc/nameof";
+} from "@twin.org/entity-storage-models";
+import { nameof } from "@twin.org/nameof";
 import {
 	VaultConnectorFactory,
 	VaultEncryptionType,
 	type IVaultConnector
-} from "@gtsc/vault-models";
-import { MimeTypeHelper } from "@gtsc/web";
+} from "@twin.org/vault-models";
+import { MimeTypeHelper } from "@twin.org/web";
 import type { BlobMetadata } from "./entities/blobMetadata";
 import type { IBlobStorageServiceConfig } from "./models/IBlobStorageServiceConfig";
 

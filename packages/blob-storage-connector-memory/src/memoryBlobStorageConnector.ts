@@ -1,9 +1,9 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
-import { Converter, GeneralError, Guards, Urn } from "@gtsc/core";
-import { Sha256 } from "@gtsc/crypto";
-import { nameof } from "@gtsc/nameof";
+import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
+import { Converter, GeneralError, Guards, Urn } from "@twin.org/core";
+import { Sha256 } from "@twin.org/crypto";
+import { nameof } from "@twin.org/nameof";
 
 /**
  * Class for performing blob storage operations in-memory.

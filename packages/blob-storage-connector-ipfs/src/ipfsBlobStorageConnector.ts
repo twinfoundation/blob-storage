@@ -1,9 +1,9 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
-import { GeneralError, Guards, Is, StringHelper, Urn } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
-import { HeaderTypes, MimeTypes } from "@gtsc/web";
+import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
+import { GeneralError, Guards, Is, StringHelper, Urn } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
+import { HeaderTypes, MimeTypes } from "@twin.org/web";
 import type { IIpfsBlobStorageConnectorConfig } from "./models/IIpfsBlobStorageConnectorConfig";
 
 /**
