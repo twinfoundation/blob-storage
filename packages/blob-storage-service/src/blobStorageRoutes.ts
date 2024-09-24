@@ -298,7 +298,7 @@ export async function blobStorageCreate(
 	return {
 		statusCode: HttpStatusCode.created,
 		headers: {
-			Location: id
+			location: id
 		}
 	};
 }
