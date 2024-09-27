@@ -17,6 +17,7 @@ import type {
 import { Guards, Is, StringHelper, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { nameof } from "@twin.org/nameof";
+import { HeaderTypes } from "@twin.org/web";
 
 /**
  * Client for performing blob storage through to REST endpoints.
@@ -69,7 +70,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 			}
 		});
 
-		return response.headers.location;
+		return response.headers[HeaderTypes.Location];
 	}
 
 	/**
