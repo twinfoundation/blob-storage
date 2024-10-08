@@ -63,12 +63,25 @@ describe("IpfsBlobStorageConnector", () => {
 		expect(I18n.hasMessage("error.ipfsBlobStorageConnector.namespaceMismatch")).toEqual(true);
 	});
 
-	test("can not get an item", async () => {
+	test("can not get an item with exception", async () => {
 		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 		const idUrn = await blobStorage.set(TEST_DATA);
-		const item = await blobStorage.get(`${idUrn}-2`);
 
-		expect(item).toBeUndefined();
+		const errorUri = `${idUrn}-2`;
+
+		await expect(blobStorage.get(errorUri)).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "ipfsBlobStorageConnector.getBlobFailed",
+			inner: {
+				name: "GeneralError",
+				message: "ipfsBlobStorageConnector.fetchFail",
+				properties: {
+					Message: `invalid path "${Urn.fromValidString(errorUri).namespaceSpecificParts(1)}": path does not have enough components`,
+					Code: 0,
+					Type: "error"
+				}
+			}
+		});
 	});
 
 	test("can get an item", async () => {
@@ -104,12 +117,24 @@ describe("IpfsBlobStorageConnector", () => {
 		expect(I18n.hasMessage("error.ipfsBlobStorageConnector.namespaceMismatch")).toEqual(true);
 	});
 
-	test("can not remove an item", async () => {
+	test("can not remove an item with exception", async () => {
 		const blobStorage = new IpfsBlobStorageConnector({ config: TEST_IPFS_CONFIG });
 		const idUrn = await blobStorage.set(TEST_DATA);
 
-		const removed = await blobStorage.remove(`${idUrn}-2`);
-		expect(removed).toBe(false);
+		const errorUri = `${idUrn}-2`;
+		await expect(blobStorage.remove(errorUri)).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "ipfsBlobStorageConnector.removeBlobFailed",
+			inner: {
+				name: "GeneralError",
+				message: "ipfsBlobStorageConnector.fetchFail",
+				properties: {
+					Message: `invalid path "${Urn.fromValidString(errorUri).namespaceSpecificParts(1)}": path does not have enough components`,
+					Code: 0,
+					Type: "error"
+				}
+			}
+		});
 	});
 
 	test("can remove an item", async () => {
