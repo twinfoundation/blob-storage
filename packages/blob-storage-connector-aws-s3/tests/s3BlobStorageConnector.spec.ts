@@ -1,14 +1,16 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { I18n, RandomHelper } from "@twin.org/core";
-import { TEST_S3_CONFIG } from "./setupTestEnv";
+import { createTestBucket, TEST_S3_CONFIG } from "./setupTestEnv";
 import { S3BlobStorageConnector } from "../src/s3BlobStorageConnector";
 
 const TEST_DATA = RandomHelper.generate(32);
+const TEST_DATA_2 = RandomHelper.generate(32);
 
 describe("S3BlobStorageConnector", () => {
 	beforeAll(async () => {
 		I18n.addDictionary("en", await import("../locales/en.json"));
+		await createTestBucket();
 	});
 
 	test("can construct", async () => {
@@ -32,7 +34,6 @@ describe("S3BlobStorageConnector", () => {
 		const blobStorage = new S3BlobStorageConnector({ config: TEST_S3_CONFIG });
 
 		const idUrn = await blobStorage.set(TEST_DATA);
-		console.log(TEST_DATA);
 
 		expect(idUrn).toBeDefined();
 	});
@@ -102,18 +103,18 @@ describe("S3BlobStorageConnector", () => {
 		expect(I18n.hasMessage("error.s3BlobStorageConnector.namespaceMismatch")).toEqual(true);
 	});
 
-	test("can not remove an item", async () => {
-		const blobStorage = new S3BlobStorageConnector({ config: TEST_S3_CONFIG });
-		const idUrn = await blobStorage.set(TEST_DATA);
-
-		const removed = await blobStorage.remove(`${idUrn}-2`);
-		expect(removed).toBe(false);
-	});
-
 	test("can remove an item", async () => {
 		const blobStorage = new S3BlobStorageConnector({ config: TEST_S3_CONFIG });
 		const idUrn = await blobStorage.set(TEST_DATA);
 		const removed = await blobStorage.remove(idUrn);
 		expect(removed).toBe(true);
+	});
+
+	test("can not remove an item", async () => {
+		const blobStorage = new S3BlobStorageConnector({ config: TEST_S3_CONFIG });
+		const idUrn = await blobStorage.set(TEST_DATA_2);
+
+		const removed = await blobStorage.remove(`${idUrn}-2`);
+		expect(removed).toBe(false);
 	});
 });

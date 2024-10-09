@@ -1,19 +1,19 @@
-# TWIN Blob Storage Connector IPFS
+# TWIN Blob Storage Connector AWS S3
 
-Blob Storage connector implementation using [AWS S3](https://ipfs.tech/).
+Blob Storage connector implementation using [AWS S3](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/s3/).
 
 ## Installation
 
 ```shell
-npm install @twin.org/blob-storage-connector-ipfs
+npm install @twin.org/blob-storage-connector-aws-s3
 ```
 
 ## Testing
 
-The tests developed are functional tests and need an instance of IPFS up and running. To run IPFS locally:
+The tests developed are functional tests and need an instance of AWS S3 up and running. To run AWS S3 locally:
 
 ```shell
-docker run -p 4001:4001 -p 4001:4001/udp -p 8080:8080 -p 5001:5001 --name ipfs --hostname ipfs -d ipfs/kubo:latest
+docker run -p 9000:9000 -p 9001:9001 quay.io/minio/minio server /data --console-address ":9001"
 ```
 
 Afterwards you can run the tests as follows:

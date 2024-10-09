@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
-import { Converter, BaseError, GeneralError, Guards, Urn } from "@twin.org/core";
+import { Converter, GeneralError, Guards, Urn } from "@twin.org/core";
 import { Sha256 } from "@twin.org/crypto";
 import { nameof } from "@twin.org/nameof";
 import type { IS3BlobStorageConnectorConfig } from "./models/IS3BlobStorageConnectorConfig";
@@ -58,7 +58,8 @@ export class S3BlobStorageConnector implements IBlobStorageConnector {
 			credentials: {
 				accessKeyId: this._config.accessKeyId,
 				secretAccessKey: this._config.secretAccessKey
-			}
+			},
+			forcePathStyle: true
 		});
 	}
 
@@ -73,13 +74,15 @@ export class S3BlobStorageConnector implements IBlobStorageConnector {
 		try {
 			const id = Converter.bytesToHex(Sha256.sum256(blob));
 
-			await this._s3Client.send(new PutObjectCommand(
+			const command = new PutObjectCommand(
 				{
 					Bucket: this._config.bucketName,
 					Key: id,
 					Body: blob
 				}
-			));
+			);
+
+			await this._s3Client.send(command);
 
 			return `blob:${new Urn(S3BlobStorageConnector.NAMESPACE, id).toString()}`;
 		} catch (err) {
@@ -117,16 +120,8 @@ export class S3BlobStorageConnector implements IBlobStorageConnector {
 			if (response.Body) {
 				return new Uint8Array(await response.Body.transformToByteArray());
 			}
-		} catch (err) {
-			if (!BaseError.isErrorCode(err, "ResourceNotFoundException")) {
-				throw new GeneralError(this.CLASS_NAME, "getBlobFailed", { id }, err);
-			}
-		}
+		} catch {}
 	}
-
-	/**
-	 * !Detected default credentials 'minioadmin:minioadmin', we recommend that you change these values with 'MINIO_ROOT_USER' and 'MINIO_ROOT_PASSWORD' environment variables
-	 */
 
 	/**
 	 * Remove the blob.
@@ -146,14 +141,31 @@ export class S3BlobStorageConnector implements IBlobStorageConnector {
 
 		try {
 			const key = urnParsed.namespaceSpecific(1);
-			const command = new DeleteObjectCommand({
+
+			const headCommand = new HeadObjectCommand({
 				Bucket: this._config.bucketName,
 				Key: key
 			});
 
-			await this._s3Client.send(command);
+			try {
+				await this._s3Client.send(headCommand);
+			} catch (error) {
+				if (error instanceof Error && error.name === "NotFound") {
+					return false;
+				}
+				throw error;
+			}
+
+			const deleteCommand = new DeleteObjectCommand({
+				Bucket: this._config.bucketName,
+				Key: key
+			});
+
+			await this._s3Client.send(deleteCommand);
+
 			return true;
-		} catch {}
-		return false;
+		} catch (err) {
+			throw new GeneralError(this.CLASS_NAME, "removeBlobFailed", { id }, err);
+		}
 	}
 }

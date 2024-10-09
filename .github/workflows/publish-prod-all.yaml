@@ -18,6 +18,22 @@ jobs:
           - 4001:4001/udp
           - 8080:8080
           - 5001:5001
+      minio:
+        image: minio/minio
+        ports:
+          - 9000:9000
+          - 9001:9001
+        env:
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
+        options: >-
+          --name minio-server
+          --health-cmd "curl -f http://localhost:9000/minio/health/live"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        volumes:
+          - /tmp/data:/data
 
     strategy:
       max-parallel: 1
@@ -29,7 +45,8 @@ jobs:
             blob-storage-connector-file,
             blob-storage-connector-ipfs,
             blob-storage-service,
-            blob-storage-rest-client
+            blob-storage-rest-client,
+            blob-storage-connector-aws-s3
           ]
 
     steps:
