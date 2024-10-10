@@ -10,7 +10,7 @@ This mono-repository contains the packages to use with Blob Storage in TWIN appl
 - [blob-storage-connector-ipfs](packages/blob-storage-connector-ipfs/README.md) - Blob Storage connector implementation using [IPFS](https://ipfs.tech/).
 - [blob-storage-service](packages/blob-storage-service/README.md) - Blob storage contract implementation and REST endpoint definitions.
 - [blob-storage-rest-client](packages/blob-storage-rest-client/README.md) - Blob storage contract implementation which can connect to REST endpoints.
-- [blob-storage-connector-aws-s3] (packages/blob-storage-connector-aws-s3/README.md) - Blob Storage connector implementation using AWS S3.
+- [blob-storage-connector-aws-s3](packages/blob-storage-connector-aws-s3/README.md) - Blob Storage connector implementation using AWS S3.
 
 ## Contributing
 
