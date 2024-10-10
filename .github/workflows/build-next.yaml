@@ -41,13 +41,6 @@ jobs:
       - name: Verify LocalStack container ports
         run: docker ps
 
-      - name: Wait for LocalStack to be ready
-        run: |
-          until curl -s curl http://localhost:4566/_localstack/health | grep '"s3": "running"'; do
-            echo "Waiting for LocalStack..."
-            sleep 5
-          done
-
       - name: Restore root node_modules from cache
         id: node-cache
         uses: actions/cache@v4
