@@ -18,6 +18,16 @@ jobs:
           - 4001:4001/udp
           - 8080:8080
           - 5001:5001
+      localstack:
+        image: localstack/localstack:latest
+        ports:
+          - 4566:4566
+          - 4571:4571
+        env:
+          AWS_DEFAULT_REGION: eu-central-1
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+          SERVICES: s3
 
     strategy:
       max-parallel: 1
@@ -29,7 +39,8 @@ jobs:
             blob-storage-connector-file,
             blob-storage-connector-ipfs,
             blob-storage-service,
-            blob-storage-rest-client
+            blob-storage-rest-client,
+            blob-storage-connector-aws-s3
           ]
 
     steps:
