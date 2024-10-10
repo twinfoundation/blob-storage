@@ -17,23 +17,17 @@ jobs:
           - 4001:4001/udp
           - 8080:8080
           - 5001:5001
-      minio:
-        image: minio/minio
+
+      localstack:
+        image: localstack/localstack
         ports:
-          - 9000:9000
-          - 9001:9001
+          - 4566:4566
+          - 4571:4571
         env:
-          MINIO_ROOT_USER: minioadmin
-          MINIO_ROOT_PASSWORD: minioadmin
-        options: >-
-          --name minio-server
-          --health-cmd "curl -f http://localhost:9000/minio/health/live"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-          --entrypoint /bin/sh -c 'exec minio server /data'
-        volumes:
-          - /tmp/data:/data
+          DEFAULT_REGION: eu-central-1
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+          SERVICES: s3
 
     steps:
       - name: Checkout
@@ -44,6 +38,19 @@ jobs:
         with:
           node-version: 20
 
+      - name: Check LocalStack logs
+        run: docker logs localstack
+
+      - name: Verify LocalStack container ports
+        run: docker ps
+
+      - name: Wait for LocalStack to be ready
+        run: |
+          until curl -s curl http://localhost:4566/_localstack/health | grep '"s3": "running"'; do
+            echo "Waiting for LocalStack..."
+            sleep 5
+          done
+
       - name: Restore root node_modules from cache
         id: node-cache
         uses: actions/cache@v4
@@ -53,22 +60,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Wait for Minio to be ready
-        run: |
-          for i in {1..10}; do
-            curl -f http://localhost:9000/minio/health/live && break
-            echo "Waiting for Minio..."
-            sleep 3
-          done
-
-      - name: Setup Minio Bucket
-        run: |
-          docker run --network host --rm minio/mc alias set myminio http://localhost:9000 minioadmin minioadmin
-          docker run --network host --rm minio/mc mb myminio/test-bucket
-        env:
-          MINIO_ROOT_USER: minioadmin
-          MINIO_ROOT_PASSWORD: minioadmin
 
       - name: Run Lint and Dist
         run: |
