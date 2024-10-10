@@ -1,6 +1,12 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+	DeleteObjectCommand,
+	GetObjectCommand,
+	HeadObjectCommand,
+	PutObjectCommand,
+	S3Client
+} from "@aws-sdk/client-s3";
 import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
 import { Converter, GeneralError, Guards, Urn } from "@twin.org/core";
 import { Sha256 } from "@twin.org/crypto";
@@ -47,9 +53,21 @@ export class S3BlobStorageConnector implements IBlobStorageConnector {
 			options.config
 		);
 		Guards.stringValue(this.CLASS_NAME, nameof(options.config.region), options.config.region);
-		Guards.stringValue(this.CLASS_NAME, nameof(options.config.bucketName), options.config.bucketName);
-		Guards.stringValue(this.CLASS_NAME, nameof(options.config.accessKeyId), options.config.accessKeyId);
-		Guards.stringValue(this.CLASS_NAME, nameof(options.config.secretAccessKey), options.config.secretAccessKey);
+		Guards.stringValue(
+			this.CLASS_NAME,
+			nameof(options.config.bucketName),
+			options.config.bucketName
+		);
+		Guards.stringValue(
+			this.CLASS_NAME,
+			nameof(options.config.accessKeyId),
+			options.config.accessKeyId
+		);
+		Guards.stringValue(
+			this.CLASS_NAME,
+			nameof(options.config.secretAccessKey),
+			options.config.secretAccessKey
+		);
 
 		this._config = options.config;
 		this._s3Client = new S3Client({
@@ -74,13 +92,11 @@ export class S3BlobStorageConnector implements IBlobStorageConnector {
 		try {
 			const id = Converter.bytesToHex(Sha256.sum256(blob));
 
-			const command = new PutObjectCommand(
-				{
-					Bucket: this._config.bucketName,
-					Key: id,
-					Body: blob
-				}
-			);
+			const command = new PutObjectCommand({
+				Bucket: this._config.bucketName,
+				Key: id,
+				Body: blob
+			});
 
 			await this._s3Client.send(command);
 
@@ -108,12 +124,10 @@ export class S3BlobStorageConnector implements IBlobStorageConnector {
 
 		try {
 			const key = urnParsed.namespaceSpecific(1);
-			const command = new GetObjectCommand(
-				{
-					Bucket: this._config.bucketName,
-					Key: key
-				}
-			);
+			const command = new GetObjectCommand({
+				Bucket: this._config.bucketName,
+				Key: key
+			});
 
 			const response = await this._s3Client.send(command);
 

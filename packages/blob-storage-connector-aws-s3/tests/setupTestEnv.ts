@@ -19,9 +19,9 @@ Guards.stringValue("TestEnv", "TEST_S3_SECRET_KEY", process.env.TEST_S3_SECRET_K
 export const TEST_S3_CONFIG: IS3BlobStorageConnectorConfig = {
 	endpoint: process.env.TEST_S3_ENDPOINT,
 	region: process.env.TEST_S3_REGION,
-  	bucketName: process.env.TEST_S3_BUCKET,
-  	accessKeyId: process.env.TEST_S3_ACCESS_KEY,
-  	secretAccessKey: process.env.TEST_S3_SECRET_KEY
+	bucketName: process.env.TEST_S3_BUCKET,
+	accessKeyId: process.env.TEST_S3_ACCESS_KEY,
+	secretAccessKey: process.env.TEST_S3_SECRET_KEY
 };
 
 /**
@@ -30,12 +30,12 @@ export const TEST_S3_CONFIG: IS3BlobStorageConnectorConfig = {
 export async function createTestBucket(): Promise<void> {
 	const s3Client = new S3Client({
 		endpoint: process.env.TEST_S3_ENDPOINT,
-	  	region: process.env.TEST_S3_REGION,
-	  	credentials: {
+		region: process.env.TEST_S3_REGION,
+		credentials: {
 			accessKeyId: process.env.TEST_S3_ACCESS_KEY ?? "",
 			secretAccessKey: process.env.TEST_S3_SECRET_KEY ?? ""
-	  	},
-	  	forcePathStyle: true
+		},
+		forcePathStyle: true
 	});
 
 	console.log(`Attempting to connect to S3 endpoint '${process.env.TEST_S3_ENDPOINT}'`);
@@ -44,21 +44,23 @@ export async function createTestBucket(): Promise<void> {
 		const listBucketsCommand = new ListBucketsCommand({});
 		console.log("Successfully connected to S3 endpoint.");
 		const bucketsList = await s3Client.send(listBucketsCommand);
-		const bucketExists = bucketsList.Buckets?.some(bucket => bucket.Name === process.env.TEST_S3_BUCKET);
+		const bucketExists = bucketsList.Buckets?.some(
+			bucket => bucket.Name === process.env.TEST_S3_BUCKET
+		);
 
 		if (bucketExists) {
 			console.log(`Test bucket '${process.env.TEST_S3_BUCKET}' already exists.`);
 			return;
 		}
 
-	  	await s3Client.send(new CreateBucketCommand({ Bucket: process.env.TEST_S3_BUCKET }));
-	  	console.log(`Test bucket '${process.env.TEST_S3_BUCKET}' created successfully.`);
+		await s3Client.send(new CreateBucketCommand({ Bucket: process.env.TEST_S3_BUCKET }));
+		console.log(`Test bucket '${process.env.TEST_S3_BUCKET}' created successfully.`);
 	} catch (error) {
-	  	if (error instanceof Error && error.name === "BucketAlreadyExists") {
+		if (error instanceof Error && error.name === "BucketAlreadyExists") {
 			console.log(`Test bucket '${process.env.TEST_S3_BUCKET}' already exists.`);
-	  	} else {
+		} else {
 			console.error("Error creating test bucket:", error);
 			throw error;
-	  	}
+		}
 	}
 }
