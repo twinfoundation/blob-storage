@@ -19,7 +19,7 @@ jobs:
           - 5001:5001
 
       localstack:
-        image: localstack/localstack
+        image: localstack/localstack:latest
         ports:
           - 4566:4566
           - 4571:4571
