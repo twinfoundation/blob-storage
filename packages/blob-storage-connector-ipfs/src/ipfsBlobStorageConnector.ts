@@ -81,9 +81,8 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 				return `blob:${new Urn(IpfsBlobStorageConnector.NAMESPACE, result.Hash).toString()}`;
 			}
 
-			throw new GeneralError(this.CLASS_NAME, "fetchFail", {
-				message: response.statusText
-			});
+			const error = await response.json();
+			throw new GeneralError(this.CLASS_NAME, "fetchFail", error);
 		} catch (err) {
 			throw new GeneralError(this.CLASS_NAME, "setBlobFailed", undefined, err);
 		}
@@ -125,7 +124,12 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 
 				return new Uint8Array(result);
 			}
-		} catch {}
+
+			const error = await response.json();
+			throw new GeneralError(this.CLASS_NAME, "fetchFail", error);
+		} catch (err) {
+			throw new GeneralError(this.CLASS_NAME, "getBlobFailed", undefined, err);
+		}
 	}
 
 	/**
@@ -162,8 +166,12 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 			if (response.ok) {
 				return true;
 			}
-		} catch {}
-		return false;
+
+			const error = await response.json();
+			throw new GeneralError(this.CLASS_NAME, "fetchFail", error);
+		} catch (err) {
+			throw new GeneralError(this.CLASS_NAME, "removeBlobFailed", undefined, err);
+		}
 	}
 
 	/**
