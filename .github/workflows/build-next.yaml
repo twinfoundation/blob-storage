@@ -17,22 +17,16 @@ jobs:
           - 4001:4001/udp
           - 8080:8080
           - 5001:5001
-      minio:
-        image: minio/minio
+
+      localstack:
+        image: localstack/localstack
         ports:
-          - 9000:9000
-          - 9001:9001
+          - 4566:4566
+          - 4571:4571
         env:
-          MINIO_ROOT_USER: minioadmin
-          MINIO_ROOT_PASSWORD: minioadmin
-        options: >-
-          --name minio-server
-          --health-cmd "curl -f http://localhost:9000/minio/health/live"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        volumes:
-          - /tmp/data:/data
+          DEFAULT_REGION: eu-central-1
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
 
     steps:
       - name: Checkout
@@ -42,6 +36,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Wait for LocalStack to be ready
+        run: |
+          until curl -s curl http://localhost:4566/_localstack/health | grep '"s3": "running"'; do
+            echo "Waiting for LocalStack..."
+            sleep 5
+          done
 
       - name: Restore root node_modules from cache
         id: node-cache
