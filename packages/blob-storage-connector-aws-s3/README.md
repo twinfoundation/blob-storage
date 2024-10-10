@@ -10,10 +10,10 @@ npm install @twin.org/blob-storage-connector-aws-s3
 
 ## Testing
 
-The tests developed are functional tests and need an instance of AWS S3 up and running. To run AWS S3 locally:
+The tests developed are functional tests and need an instance of AWS S3 up and running. To run AWS S3 locally using local stack:
 
 ```shell
-docker run -p 9000:9000 -p 9001:9001 quay.io/minio/minio server /data --console-address ":9001"
+docker run -p 4566:4566 -p 4510-4559:4510-4559 --name localstack -d localstack/localstack -e AWS_DEFAULT_REGION='eu-central-1' -e AWS_ACCESS_KEY_ID='test' -e AWS_SECRET_ACCESS_KEY='test' -e SERVICE='S3'
 ```
 
 Afterwards you can run the tests as follows:

@@ -8,7 +8,7 @@ import {
 	S3Client
 } from "@aws-sdk/client-s3";
 import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
-import { Converter, GeneralError, Guards, Urn } from "@twin.org/core";
+import { BaseError, Converter, GeneralError, Guards, Urn } from "@twin.org/core";
 import { Sha256 } from "@twin.org/crypto";
 import { nameof } from "@twin.org/nameof";
 import type { IS3BlobStorageConnectorConfig } from "./models/IS3BlobStorageConnectorConfig";
@@ -164,7 +164,7 @@ export class S3BlobStorageConnector implements IBlobStorageConnector {
 			try {
 				await this._s3Client.send(headCommand);
 			} catch (error) {
-				if (error instanceof Error && error.name === "NotFound") {
+				if (BaseError.isErrorName(error, "NotFound")) {
 					return false;
 				}
 				throw error;
