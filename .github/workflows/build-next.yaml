@@ -38,9 +38,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: Verify LocalStack container ports
-        run: docker ps
-
       - name: Restore root node_modules from cache
         id: node-cache
         uses: actions/cache@v4
