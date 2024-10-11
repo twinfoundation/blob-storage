@@ -29,14 +29,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: test
           SERVICES: s3
 
-      gcp-storage-emulator:
-        image: fsouza/fake-gcs-server:latest
-        ports:
-          - 4443:4443
-        env:
-          STORAGE_EMULATOR_HOST: http://localhost:4443
-          FAKE_GCS_SERVER_SCHEME: http
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,6 +37,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Start GCP Storage Emulator
+        run: >-
+          docker run -d
+          -p 4443:4443
+          --name gcp-storage-emulator
+          fsouza/fake-gcs-server:latest
+          -scheme http
 
       - name: Restore root node_modules from cache
         id: node-cache
