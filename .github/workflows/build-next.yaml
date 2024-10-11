@@ -47,6 +47,15 @@ jobs:
         with:
           node-version: 20
 
+      # TODO: Remove once we have a way to pass flags (-scheme http) and run it in the services section
+      - name: Start GCP Storage Emulator
+        run: >-
+          docker run -d
+          -p 4443:4443
+          --name gcp-storage-emulator
+          fsouza/fake-gcs-server:latest
+          -scheme http
+
       - name: Restore root node_modules from cache
         id: node-cache
         uses: actions/cache@v4

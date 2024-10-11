@@ -15,6 +15,8 @@ on:
           - blob-storage-service
           - blob-storage-rest-client,
           - blob-storage-connector-aws-s3
+          - blob-storage-connector-gcp
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -59,6 +61,15 @@ jobs:
         with:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
+
+      # TODO: Remove once we have a way to pass flags (-scheme http) and run it in the services section
+      - name: Start GCP Storage Emulator
+        run: >-
+          docker run -d
+          -p 4443:4443
+          --name gcp-storage-emulator
+          fsouza/fake-gcs-server:latest
+          -scheme http
 
       - name: Remove Mono-Repo Node Modules
         run: |
