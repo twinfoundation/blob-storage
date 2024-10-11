@@ -5,7 +5,7 @@ Blob Storage connector implementation using [Google Cloud Storage](https://cloud
 ## Installation
 
 ```shell
-npm install @twin.org/blob-storage-connector-aws-s3
+npm install @twin.org/blob-storage-connector-gcp
 ```
 
 ## Testing

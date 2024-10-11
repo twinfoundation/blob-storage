@@ -5,6 +5,7 @@ import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
 import { Converter, GeneralError, Guards, Urn } from "@twin.org/core";
 import { Sha256 } from "@twin.org/crypto";
 import { nameof } from "@twin.org/nameof";
+import { MimeTypes } from "@twin.org/web";
 import type { IGcpBlobStorageConnectorConfig } from "./models/IGcpBlobStorageConnectorConfig";
 
 /**
@@ -56,8 +57,7 @@ export class GcpBlobStorageConnector implements IBlobStorageConnector {
 		this._config = options.config;
 		this._storage = new Storage({
 			projectId: this._config.projectId,
-			apiEndpoint: this._config.apiEndpoint,
-			...(this._config.protocol === "http" ? { http: true } : {})
+			apiEndpoint: this._config.apiEndpoint
 		});
 	}
 
@@ -75,7 +75,7 @@ export class GcpBlobStorageConnector implements IBlobStorageConnector {
 			const file = bucket.file(id);
 
 			await file.save(blob, {
-				contentType: "application/octet-stream"
+				contentType: MimeTypes.OctetStream
 			});
 
 			return `blob:${new Urn(GcpBlobStorageConnector.NAMESPACE, id).toString()}`;

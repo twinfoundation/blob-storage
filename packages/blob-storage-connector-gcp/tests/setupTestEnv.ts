@@ -27,8 +27,7 @@ export const TEST_GCP_CONFIG: IGcpBlobStorageConnectorConfig = {
 export async function createTestBucket(): Promise<void> {
 	const storage = new Storage({
 		projectId: TEST_GCP_CONFIG.projectId,
-		apiEndpoint: TEST_GCP_CONFIG.apiEndpoint,
-		...(TEST_GCP_CONFIG.protocol === "http" ? { http: true } : {})
+		apiEndpoint: TEST_GCP_CONFIG.apiEndpoint
 	});
 
 	console.log(`Attempting to connect to GCP Storage endpoint '${TEST_GCP_CONFIG.apiEndpoint}'`);

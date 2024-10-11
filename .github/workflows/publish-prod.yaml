@@ -54,7 +54,7 @@ jobs:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
 
-      # TODO: Remove once we have a way to pass flags (-cheme http) and run it in the services section
+      # TODO: Remove once we have a way to pass flags (-scheme http) and run it in the services section
       - name: Start GCP Storage Emulator
         run: >-
           docker run -d
