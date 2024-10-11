@@ -34,8 +34,6 @@ jobs:
           - 10000:10000
         env:
           AZURITE_ACCOUNTS: testAccount:testKey
-        options: --network-mode host
-        command: azurite-blob --blobHost 0.0.0.0
 
     strategy:
       max-parallel: 1
