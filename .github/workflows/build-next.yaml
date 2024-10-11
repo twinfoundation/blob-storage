@@ -35,6 +35,8 @@ jobs:
           - 4443:4443
         env:
           STORAGE_EMULATOR_HOST: http://localhost:4443
+        options: >-
+          --scheme http
 
     steps:
       - name: Checkout
