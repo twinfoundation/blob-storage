@@ -35,7 +35,6 @@ jobs:
           - 10000:10000
         env:
           AZURITE_ACCOUNTS: testAccount:testKey
-        command: ["azurite-blob", "--blobHost", "0.0.0.0"]
 
     steps:
       - name: Checkout
@@ -54,6 +53,9 @@ jobs:
           --name gcp-storage-emulator
           fsouza/fake-gcs-server:latest
           -scheme http
+      
+      - name: Start Azurite with blobHost
+        run: docker exec $(docker ps -q --filter ancestor=mcr.microsoft.com/azure-storage/azurite) azurite-blob --blobHost 0.0.0.0
 
       - name: Restore root node_modules from cache
         id: node-cache
