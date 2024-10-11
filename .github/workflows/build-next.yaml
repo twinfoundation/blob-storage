@@ -29,6 +29,13 @@ jobs:
           AWS_SECRET_ACCESS_KEY: test
           SERVICES: s3
 
+      gcp-storage-emulator:
+        image: fsouza/fake-gcs-server:latest
+        ports:
+          - 4443:4443
+        env:
+          STORAGE_EMULATOR_HOST: http://localhost:4443
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
