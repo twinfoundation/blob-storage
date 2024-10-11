@@ -1,0 +1,10 @@
+{
+	"error": {
+		"azureBlobStorageConnector": {
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
+			"getBlobFailed": "Failed to get blob in Azure",
+			"setBlobFailed": "Failed to set blob in Azure",
+			"removeBlobFailed": "Failed to remove blob in Azure"
+		}
+	}
+}
