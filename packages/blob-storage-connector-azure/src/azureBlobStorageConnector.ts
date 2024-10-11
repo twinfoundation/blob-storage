@@ -152,7 +152,11 @@ export class AzureBlobStorageConnector implements IBlobStorageConnector {
 				return new Uint8Array(buffer);
 			}
 			return undefined;
-		} catch {}
+		} catch(err) {
+			throw new GeneralError(this.CLASS_NAME, "getBlobFailed", {
+				id, namespace: AzureBlobStorageConnector.NAMESPACE
+			}, err);
+		}
 	}
 
 	/**

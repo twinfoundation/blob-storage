@@ -64,9 +64,17 @@ describe("AzureBlobStorageConnector", () => {
 	test("can not get an item", async () => {
 		const blobStorage = new AzureBlobStorageConnector({ config: TEST_AZURE_CONFIG });
 		const idUrn = await blobStorage.set(TEST_DATA);
-		const item = await blobStorage.get(`${idUrn}-2`);
 
-		expect(item).toBeUndefined();
+		const errorUri = `${idUrn}-2`;
+
+		await expect(blobStorage.get(errorUri)).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "azureBlobStorageConnector.getBlobFailed",
+			properties: {
+				namespace: AzureBlobStorageConnector.NAMESPACE,
+				id: errorUri
+			}
+		});
 	});
 
 	test("can get an item", async () => {
