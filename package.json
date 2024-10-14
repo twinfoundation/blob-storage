@@ -46,6 +46,7 @@
 		"packages/blob-storage-service",
 		"packages/blob-storage-rest-client",
 		"packages/blob-storage-connector-aws-s3",
+		"packages/blob-storage-connector-azure",
 		"packages/blob-storage-connector-gcp"
 	],
 	"type": "module"

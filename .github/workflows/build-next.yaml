@@ -29,6 +29,13 @@ jobs:
           AWS_SECRET_ACCESS_KEY: test
           SERVICES: s3
 
+      azurite:
+        image: mcr.microsoft.com/azure-storage/azurite:latest
+        ports:
+          - 10000:10000
+        env:
+          AZURITE_ACCOUNTS: testAccount:testKey
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4

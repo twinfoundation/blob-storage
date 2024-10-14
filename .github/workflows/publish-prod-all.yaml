@@ -28,6 +28,12 @@ jobs:
           AWS_ACCESS_KEY_ID: test
           AWS_SECRET_ACCESS_KEY: test
           SERVICES: s3
+      azurite:
+        image: mcr.microsoft.com/azure-storage/azurite:latest
+        ports:
+          - 10000:10000
+        env:
+          AZURITE_ACCOUNTS: testAccount:testKey
 
     strategy:
       max-parallel: 1
