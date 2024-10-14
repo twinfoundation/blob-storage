@@ -11,6 +11,11 @@ export interface IGcpBlobStorageConnectorConfig {
 	projectId: string;
 
 	/**
+	 * The GCP credentials, a base64 encoded version of the JWTInput data type.
+	 */
+	credentials?: string;
+
+	/**
 	 * The GCP bucket name.
 	 */
 	bucketName: string;
@@ -19,10 +24,4 @@ export interface IGcpBlobStorageConnectorConfig {
 	 * Optional endpoint for GCP Storage emulator.
 	 */
 	apiEndpoint?: string;
-
-	/**
-	 * The protocol to use for GCP Storage (e.g., 'http' or 'https').
-	 * Defaults to 'https' if not specified.
-	 */
-	protocol?: "http" | "https";
 }

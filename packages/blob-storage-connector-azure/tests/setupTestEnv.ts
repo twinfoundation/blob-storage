@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
-import { BlobServiceClient } from "@azure/storage-blob";
+import { BlobServiceClient, StorageSharedKeyCredential } from "@azure/storage-blob";
 import { Guards } from "@twin.org/core";
 import * as dotenv from "dotenv";
 import type { IAzureBlobStorageConnectorConfig } from "../src/models/IAzureBlobStorageConnectorConfig";
@@ -10,22 +10,28 @@ dotenv.config({ path: [path.join(__dirname, ".env"), path.join(__dirname, ".env.
 
 console.debug("Setting up test environment from .env and .env.dev files");
 
-Guards.stringValue("TestEnv", "TEST_AZURE_CONNECTION", process.env.TEST_AZURE_CONNECTION);
+Guards.stringValue("TestEnv", "TEST_AZURE_ACCOUNT_NAME", process.env.TEST_AZURE_ACCOUNT_NAME);
+Guards.stringValue("TestEnv", "TEST_AZURE_ACCOUNT_KEY", process.env.TEST_AZURE_ACCOUNT_KEY);
 Guards.stringValue("TestEnv", "TEST_AZURE_CONTAINER", process.env.TEST_AZURE_CONTAINER);
-Guards.stringValue("TestEnv", "TEST_AZURE_BLOB_ENDPOINT", process.env.TEST_AZURE_BLOB_ENDPOINT);
+Guards.stringValue("TestEnv", "TEST_AZURE_ENDPOINT", process.env.TEST_AZURE_ENDPOINT);
 
 export const TEST_AZURE_CONFIG: IAzureBlobStorageConnectorConfig = {
-	connectionString: process.env.TEST_AZURE_CONNECTION,
+	accountName: process.env.TEST_AZURE_ACCOUNT_NAME,
+	accountKey: process.env.TEST_AZURE_ACCOUNT_KEY,
 	containerName: process.env.TEST_AZURE_CONTAINER,
-	blobEndpoint: process.env.TEST_AZURE_BLOB_ENDPOINT
+	endpoint: process.env.TEST_AZURE_ENDPOINT
 };
 
 /**
  * Create a test container for the tests.
  */
 export async function createTestContainer(): Promise<void> {
-	const azureServiceClient = BlobServiceClient.fromConnectionString(
-		(process.env.TEST_AZURE_CONNECTION ?? "") + (process.env.TEST_AZURE_BLOB_ENDPOINT ?? "")
+	const azureServiceClient = new BlobServiceClient(
+		(TEST_AZURE_CONFIG.endpoint ?? "https://{accountName}.blob.core.windows.net/").replace(
+			"{accountName}",
+			TEST_AZURE_CONFIG.accountName
+		),
+		new StorageSharedKeyCredential(TEST_AZURE_CONFIG.accountName, TEST_AZURE_CONFIG.accountKey)
 	);
 
 	console.log(`Attempting to connect to Blob endpoint '${process.env.TEST_AZURE_BLOB_ENDPOINT}'`);

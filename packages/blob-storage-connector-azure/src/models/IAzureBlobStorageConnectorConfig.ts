@@ -6,17 +6,23 @@
  */
 export interface IAzureBlobStorageConnectorConfig {
 	/**
+	 * Storage account name.
+	 */
+	accountName: string;
+
+	/**
+	 * Account key.
+	 */
+	accountKey: string;
+
+	/**
 	 * The Azure container name.
 	 */
 	containerName: string;
 
 	/**
-	 * Connection string.
+	 * Endpoint defaults to `https://{accountName}.blob.core.windows.net/` where accountName will be
+	 * substituted.
 	 */
-	connectionString: string;
-
-	/**
-	 * Blob endpoint.
-	 */
-	blobEndpoint: string;
+	endpoint?: string;
 }

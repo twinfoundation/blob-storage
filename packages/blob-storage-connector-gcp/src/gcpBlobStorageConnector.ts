@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { Storage } from "@google-cloud/storage";
 import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
-import { Converter, GeneralError, Guards, Urn } from "@twin.org/core";
+import { Converter, GeneralError, Guards, Is, ObjectHelper, Urn } from "@twin.org/core";
 import { Sha256 } from "@twin.org/crypto";
 import { nameof } from "@twin.org/nameof";
 import { MimeTypes } from "@twin.org/web";
+import type { JWTInput } from "google-auth-library";
 import type { IGcpBlobStorageConnectorConfig } from "./models/IGcpBlobStorageConnectorConfig";
 
 /**
@@ -48,6 +49,19 @@ export class GcpBlobStorageConnector implements IBlobStorageConnector {
 			options.config
 		);
 		Guards.stringValue(this.CLASS_NAME, nameof(options.config.projectId), options.config.projectId);
+
+		let credentials: JWTInput | undefined;
+		if (!Is.empty(options.config.credentials)) {
+			Guards.stringBase64(
+				this.CLASS_NAME,
+				nameof(options.config.credentials),
+				options.config.credentials
+			);
+			credentials = ObjectHelper.fromBytes<JWTInput>(
+				Converter.base64ToBytes(options.config.credentials)
+			);
+		}
+
 		Guards.stringValue(
 			this.CLASS_NAME,
 			nameof(options.config.bucketName),
@@ -57,7 +71,8 @@ export class GcpBlobStorageConnector implements IBlobStorageConnector {
 		this._config = options.config;
 		this._storage = new Storage({
 			projectId: this._config.projectId,
-			apiEndpoint: this._config.apiEndpoint
+			apiEndpoint: this._config.apiEndpoint,
+			credentials
 		});
 	}
 

@@ -7,7 +7,8 @@ import {
 	type ContainerClient,
 	type BlobClient,
 	type BlobDeleteOptions,
-	type BlobDeleteResponse
+	type BlobDeleteResponse,
+	StorageSharedKeyCredential
 } from "@azure/storage-blob";
 import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
 import { Converter, GeneralError, Guards, Urn } from "@twin.org/core";
@@ -29,12 +30,6 @@ export class AzureBlobStorageConnector implements IBlobStorageConnector {
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<AzureBlobStorageConnector>();
-
-	/**
-	 * The configuration for the connector.
-	 * @internal
-	 */
-	private readonly _config: IAzureBlobStorageConnectorConfig;
 
 	/**
 	 * The Azure Service client.
@@ -62,26 +57,27 @@ export class AzureBlobStorageConnector implements IBlobStorageConnector {
 		);
 		Guards.stringValue(
 			this.CLASS_NAME,
+			nameof(options.config.accountName),
+			options.config.accountName
+		);
+		Guards.stringValue(
+			this.CLASS_NAME,
+			nameof(options.config.accountKey),
+			options.config.accountKey
+		);
+		Guards.stringValue(
+			this.CLASS_NAME,
 			nameof(options.config.containerName),
 			options.config.containerName
 		);
-		Guards.stringValue(
-			this.CLASS_NAME,
-			nameof(options.config.connectionString),
-			options.config.connectionString
+
+		this._azureBlobServiceClient = new BlobServiceClient(
+			(options.config.endpoint ?? "https://{accountName}.blob.core.windows.net/").replace(
+				"{accountName}",
+				options.config.accountName
+			),
+			new StorageSharedKeyCredential(options.config.accountName, options.config.accountKey)
 		);
-		Guards.stringValue(
-			this.CLASS_NAME,
-			nameof(options.config.blobEndpoint),
-			options.config.blobEndpoint
-		);
-
-		this._config = options.config;
-
-		const AZURITE_CONNECTION_STRING = options.config.connectionString + options.config.blobEndpoint;
-
-		this._azureBlobServiceClient =
-			BlobServiceClient.fromConnectionString(AZURITE_CONNECTION_STRING);
 
 		this._azureContainerClient = this._azureBlobServiceClient.getContainerClient(
 			options.config.containerName
