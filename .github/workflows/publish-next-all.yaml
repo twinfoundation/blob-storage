@@ -47,7 +47,8 @@ jobs:
             blob-storage-service,
             blob-storage-rest-client,
             blob-storage-connector-aws-s3,
-            blob-storage-connector-gcp
+            blob-storage-connector-gcp,
+            blob-storage-connector-azure
           ]
 
     steps:
