@@ -15,7 +15,7 @@ The tests developed are functional tests and need an instance of Google Cloud St
 To run Google Cloud Storage locally using the emulator with HTTP protocol:
 
 ```shell
-docker run -p 4443:4443 --name gcp-storage-emulator -d fsouza/fake-gcs-server -scheme http
+docker run -p 4443:4443 --name twin-blob-gcp -d fsouza/fake-gcs-server -scheme http
 ```
 
 This command pulls and runs the `fake-gcs-server` Docker image, which provides a local emulation of Google Cloud Storage. We use the `-scheme http` flag to configure the emulator to use HTTP instead of HTTPS for local testing purposes. This simplifies the setup and avoids potential SSL/TLS configuration issues in the local environment.
