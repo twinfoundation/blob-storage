@@ -16,4 +16,14 @@ export interface IBlobStorageServiceConfig {
 	 * Defaults to the first entry in the factory if not provided.
 	 */
 	defaultNamespace?: string;
+
+	/**
+	 * Include the node identity when performing storage operations, defaults to true.
+	 */
+	includeNodeIdentity?: boolean;
+
+	/**
+	 * Include the user identity when performing storage operations, defaults to true.
+	 */
+	includeUserIdentity?: boolean;
 }

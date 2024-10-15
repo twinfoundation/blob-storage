@@ -14,7 +14,8 @@ export interface IBlobStorageComponent extends IComponent {
 	 * @param extension Extension for the blob, will be detected if left undefined.
 	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
-	 * @param nodeIdentity The node identity which controls the vault key.
+	 * @param userIdentity The user identity to use with storage operations.
+	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	create(
@@ -23,6 +24,7 @@ export interface IBlobStorageComponent extends IComponent {
 		extension?: string,
 		metadata?: IJsonLdNodeObject,
 		namespace?: string,
+		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<string>;
 
@@ -30,13 +32,15 @@ export interface IBlobStorageComponent extends IComponent {
 	 * Get the blob and metadata.
 	 * @param id The id of the blob to get in urn format.
 	 * @param includeContent Include the content, or just get the metadata.
-	 * @param nodeIdentity The node identity which controls the vault key.
+	 * @param userIdentity The user identity to use with storage operations.
+	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns The data and metadata for the blob if it can be found.
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	get(
 		id: string,
 		includeContent: boolean,
+		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<{
 		blob?: string;
@@ -51,6 +55,8 @@ export interface IBlobStorageComponent extends IComponent {
 	 * @param mimeType Mime type for the blob, will be detected if left undefined.
 	 * @param extension Extension for the blob, will be detected if left undefined.
 	 * @param metadata Data for the custom metadata as JSON-LD.
+	 * @param userIdentity The user identity to use with storage operations.
+	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns Nothing.
 	 * @throws Not found error if the blob cannot be found.
 	 */
@@ -58,14 +64,18 @@ export interface IBlobStorageComponent extends IComponent {
 		id: string,
 		mimeType?: string,
 		extension?: string,
-		metadata?: IJsonLdNodeObject
+		metadata?: IJsonLdNodeObject,
+		userIdentity?: string,
+		nodeIdentity?: string
 	): Promise<void>;
 
 	/**
 	 * Remove the blob.
 	 * @param id The id of the blob to remove in urn format.
+	 * @param userIdentity The user identity to use with storage operations.
+	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns Nothing.
 	 * @throws Not found error if the blob cannot be found.
 	 */
-	remove(id: string): Promise<void>;
+	remove(id: string, userIdentity?: string, nodeIdentity?: string): Promise<void>;
 }

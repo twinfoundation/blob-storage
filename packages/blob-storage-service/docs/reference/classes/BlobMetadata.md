@@ -43,3 +43,19 @@ The extension.
 > `optional` **metadata**: `IJsonLdNodeObject`
 
 The metadata for the blob as JSON-LD.
+
+***
+
+### userIdentity?
+
+> `optional` **userIdentity**: `string`
+
+The user identity that created the blob.
+
+***
+
+### nodeIdentity?
+
+> `optional` **nodeIdentity**: `string`
+
+The node identity that created the blob.

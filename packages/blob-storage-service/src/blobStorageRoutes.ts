@@ -19,7 +19,7 @@ import type {
 	IBlobStorageRemoveRequest,
 	IBlobStorageUpdateRequest
 } from "@twin.org/blob-storage-models";
-import { ComponentFactory, Converter, Guards, Is } from "@twin.org/core";
+import { ComponentFactory, Converter, Guards, Is, StringHelper } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { HeaderTypes, HttpStatusCode, MimeTypeHelper, MimeTypes } from "@twin.org/web";
 
@@ -42,16 +42,27 @@ export const tagsBlobStorage: ITag[] = [
  * The REST routes for blob storage.
  * @param baseRouteName Prefix to prepend to the paths.
  * @param componentName The name of the component to use in the routes stored in the ComponentFactory.
+ * @param options Additional options for the routes.
+ * @param options.typeName Optional type name to use in the routes, defaults to Blob Storage.
+ * @param options.tagName Optional name to use in OpenAPI spec for tag.
  * @returns The generated routes.
  */
 export function generateRestRoutesBlobStorage(
 	baseRouteName: string,
-	componentName: string
+	componentName: string,
+	options?: {
+		typeName?: string;
+		tagName?: string;
+	}
 ): IRestRoute[] {
+	const typeName = options?.typeName ?? "Blob Storage";
+	const lowerName = typeName.toLowerCase();
+	const camelTypeName = StringHelper.camelCase(typeName);
+
 	const blobStorageCreateRoute: IRestRoute<IBlobStorageCreateRequest, ICreatedResponse> = {
-		operationId: "blobStorageCreate",
-		summary: "Create a blob in to storage",
-		tag: tagsBlobStorage[0].name,
+		operationId: `${camelTypeName}Create`,
+		summary: `Create an entry in ${lowerName}`,
+		tag: options?.tagName ?? tagsBlobStorage[0].name,
 		method: "POST",
 		path: `${baseRouteName}/`,
 		handler: async (httpRequestContext, request) =>
@@ -60,7 +71,7 @@ export function generateRestRoutesBlobStorage(
 			type: nameof<IBlobStorageCreateRequest>(),
 			examples: [
 				{
-					id: "blobStorageCreateExample",
+					id: `${camelTypeName}CreateRequestExample`,
 					request: {
 						body: {
 							blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
@@ -79,7 +90,7 @@ export function generateRestRoutesBlobStorage(
 				type: nameof<ICreatedResponse>(),
 				examples: [
 					{
-						id: "blobStorageCreateResponseExample",
+						id: `${camelTypeName}CreateResponseExample`,
 						response: {
 							statusCode: HttpStatusCode.created,
 							headers: {
@@ -94,9 +105,9 @@ export function generateRestRoutesBlobStorage(
 	};
 
 	const blobStorageGetRoute: IRestRoute<IBlobStorageGetRequest, IBlobStorageGetResponse> = {
-		operationId: "blobStorageGet",
-		summary: "Get the blob metadata from storage",
-		tag: tagsBlobStorage[0].name,
+		operationId: `${camelTypeName}Get`,
+		summary: `Get the metadata for an item from ${lowerName}`,
+		tag: options?.tagName ?? tagsBlobStorage[0].name,
 		method: "GET",
 		path: `${baseRouteName}/:id`,
 		handler: async (httpRequestContext, request) =>
@@ -105,7 +116,7 @@ export function generateRestRoutesBlobStorage(
 			type: nameof<IBlobStorageGetRequest>(),
 			examples: [
 				{
-					id: "blobStorageGetRequestExample",
+					id: `${camelTypeName}GetRequestExample`,
 					request: {
 						pathParams: {
 							id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
@@ -122,7 +133,7 @@ export function generateRestRoutesBlobStorage(
 				type: nameof<IBlobStorageGetResponse>(),
 				examples: [
 					{
-						id: "blobStorageGetResponseExample",
+						id: `${camelTypeName}GetResponseExample`,
 						response: {
 							body: {
 								metadata: {
@@ -146,9 +157,9 @@ export function generateRestRoutesBlobStorage(
 		IBlobStorageGetContentRequest,
 		IBlobStorageGetContentResponse & IRestRouteResponseOptions
 	> = {
-		operationId: "blobStorageGetContent",
-		summary: "Get the blob from storage",
-		tag: tagsBlobStorage[0].name,
+		operationId: `${camelTypeName}GetContent`,
+		summary: `Get the content for an item in ${lowerName}`,
+		tag: options?.tagName ?? tagsBlobStorage[0].name,
 		method: "GET",
 		path: `${baseRouteName}/:id/content`,
 		handler: async (httpRequestContext, request) =>
@@ -157,7 +168,7 @@ export function generateRestRoutesBlobStorage(
 			type: nameof<IBlobStorageGetRequest>(),
 			examples: [
 				{
-					id: "blobStorageGetContentRequestExample",
+					id: `${camelTypeName}GetContentRequestExample`,
 					request: {
 						pathParams: {
 							id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
@@ -176,7 +187,7 @@ export function generateRestRoutesBlobStorage(
 				mimeType: MimeTypes.OctetStream,
 				examples: [
 					{
-						id: "blobStorageGetContentResponseExample",
+						id: `${camelTypeName}GetContentResponseExample`,
 						description: `The content of the blob, which will be a specific mime type if one can be detected from the content (or set as mimeType in the metadata), or defaults to ${MimeTypes.OctetStream}.`,
 						response: {
 							body: new Uint8Array()
@@ -191,9 +202,9 @@ export function generateRestRoutesBlobStorage(
 	};
 
 	const blobStorageUpdateRoute: IRestRoute<IBlobStorageUpdateRequest, INoContentResponse> = {
-		operationId: "blobStorageUpdate",
-		summary: "Update a blob metadata in storage",
-		tag: tagsBlobStorage[0].name,
+		operationId: `${camelTypeName}Update`,
+		summary: `Update the metadata for an item in ${lowerName}`,
+		tag: options?.tagName ?? tagsBlobStorage[0].name,
 		method: "PUT",
 		path: `${baseRouteName}/:id`,
 		handler: async (httpRequestContext, request) =>
@@ -202,7 +213,7 @@ export function generateRestRoutesBlobStorage(
 			type: nameof<IBlobStorageUpdateRequest>(),
 			examples: [
 				{
-					id: "blobStorageUpdateExample",
+					id: `${camelTypeName}UpdateRequestExample`,
 					request: {
 						pathParams: {
 							id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
@@ -226,9 +237,9 @@ export function generateRestRoutesBlobStorage(
 	};
 
 	const blobStorageRemoveRoute: IRestRoute<IBlobStorageRemoveRequest, INoContentResponse> = {
-		operationId: "blobStorageRemove",
-		summary: "Remove the blob from storage",
-		tag: tagsBlobStorage[0].name,
+		operationId: `${camelTypeName}Remove`,
+		summary: `Remove an item from ${lowerName}`,
+		tag: options?.tagName ?? tagsBlobStorage[0].name,
 		method: "DELETE",
 		path: `${baseRouteName}/:id`,
 		handler: async (httpRequestContext, request) =>
@@ -237,7 +248,7 @@ export function generateRestRoutesBlobStorage(
 			type: nameof<IBlobStorageRemoveRequest>(),
 			examples: [
 				{
-					id: "blobStorageRemoveRequestExample",
+					id: `${camelTypeName}RemoveRequestExample`,
 					request: {
 						pathParams: {
 							id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
@@ -328,6 +339,7 @@ export async function blobStorageGet(
 	const result = await component.get(
 		request.pathParams.id,
 		request.query?.includeContent ?? false,
+		httpRequestContext.userIdentity,
 		httpRequestContext.nodeIdentity
 	);
 
@@ -358,7 +370,12 @@ export async function blobStorageGetContent(
 
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
-	const result = await component.get(request.pathParams.id, true, httpRequestContext.nodeIdentity);
+	const result = await component.get(
+		request.pathParams.id,
+		true,
+		httpRequestContext.userIdentity,
+		httpRequestContext.nodeIdentity
+	);
 
 	const mimeType = result?.mimeType ?? MimeTypes.OctetStream;
 	let filename = request.query?.filename;
@@ -402,7 +419,9 @@ export async function blobStorageUpdate(
 		request.pathParams.id,
 		request.body.mimeType,
 		request.body.extension,
-		request.body.metadata
+		request.body.metadata,
+		httpRequestContext.userIdentity,
+		httpRequestContext.nodeIdentity
 	);
 
 	return {
@@ -432,7 +451,11 @@ export async function blobStorageRemove(
 
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
-	await component.remove(request.pathParams.id);
+	await component.remove(
+		request.pathParams.id,
+		httpRequestContext.userIdentity,
+		httpRequestContext.nodeIdentity
+	);
 
 	return {
 		statusCode: HttpStatusCode.noContent

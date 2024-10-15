@@ -31,4 +31,16 @@ export class BlobMetadata {
 	 */
 	@property({ type: "object", itemTypeRef: "IJsonLdNodeObject" })
 	public metadata?: IJsonLdNodeObject;
+
+	/**
+	 * The user identity that created the blob.
+	 */
+	@property({ type: "string" })
+	public userIdentity?: string;
+
+	/**
+	 * The node identity that created the blob.
+	 */
+	@property({ type: "string" })
+	public nodeIdentity?: string;
 }

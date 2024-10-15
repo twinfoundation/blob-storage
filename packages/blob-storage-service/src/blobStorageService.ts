@@ -12,10 +12,17 @@ import {
 	Is,
 	type IValidationFailure,
 	NotFoundError,
+	ObjectHelper,
 	Urn,
 	Validation
 } from "@twin.org/core";
 import { JsonLdHelper, type IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import {
+	ComparisonOperator,
+	type EntityCondition,
+	EntitySchemaHelper,
+	LogicalOperator
+} from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -70,6 +77,18 @@ export class BlobStorageService implements IBlobStorageComponent {
 	private readonly _vaultKeyId: string;
 
 	/**
+	 * Include the node identity when performing storage operations, defaults to true.
+	 * @internal
+	 */
+	private readonly _includeNodeIdentity: boolean;
+
+	/**
+	 * Include the user identity when performing storage operations, defaults to true.
+	 * @internal
+	 */
+	private readonly _includeUserIdentity: boolean;
+
+	/**
 	 * Create a new instance of BlobStorageService.
 	 * @param options The dependencies for the service.
 	 * @param options.metadataEntityStorageType The type of the storage connector for the metadata, defaults to "blob-metadata".
@@ -95,6 +114,8 @@ export class BlobStorageService implements IBlobStorageComponent {
 
 		this._defaultNamespace = options?.config?.defaultNamespace ?? names[0];
 		this._vaultKeyId = options?.config?.vaultKeyId ?? "blob-storage";
+		this._includeNodeIdentity = options?.config?.includeNodeIdentity ?? true;
+		this._includeUserIdentity = options?.config?.includeUserIdentity ?? true;
 	}
 
 	/**
@@ -104,7 +125,8 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 * @param extension Extension for the blob, will be detected if left undefined.
 	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
-	 * @param nodeIdentity The node identity which controls the vault key.
+	 * @param userIdentity The user identity to use with storage operations.
+	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async create(
@@ -113,10 +135,14 @@ export class BlobStorageService implements IBlobStorageComponent {
 		extension?: string,
 		metadata?: IJsonLdNodeObject,
 		namespace?: string,
+		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<string> {
 		Guards.stringBase64(this.CLASS_NAME, nameof(blob), blob);
-		if (this._vaultConnector) {
+		if (this._includeUserIdentity) {
+			Guards.stringValue(this.CLASS_NAME, nameof(userIdentity), userIdentity);
+		}
+		if (this._includeNodeIdentity || Is.notEmpty(this._vaultConnector)) {
 			Guards.stringValue(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
 		}
 
@@ -158,12 +184,25 @@ export class BlobStorageService implements IBlobStorageComponent {
 			// Set the blob in the storage connector, which may now be encrypted
 			const blobId = await blobStorageConnector.set(storeBlob);
 
-			await this._metadataEntityStorage.set({
+			// Now store the metadata in entity storage
+			const blobMetadata: BlobMetadata = {
 				id: blobId,
 				mimeType,
 				extension,
 				metadata
-			});
+			};
+
+			const conditions: { property: keyof BlobMetadata; value: unknown }[] = [];
+			if (this._includeUserIdentity) {
+				ObjectHelper.propertySet(blobMetadata, "userIdentity", userIdentity);
+				conditions.push({ property: "userIdentity", value: userIdentity });
+			}
+			if (this._includeNodeIdentity) {
+				ObjectHelper.propertySet(blobMetadata, "nodeIdentity", nodeIdentity);
+				conditions.push({ property: "nodeIdentity", value: nodeIdentity });
+			}
+
+			await this._metadataEntityStorage.set(blobMetadata, conditions);
 
 			return blobId;
 		} catch (error) {
@@ -175,13 +214,15 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 * Get the blob and metadata.
 	 * @param id The id of the blob to get in urn format.
 	 * @param includeContent Include the content, or just get the metadata.
-	 * @param nodeIdentity The node identity which controls the vault key.
+	 * @param userIdentity The user identity to use with storage operations.
+	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns The metadata and data for the blob if it can be found.
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	public async get(
 		id: string,
 		includeContent: boolean,
+		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<{
 		blob?: string;
@@ -190,13 +231,28 @@ export class BlobStorageService implements IBlobStorageComponent {
 		metadata?: IJsonLdNodeObject;
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
-		if (this._vaultConnector && includeContent) {
+
+		const conditions: EntityCondition<BlobMetadata>[] = [];
+
+		if (this._includeUserIdentity) {
+			Guards.stringValue(this.CLASS_NAME, nameof(userIdentity), userIdentity);
+			conditions.push({
+				property: "userIdentity",
+				comparison: ComparisonOperator.Equals,
+				value: userIdentity
+			});
+		}
+		if (this._includeNodeIdentity || (Is.notEmpty(this._vaultConnector) && includeContent)) {
 			Guards.stringValue(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
+			conditions.push({
+				property: "nodeIdentity",
+				comparison: ComparisonOperator.Equals,
+				value: nodeIdentity
+			});
 		}
 
 		try {
-			// Get the metadata
-			const blobMetadata = await this._metadataEntityStorage.get(id);
+			const blobMetadata = await this.internalGet(id, userIdentity, nodeIdentity);
 
 			let returnBlob: Uint8Array | undefined;
 			if (includeContent) {
@@ -233,6 +289,8 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 * @param mimeType Mime type for the blob, will be detected if left undefined.
 	 * @param extension Extension for the blob, will be detected if left undefined.
 	 * @param metadata Data for the custom metadata as JSON-LD.
+	 * @param userIdentity The user identity to use with storage operations.
+	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns Nothing.
 	 * @throws Not found error if the blob cannot be found.
 	 */
@@ -240,9 +298,17 @@ export class BlobStorageService implements IBlobStorageComponent {
 		id: string,
 		mimeType?: string,
 		extension?: string,
-		metadata?: IJsonLdNodeObject
+		metadata?: IJsonLdNodeObject,
+		userIdentity?: string,
+		nodeIdentity?: string
 	): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
+		if (this._includeUserIdentity) {
+			Guards.stringValue(this.CLASS_NAME, nameof(userIdentity), userIdentity);
+		}
+		if (this._includeNodeIdentity || Is.notEmpty(this._vaultConnector)) {
+			Guards.stringValue(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
+		}
 
 		try {
 			const blobMetadata = await this._metadataEntityStorage.get(id);
@@ -257,12 +323,25 @@ export class BlobStorageService implements IBlobStorageComponent {
 				Validation.asValidationError(this.CLASS_NAME, "metadata", validationFailures);
 			}
 
-			await this._metadataEntityStorage.set({
+			// Now store the metadata in entity storage
+			const updatedBlobMetadata: BlobMetadata = {
 				id: blobMetadata.id,
 				mimeType: mimeType ?? blobMetadata.mimeType,
 				extension: extension ?? blobMetadata.extension,
 				metadata: metadata ?? blobMetadata.metadata
-			});
+			};
+
+			const conditions: { property: keyof BlobMetadata; value: unknown }[] = [];
+			if (this._includeUserIdentity) {
+				ObjectHelper.propertySet(updatedBlobMetadata, "userIdentity", userIdentity);
+				conditions.push({ property: "userIdentity", value: userIdentity });
+			}
+			if (this._includeNodeIdentity) {
+				ObjectHelper.propertySet(updatedBlobMetadata, "nodeIdentity", nodeIdentity);
+				conditions.push({ property: "nodeIdentity", value: nodeIdentity });
+			}
+
+			await this._metadataEntityStorage.set(updatedBlobMetadata, conditions);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "updateFailed", undefined, error);
 		}
@@ -271,21 +350,36 @@ export class BlobStorageService implements IBlobStorageComponent {
 	/**
 	 * Remove the blob.
 	 * @param id The id of the blob to remove in urn format.
+	 * @param userIdentity The user identity to use with storage operations.
+	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns Nothing.
 	 */
-	public async remove(id: string): Promise<void> {
+	public async remove(id: string, userIdentity?: string, nodeIdentity?: string): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
+		if (this._includeUserIdentity) {
+			Guards.stringValue(this.CLASS_NAME, nameof(userIdentity), userIdentity);
+		}
+		if (this._includeNodeIdentity || Is.notEmpty(this._vaultConnector)) {
+			Guards.stringValue(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
+		}
 
 		try {
 			const blobStorageConnector = this.getConnector(id);
+
+			const conditions: { property: keyof BlobMetadata; value: unknown }[] = [];
+			if (this._includeUserIdentity) {
+				conditions.push({ property: "userIdentity", value: userIdentity });
+			}
+			if (this._includeNodeIdentity) {
+				conditions.push({ property: "nodeIdentity", value: nodeIdentity });
+			}
+			await this._metadataEntityStorage.remove(id, conditions);
 
 			const removed = await blobStorageConnector.remove(id);
 
 			if (!removed) {
 				throw new NotFoundError(this.CLASS_NAME, "blobNotFound", id);
 			}
-
-			await this._metadataEntityStorage.remove(id);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "removeFailed", undefined, error);
 		}
@@ -308,5 +402,75 @@ export class BlobStorageService implements IBlobStorageComponent {
 		}
 
 		return BlobStorageConnectorFactory.get<IBlobStorageConnector>(idUri.namespaceMethod());
+	}
+
+	/**
+	 * Get an entity.
+	 * @param id The id of the entity to get, or the index value if secondaryIndex is set.
+	 * @param secondaryIndex Get the item using a secondary index.
+	 * @param userIdentity The user identity to use with storage operations.
+	 * @param nodeIdentity The node identity to use with storage operations.
+	 * @returns The object if it can be found or throws.
+	 * @internal
+	 */
+	private async internalGet(
+		id: string,
+		userIdentity?: string,
+		nodeIdentity?: string
+	): Promise<BlobMetadata> {
+		const conditions: EntityCondition<BlobMetadata>[] = [];
+
+		if (this._includeUserIdentity) {
+			Guards.stringValue(this.CLASS_NAME, nameof(userIdentity), userIdentity);
+			conditions.push({
+				property: "userIdentity",
+				comparison: ComparisonOperator.Equals,
+				value: userIdentity
+			});
+		}
+		if (this._includeNodeIdentity) {
+			Guards.stringValue(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
+			conditions.push({
+				property: "nodeIdentity",
+				comparison: ComparisonOperator.Equals,
+				value: nodeIdentity
+			});
+		}
+
+		let entity: BlobMetadata | undefined;
+		if (conditions.length === 0) {
+			entity = await this._metadataEntityStorage.get(id);
+		} else {
+			const schema = this._metadataEntityStorage.getSchema();
+			const primaryKey = EntitySchemaHelper.getPrimaryKey(schema);
+
+			conditions.unshift({
+				property: primaryKey.property,
+				comparison: ComparisonOperator.Equals,
+				value: id
+			});
+
+			const results = await this._metadataEntityStorage.query(
+				{
+					conditions,
+					logicalOperator: LogicalOperator.And
+				},
+				undefined,
+				undefined,
+				undefined,
+				1
+			);
+
+			entity = results.entities[0] as BlobMetadata;
+		}
+
+		if (Is.empty(entity)) {
+			throw new NotFoundError(this.CLASS_NAME, "entityNotFound", id);
+		}
+
+		ObjectHelper.propertyDelete(entity, "nodeIdentity");
+		ObjectHelper.propertyDelete(entity, "userIdentity");
+
+		return entity;
 	}
 }

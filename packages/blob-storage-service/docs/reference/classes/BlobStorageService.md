@@ -60,7 +60,7 @@ Runtime name for the class.
 
 ### create()
 
-> **create**(`blob`, `mimeType`?, `extension`?, `metadata`?, `namespace`?, `nodeIdentity`?): `Promise`\<`string`\>
+> **create**(`blob`, `mimeType`?, `extension`?, `metadata`?, `namespace`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`string`\>
 
 Create the blob with some metadata.
 
@@ -86,9 +86,13 @@ Data for the custom metadata as JSON-LD.
 
 The namespace to use for storing, defaults to component configured namespace.
 
+• **userIdentity?**: `string`
+
+The user identity to use with storage operations.
+
 • **nodeIdentity?**: `string`
 
-The node identity which controls the vault key.
+The node identity to use with storage operations.
 
 #### Returns
 
@@ -104,7 +108,7 @@ The id of the stored blob in urn format.
 
 ### get()
 
-> **get**(`id`, `includeContent`, `nodeIdentity`?): `Promise`\<`object`\>
+> **get**(`id`, `includeContent`, `userIdentity`?, `nodeIdentity`?): `Promise`\<`object`\>
 
 Get the blob and metadata.
 
@@ -118,9 +122,13 @@ The id of the blob to get in urn format.
 
 Include the content, or just get the metadata.
 
+• **userIdentity?**: `string`
+
+The user identity to use with storage operations.
+
 • **nodeIdentity?**: `string`
 
-The node identity which controls the vault key.
+The node identity to use with storage operations.
 
 #### Returns
 
@@ -156,7 +164,7 @@ Not found error if the blob cannot be found.
 
 ### update()
 
-> **update**(`id`, `mimeType`?, `extension`?, `metadata`?): `Promise`\<`void`\>
+> **update**(`id`, `mimeType`?, `extension`?, `metadata`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`void`\>
 
 Update the blob with metadata.
 
@@ -178,6 +186,14 @@ Extension for the blob, will be detected if left undefined.
 
 Data for the custom metadata as JSON-LD.
 
+• **userIdentity?**: `string`
+
+The user identity to use with storage operations.
+
+• **nodeIdentity?**: `string`
+
+The node identity to use with storage operations.
+
 #### Returns
 
 `Promise`\<`void`\>
@@ -196,7 +212,7 @@ Not found error if the blob cannot be found.
 
 ### remove()
 
-> **remove**(`id`): `Promise`\<`void`\>
+> **remove**(`id`, `userIdentity`?, `nodeIdentity`?): `Promise`\<`void`\>
 
 Remove the blob.
 
@@ -205,6 +221,14 @@ Remove the blob.
 • **id**: `string`
 
 The id of the blob to remove in urn format.
+
+• **userIdentity?**: `string`
+
+The user identity to use with storage operations.
+
+• **nodeIdentity?**: `string`
+
+The node identity to use with storage operations.
 
 #### Returns
 

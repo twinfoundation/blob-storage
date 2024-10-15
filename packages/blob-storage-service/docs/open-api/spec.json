@@ -21,10 +21,10 @@
         }
     ],
     "paths": {
-        "/blob": {
+        "/blob-storage": {
             "post": {
                 "operationId": "blobStorageCreate",
-                "summary": "Create a blob in to storage",
+                "summary": "Create an entry in blob storage",
                 "tags": [
                     "Blob Storage"
                 ],
@@ -42,7 +42,7 @@
                                 "$ref": "#/components/schemas/BlobStorageCreateRequest"
                             },
                             "examples": {
-                                "blobStorageCreateExample": {
+                                "blobStorageCreateRequestExample": {
                                     "value": {
                                         "blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
                                         "metadata": {
@@ -128,10 +128,10 @@
                 }
             }
         },
-        "/blob/{id}": {
+        "/blob-storage/{id}": {
             "get": {
                 "operationId": "blobStorageGet",
-                "summary": "Get the blob metadata from storage",
+                "summary": "Get the metadata for an item from blob storage",
                 "tags": [
                     "Blob Storage"
                 ],
@@ -268,7 +268,7 @@
             },
             "put": {
                 "operationId": "blobStorageUpdate",
-                "summary": "Update a blob metadata in storage",
+                "summary": "Update the metadata for an item in blob storage",
                 "tags": [
                     "Blob Storage"
                 ],
@@ -299,7 +299,7 @@
                                 "$ref": "#/components/schemas/BlobStorageUpdateRequest"
                             },
                             "examples": {
-                                "blobStorageUpdateExample": {
+                                "blobStorageUpdateRequestExample": {
                                     "value": {
                                         "metadata": {
                                             "@context": "http://schema.org/",
@@ -377,7 +377,7 @@
             },
             "delete": {
                 "operationId": "blobStorageRemove",
-                "summary": "Remove the blob from storage",
+                "summary": "Remove an item from blob storage",
                 "tags": [
                     "Blob Storage"
                 ],
@@ -484,10 +484,10 @@
                 }
             }
         },
-        "/blob/{id}/content": {
+        "/blob-storage/{id}/content": {
             "get": {
                 "operationId": "blobStorageGetContent",
-                "summary": "Get the blob from storage",
+                "summary": "Get the content for an item in blob storage",
                 "tags": [
                     "Blob Storage"
                 ],
