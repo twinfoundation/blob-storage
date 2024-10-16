@@ -144,12 +144,25 @@
                         }
                     },
                     {
-                        "name": "sortProperties",
-                        "description": "The sort property array as JSON serialization of property,direction.",
+                        "name": "orderBy",
+                        "description": "The order for the results, default to created.",
                         "in": "query",
                         "required": false,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                                "dateCreated",
+                                "dateModified"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "orderByDirection",
+                        "description": "The direction for the order, defaults to desc.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/components/schemas/SortDirection"
                         }
                     },
                     {
@@ -2171,6 +2184,21 @@
                     "name"
                 ],
                 "description": "The body which contains the error."
+            },
+            "SortDirection": {
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "const": "asc",
+                        "description": "Ascending."
+                    },
+                    {
+                        "type": "string",
+                        "const": "desc",
+                        "description": "Descending."
+                    }
+                ],
+                "description": "The sort directions."
             },
             "Uint8Array": {
                 "type": "object",

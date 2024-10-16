@@ -26,7 +26,7 @@ import {
 	type EntityCondition,
 	EntitySchemaHelper,
 	LogicalOperator,
-	type SortDirection
+	SortDirection
 } from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
@@ -393,7 +393,8 @@ export class BlobStorageService implements IBlobStorageComponent {
 	/**
 	 * Query all the blob storage entries which match the conditions.
 	 * @param conditions The conditions to match for the entries.
-	 * @param sortProperties The optional sort order.
+	 * @param orderBy The order for the results, defaults to created.
+	 * @param orderByDirection The direction for the order, defaults to descending.
 	 * @param cursor The cursor to request the next page of entries.
 	 * @param pageSize The suggested number of entries to return in each chunk, in some scenarios can return a different amount.
 	 * @param userIdentity The user identity to use with storage operations.
@@ -403,10 +404,8 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 */
 	public async query(
 		conditions?: EntityCondition<IBlobStorageEntry>,
-		sortProperties?: {
-			property: keyof Pick<IBlobStorageEntry, "dateCreated" | "dateModified">;
-			sortDirection: SortDirection;
-		}[],
+		orderBy?: keyof Pick<IBlobStorageEntry, "dateCreated" | "dateModified">,
+		orderByDirection?: SortDirection,
 		cursor?: string,
 		pageSize?: number,
 		userIdentity?: string,
@@ -438,9 +437,17 @@ export class BlobStorageService implements IBlobStorageComponent {
 			finalConditions.conditions.push(conditions);
 		}
 
+		const orderProperty = orderBy ?? "dateCreated";
+		const orderDirection = orderByDirection ?? SortDirection.Descending;
+
 		const result = await this._entryEntityStorage.query(
 			finalConditions.conditions.length > 0 ? finalConditions : undefined,
-			sortProperties,
+			[
+				{
+					property: orderProperty,
+					sortDirection: orderDirection
+				}
+			],
 			undefined,
 			cursor,
 			pageSize

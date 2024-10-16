@@ -184,7 +184,7 @@ Nothing.
 
 ### query()
 
-> **query**(`conditions`?, `sortProperties`?, `cursor`?, `pageSize`?): `Promise`\<`IBlobStorageEntryList`\>
+> **query**(`conditions`?, `orderBy`?, `orderByDirection`?, `cursor`?, `pageSize`?): `Promise`\<`IBlobStorageEntryList`\>
 
 Query all the blob storage entries which match the conditions.
 
@@ -194,9 +194,13 @@ Query all the blob storage entries which match the conditions.
 
 The conditions to match for the entries.
 
-• **sortProperties?**: `object`[]
+• **orderBy?**: `"dateCreated"` \| `"dateModified"`
 
-The optional sort order.
+The order for the results, defaults to created.
+
+• **orderByDirection?**: `SortDirection`
+
+The direction for the order, defaults to descending.
 
 • **cursor?**: `string`
 

@@ -615,7 +615,8 @@ export async function blobStorageList(
 
 	const result = await component.query(
 		HttpParameterHelper.objectFromString(request.query?.conditions),
-		HttpParameterHelper.objectFromString(request.query?.sortProperties),
+		request.query?.orderBy,
+		request.query?.orderByDirection,
 		request.query?.cursor,
 		Coerce.number(request.query?.pageSize),
 		httpRequestContext.userIdentity,

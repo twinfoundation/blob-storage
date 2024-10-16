@@ -80,7 +80,8 @@ export interface IBlobStorageComponent extends IComponent {
 	/**
 	 * Query all the blob storage entries which match the conditions.
 	 * @param conditions The conditions to match for the entries.
-	 * @param sortProperties The optional sort order.
+	 * @param orderBy The order for the results, defaults to created.
+	 * @param orderByDirection The direction for the order, defaults to descending.
 	 * @param cursor The cursor to request the next page of entries.
 	 * @param pageSize The suggested number of entries to return in each chunk, in some scenarios can return a different amount.
 	 * @param userIdentity The user identity to use with storage operations.
@@ -90,10 +91,8 @@ export interface IBlobStorageComponent extends IComponent {
 	 */
 	query(
 		conditions?: EntityCondition<IBlobStorageEntry>,
-		sortProperties?: {
-			property: keyof Pick<IBlobStorageEntry, "dateCreated" | "dateModified">;
-			sortDirection: SortDirection;
-		}[],
+		orderBy?: keyof Pick<IBlobStorageEntry, "dateCreated" | "dateModified">,
+		orderByDirection?: SortDirection,
 		cursor?: string,
 		pageSize?: number,
 		userIdentity?: string,

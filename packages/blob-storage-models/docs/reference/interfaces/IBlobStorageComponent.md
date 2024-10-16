@@ -166,7 +166,7 @@ Not found error if the blob cannot be found.
 
 ### query()
 
-> **query**(`conditions`?, `sortProperties`?, `cursor`?, `pageSize`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<[`IBlobStorageEntryList`](IBlobStorageEntryList.md)\>
+> **query**(`conditions`?, `orderBy`?, `orderByDirection`?, `cursor`?, `pageSize`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<[`IBlobStorageEntryList`](IBlobStorageEntryList.md)\>
 
 Query all the blob storage entries which match the conditions.
 
@@ -176,9 +176,13 @@ Query all the blob storage entries which match the conditions.
 
 The conditions to match for the entries.
 
-• **sortProperties?**: `object`[]
+• **orderBy?**: `"dateCreated"` \| `"dateModified"`
 
-The optional sort order.
+The order for the results, defaults to created.
+
+• **orderByDirection?**: `SortDirection`
+
+The direction for the order, defaults to descending.
 
 • **cursor?**: `string`
 

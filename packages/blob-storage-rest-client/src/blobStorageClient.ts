@@ -155,7 +155,8 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	/**
 	 * Query all the blob storage entries which match the conditions.
 	 * @param conditions The conditions to match for the entries.
-	 * @param sortProperties The optional sort order.
+	 * @param orderBy The order for the results, defaults to created.
+	 * @param orderByDirection The direction for the order, defaults to descending.
 	 * @param cursor The cursor to request the next page of entries.
 	 * @param pageSize The suggested number of entries to return in each chunk, in some scenarios can return a different amount.
 	 * @returns All the entries for the storage matching the conditions,
@@ -163,10 +164,8 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	 */
 	public async query(
 		conditions?: EntityCondition<IBlobStorageEntry>,
-		sortProperties?: {
-			property: keyof Pick<IBlobStorageEntry, "dateCreated" | "dateModified">;
-			sortDirection: SortDirection;
-		}[],
+		orderBy?: keyof Pick<IBlobStorageEntry, "dateCreated" | "dateModified">,
+		orderByDirection?: SortDirection,
 		cursor?: string,
 		pageSize?: number
 	): Promise<IBlobStorageEntryList> {
@@ -179,7 +178,8 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 				},
 				query: {
 					conditions: HttpParameterHelper.objectToString(conditions),
-					sortProperties: HttpParameterHelper.objectToString(sortProperties),
+					orderBy,
+					orderByDirection,
 					pageSize,
 					cursor
 				}
