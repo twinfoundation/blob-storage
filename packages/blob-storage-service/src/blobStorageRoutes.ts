@@ -430,6 +430,7 @@ export async function blobStorageCreate(
 		request.body.fileExtension,
 		request.body.metadata,
 		request.body.namespace,
+		httpRequestContext.userIdentity,
 		httpRequestContext.nodeIdentity
 	);
 
