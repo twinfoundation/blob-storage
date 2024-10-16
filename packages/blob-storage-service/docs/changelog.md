@@ -1,5 +1,5 @@
 # @twin.org/blob-storage-service - Changelog
 
-## v0.0.1-next.10
+## v0.0.1-next.12
 
 - Initial Release

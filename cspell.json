@@ -17,7 +17,7 @@
 		".eslintrc.cjs",
 		"**/wordlists/**"
 	],
-	"words": ["IIPFS", "IPFS", "kubo", "nameof", "Stiftung"],
+	"words": ["IIPFS", "IPFS", "jsonld", "kubo", "nameof", "Stiftung"],
 	"ignoreRegExpList": [
 		"/from\\s+(['\"]).*\\1/",
 		"/eslint-disable.*/",

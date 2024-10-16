@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { I18n, RandomHelper } from "@twin.org/core";
-import { createTestBucket, TEST_GCP_CONFIG } from "./setupTestEnv";
+import { TEST_GCP_CONFIG } from "./setupTestEnv";
 import { GcpBlobStorageConnector } from "../src/gcpBlobStorageConnector";
 
 const TEST_DATA = RandomHelper.generate(32);
@@ -10,11 +10,16 @@ const TEST_DATA_2 = RandomHelper.generate(32);
 describe("GcpBlobStorageConnector", () => {
 	beforeAll(async () => {
 		I18n.addDictionary("en", await import("../locales/en.json"));
-		await createTestBucket();
 	});
 
 	test("can construct", async () => {
 		const blobStorage = new GcpBlobStorageConnector({ config: TEST_GCP_CONFIG });
+		expect(blobStorage).toBeDefined();
+	});
+
+	test("can bootstrap", async () => {
+		const blobStorage = new GcpBlobStorageConnector({ config: TEST_GCP_CONFIG });
+		await blobStorage.bootstrap();
 		expect(blobStorage).toBeDefined();
 	});
 

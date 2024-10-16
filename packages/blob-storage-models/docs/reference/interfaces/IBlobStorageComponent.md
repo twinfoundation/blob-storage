@@ -10,7 +10,7 @@ Interface describing an blob storage component.
 
 ### create()
 
-> **create**(`blob`, `mimeType`?, `extension`?, `metadata`?, `namespace`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`string`\>
+> **create**(`blob`, `encodingFormat`?, `fileExtension`?, `metadata`?, `namespace`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`string`\>
 
 Create the blob with some metadata.
 
@@ -20,11 +20,11 @@ Create the blob with some metadata.
 
 The data for the blob in base64 format.
 
-• **mimeType?**: `string`
+• **encodingFormat?**: `string`
 
 Mime type for the blob, will be detected if left undefined.
 
-• **extension?**: `string`
+• **fileExtension?**: `string`
 
 Extension for the blob, will be detected if left undefined.
 
@@ -54,7 +54,7 @@ The id of the stored blob in urn format.
 
 ### get()
 
-> **get**(`id`, `includeContent`, `userIdentity`?, `nodeIdentity`?): `Promise`\<`object`\>
+> **get**(`id`, `includeContent`, `userIdentity`?, `nodeIdentity`?): `Promise`\<[`IBlobStorageEntry`](IBlobStorageEntry.md)\>
 
 Get the blob and metadata.
 
@@ -78,25 +78,9 @@ The node identity to use with storage operations.
 
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<[`IBlobStorageEntry`](IBlobStorageEntry.md)\>
 
 The data and metadata for the blob if it can be found.
-
-##### blob?
-
-> `optional` **blob**: `string`
-
-##### mimeType?
-
-> `optional` **mimeType**: `string`
-
-##### extension?
-
-> `optional` **extension**: `string`
-
-##### metadata?
-
-> `optional` **metadata**: `IJsonLdNodeObject`
 
 #### Throws
 
@@ -106,7 +90,7 @@ Not found error if the blob cannot be found.
 
 ### update()
 
-> **update**(`id`, `mimeType`?, `extension`?, `metadata`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`void`\>
+> **update**(`id`, `encodingFormat`?, `fileExtension`?, `metadata`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`void`\>
 
 Update the blob with metadata.
 
@@ -116,11 +100,11 @@ Update the blob with metadata.
 
 The id of the blob metadata to update.
 
-• **mimeType?**: `string`
+• **encodingFormat?**: `string`
 
 Mime type for the blob, will be detected if left undefined.
 
-• **extension?**: `string`
+• **fileExtension?**: `string`
 
 Extension for the blob, will be detected if left undefined.
 
@@ -182,7 +166,7 @@ Not found error if the blob cannot be found.
 
 ### query()
 
-> **query**(`conditions`?, `sortProperties`?, `cursor`?, `pageSize`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`object`\>
+> **query**(`conditions`?, `sortProperties`?, `cursor`?, `pageSize`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<[`IBlobStorageEntryList`](IBlobStorageEntryList.md)\>
 
 Query all the blob storage entries which match the conditions.
 
@@ -214,19 +198,7 @@ The node identity to use with storage operations.
 
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<[`IBlobStorageEntryList`](IBlobStorageEntryList.md)\>
 
 All the entries for the storage matching the conditions,
 and a cursor which can be used to request more entities.
-
-##### entities
-
-> **entities**: [`IBlobStorageEntry`](IBlobStorageEntry.md)[]
-
-The entities.
-
-##### cursor?
-
-> `optional` **cursor**: `string`
-
-An optional cursor, when defined can be used to call find to get more entities.

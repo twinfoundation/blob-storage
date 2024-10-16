@@ -10,19 +10,21 @@ import {
 	type IRestRouteResponseOptions,
 	type ITag
 } from "@twin.org/api-models";
-import type {
-	IBlobStorageComponent,
-	IBlobStorageCreateRequest,
-	IBlobStorageGetContentRequest,
-	IBlobStorageGetContentResponse,
-	IBlobStorageGetRequest,
-	IBlobStorageGetResponse,
-	IBlobStorageListRequest,
-	IBlobStorageListResponse,
-	IBlobStorageRemoveRequest,
-	IBlobStorageUpdateRequest
+import {
+	BlobStorageTypes,
+	type IBlobStorageComponent,
+	type IBlobStorageCreateRequest,
+	type IBlobStorageGetContentRequest,
+	type IBlobStorageGetContentResponse,
+	type IBlobStorageGetRequest,
+	type IBlobStorageGetResponse,
+	type IBlobStorageListRequest,
+	type IBlobStorageListResponse,
+	type IBlobStorageRemoveRequest,
+	type IBlobStorageUpdateRequest
 } from "@twin.org/blob-storage-models";
 import { Coerce, ComponentFactory, Converter, Guards, Is, StringHelper } from "@twin.org/core";
+import { SchemaOrgTypes } from "@twin.org/data-schema-org";
 import { nameof } from "@twin.org/nameof";
 import { HeaderTypes, HttpStatusCode, MimeTypeHelper, MimeTypes } from "@twin.org/web";
 
@@ -139,6 +141,40 @@ export function generateRestRoutesBlobStorage(
 						id: `${camelTypeName}GetResponseExample`,
 						response: {
 							body: {
+								"@context": [BlobStorageTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+								type: BlobStorageTypes.Entry,
+								id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+								dateCreated: "2024-01-01T00:00:00Z",
+								encodingFormat: MimeTypes.Pdf,
+								blobSize: 42,
+								fileExtension: "pdf",
+								metadata: {
+									"@context": "http://schema.org/",
+									"@type": "DigitalDocument",
+									name: "myfile.pdf"
+								},
+								blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+							}
+						}
+					}
+				]
+			},
+			{
+				type: nameof<IBlobStorageGetResponse>(),
+				mimeType: MimeTypes.JsonLd,
+				examples: [
+					{
+						id: `${camelTypeName}GetResponseJsonLdExample`,
+						response: {
+							body: {
+								"@context": [BlobStorageTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+								type: BlobStorageTypes.Entry,
+								id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+								dateCreated: "2024-01-01T00:00:00Z",
+								encodingFormat: MimeTypes.Pdf,
+								blobSize: 42,
+								fileExtension: "pdf",
+
 								metadata: {
 									"@context": "http://schema.org/",
 									"@type": "DigitalDocument",
@@ -191,7 +227,7 @@ export function generateRestRoutesBlobStorage(
 				examples: [
 					{
 						id: `${camelTypeName}GetContentResponseExample`,
-						description: `The content of the blob, which will be a specific mime type if one can be detected from the content (or set as mimeType in the metadata), or defaults to ${MimeTypes.OctetStream}.`,
+						description: `The content of the blob, which will be a specific mime type if one can be detected from the content (or set as encodingFormat in the entry), or defaults to ${MimeTypes.OctetStream}.`,
 						response: {
 							body: new Uint8Array()
 						}
@@ -295,14 +331,55 @@ export function generateRestRoutesBlobStorage(
 						id: `${camelTypeName}ListResponseExample`,
 						response: {
 							body: {
-								entities: [
+								"@context": [BlobStorageTypes.ContextRoot],
+								type: BlobStorageTypes.EntryList,
+								entries: [
 									{
+										"@context": [BlobStorageTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+										type: BlobStorageTypes.Entry,
 										id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+										dateCreated: "2024-01-01T00:00:00Z",
+										encodingFormat: MimeTypes.Pdf,
+										blobSize: 42,
+										fileExtension: "pdf",
 										metadata: {
 											"@context": "http://schema.org/",
 											"@type": "DigitalDocument",
 											name: "myfile.pdf"
-										}
+										},
+										blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			{
+				type: nameof<IBlobStorageListResponse>(),
+				mimeType: MimeTypes.JsonLd,
+				examples: [
+					{
+						id: `${camelTypeName}ListResponseJsonLdExample`,
+						response: {
+							body: {
+								"@context": [BlobStorageTypes.ContextRoot],
+								type: BlobStorageTypes.EntryList,
+								entries: [
+									{
+										"@context": [BlobStorageTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+										type: BlobStorageTypes.Entry,
+										id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+										dateCreated: "2024-01-01T00:00:00Z",
+										encodingFormat: MimeTypes.Pdf,
+										blobSize: 42,
+										fileExtension: "pdf",
+										metadata: {
+											"@context": "http://schema.org/",
+											"@type": "DigitalDocument",
+											name: "myfile.pdf"
+										},
+										blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
 									}
 								]
 							}
@@ -349,8 +426,8 @@ export async function blobStorageCreate(
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 	const id = await component.create(
 		request.body.blob,
-		request.body.mimeType,
-		request.body.extension,
+		request.body.encodingFormat,
+		request.body.fileExtension,
 		request.body.metadata,
 		request.body.namespace,
 		httpRequestContext.nodeIdentity
@@ -384,6 +461,8 @@ export async function blobStorageGet(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
+	const mimeType = request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? "jsonld" : "json";
+
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
 	const result = await component.get(
@@ -394,6 +473,9 @@ export async function blobStorageGet(
 	);
 
 	return {
+		headers: {
+			[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
+		},
 		body: result
 	};
 }
@@ -427,16 +509,16 @@ export async function blobStorageGetContent(
 		httpRequestContext.nodeIdentity
 	);
 
-	const mimeType = result?.mimeType ?? MimeTypes.OctetStream;
+	const encodingFormat = result?.encodingFormat ?? MimeTypes.OctetStream;
 	let filename = request.query?.filename;
 	if (!Is.stringValue(filename)) {
-		filename = `file.${result.extension ?? MimeTypeHelper.defaultExtension(mimeType)}`;
+		filename = `file.${result.fileExtension ?? MimeTypeHelper.defaultExtension(encodingFormat)}`;
 	}
 
 	return {
 		body: Is.stringBase64(result.blob) ? Converter.base64ToBytes(result.blob) : new Uint8Array(),
 		attachment: {
-			mimeType,
+			mimeType: encodingFormat,
 			filename,
 			inline: !(request.query?.download ?? false)
 		}
@@ -467,8 +549,8 @@ export async function blobStorageUpdate(
 
 	await component.update(
 		request.pathParams.id,
-		request.body.mimeType,
-		request.body.extension,
+		request.body.encodingFormat,
+		request.body.fileExtension,
 		request.body.metadata,
 		httpRequestContext.userIdentity,
 		httpRequestContext.nodeIdentity
@@ -526,6 +608,8 @@ export async function blobStorageList(
 ): Promise<IBlobStorageListResponse> {
 	Guards.object<IBlobStorageListRequest>(ROUTES_SOURCE, nameof(request), request);
 
+	const mimeType = request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? "jsonld" : "json";
+
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
 	const result = await component.query(
@@ -538,6 +622,9 @@ export async function blobStorageList(
 	);
 
 	return {
+		headers: {
+			[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
+		},
 		body: result
 	};
 }

@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { Storage } from "@google-cloud/storage";
 import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
-import { Converter, GeneralError, Guards, Is, ObjectHelper, Urn } from "@twin.org/core";
+import { BaseError, Converter, GeneralError, Guards, Is, ObjectHelper, Urn } from "@twin.org/core";
 import { Sha256 } from "@twin.org/crypto";
+import { LoggingConnectorFactory } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import { MimeTypes } from "@twin.org/web";
 import type { JWTInput } from "google-auth-library";
@@ -74,6 +75,67 @@ export class GcpBlobStorageConnector implements IBlobStorageConnector {
 			apiEndpoint: this._config.apiEndpoint,
 			credentials
 		});
+	}
+
+	/**
+	 * Bootstrap the component by creating and initializing any resources it needs.
+	 * @param nodeLoggingConnectorType The node logging connector type, defaults to "node-logging".
+	 * @returns True if the bootstrapping process was successful.
+	 */
+	public async bootstrap(nodeLoggingConnectorType?: string): Promise<boolean> {
+		const nodeLogging = LoggingConnectorFactory.getIfExists(
+			nodeLoggingConnectorType ?? "node-logging"
+		);
+
+		try {
+			await nodeLogging?.log({
+				level: "info",
+				source: this.CLASS_NAME,
+				message: "bucketCreating",
+				data: {
+					bucket: this._config.bucketName
+				}
+			});
+
+			const [buckets] = await this._storage.getBuckets();
+			const bucketExists = buckets.some(bucket => bucket.name === this._config.bucketName);
+
+			if (bucketExists) {
+				await nodeLogging?.log({
+					level: "info",
+					source: this.CLASS_NAME,
+					message: "bucketExists",
+					data: {
+						bucket: this._config.bucketName
+					}
+				});
+			} else {
+				await this._storage.createBucket(this._config.bucketName);
+
+				await nodeLogging?.log({
+					level: "info",
+					source: this.CLASS_NAME,
+					message: "bucketCreated",
+					data: {
+						bucket: this._config.bucketName
+					}
+				});
+			}
+		} catch (err) {
+			await nodeLogging?.log({
+				level: "error",
+				source: this.CLASS_NAME,
+				message: "bucketCreateFailed",
+				data: {
+					bucket: this._config.bucketName
+				},
+				error: BaseError.fromError(err)
+			});
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

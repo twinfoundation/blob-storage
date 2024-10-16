@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { I18n, RandomHelper } from "@twin.org/core";
-import { createTestContainer, TEST_AZURE_CONFIG } from "./setupTestEnv";
+import { TEST_AZURE_CONFIG } from "./setupTestEnv";
 import { AzureBlobStorageConnector } from "../src/azureBlobStorageConnector";
 
 const TEST_DATA = RandomHelper.generate(32);
@@ -9,11 +9,16 @@ const TEST_DATA = RandomHelper.generate(32);
 describe("AzureBlobStorageConnector", () => {
 	beforeAll(async () => {
 		I18n.addDictionary("en", await import("../locales/en.json"));
-		await createTestContainer();
 	});
 
 	test("can construct", async () => {
 		const blobStorage = new AzureBlobStorageConnector({ config: TEST_AZURE_CONFIG });
+		expect(blobStorage).toBeDefined();
+	});
+
+	test("can bootstrap", async () => {
+		const blobStorage = new AzureBlobStorageConnector({ config: TEST_AZURE_CONFIG });
+		await blobStorage.bootstrap();
 		expect(blobStorage).toBeDefined();
 	});
 

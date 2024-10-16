@@ -4,10 +4,10 @@ import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { entity, property } from "@twin.org/entity";
 
 /**
- * Class representing metadata for the blob storage.
+ * Class representing entry for the blob storage.
  */
 @entity()
-export class BlobMetadata {
+export class BlobStorageEntry {
 	/**
 	 * The id for the blob.
 	 */
@@ -15,16 +15,34 @@ export class BlobMetadata {
 	public id!: string;
 
 	/**
+	 * The date/time when the entry was created.
+	 */
+	@property({ type: "string", format: "date-time", sortDirection: "desc" })
+	public dateCreated!: string;
+
+	/**
+	 * The date/time when the entry was modified.
+	 */
+	@property({ type: "string", format: "date-time", sortDirection: "desc" })
+	public dateModified?: string;
+
+	/**
+	 * The length of the data in the blob.
+	 */
+	@property({ type: "number" })
+	public blobSize!: number;
+
+	/**
 	 * The mime type for the blob.
 	 */
 	@property({ type: "string" })
-	public mimeType?: string;
+	public encodingFormat?: string;
 
 	/**
 	 * The extension.
 	 */
 	@property({ type: "string" })
-	public extension?: string;
+	public fileExtension?: string;
 
 	/**
 	 * The metadata for the blob as JSON-LD.

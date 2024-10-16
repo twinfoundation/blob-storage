@@ -23,12 +23,12 @@ export interface IBlobStorageUpdateRequest {
 		/**
 		 * The mime type of the blob, will be detected if left undefined.
 		 */
-		mimeType?: string;
+		encodingFormat?: string;
 
 		/**
 		 * The extension of the blob, will be detected if left undefined.
 		 */
-		extension?: string;
+		fileExtension?: string;
 
 		/**
 		 * Custom metadata to associate with the blob as JSON-LD.

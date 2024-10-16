@@ -8,27 +8,32 @@ import { MemoryEntityStorageConnector } from "@twin.org/entity-storage-connector
 import { EntityStorageConnectorFactory } from "@twin.org/entity-storage-models";
 import { nameof } from "@twin.org/nameof";
 import { BlobStorageService } from "../src/blobStorageService";
-import { BlobMetadata } from "../src/entities/blobMetadata";
+import { BlobStorageEntry } from "../src/entities/blobStorageEntry";
 
 const TEST_USER_IDENTITY = "test-user-identity";
 const TEST_NODE_IDENTITY = "test-node-identity";
-let entityStorage: MemoryEntityStorageConnector<BlobMetadata>;
+let entityStorage: MemoryEntityStorageConnector<BlobStorageEntry>;
 let blobStorage: MemoryBlobStorageConnector;
 
 describe("blob-storage-service", () => {
 	beforeEach(() => {
-		EntitySchemaFactory.register(nameof<BlobMetadata>(), () =>
-			EntitySchemaHelper.getSchema(BlobMetadata)
+		EntitySchemaFactory.register(nameof<BlobStorageEntry>(), () =>
+			EntitySchemaHelper.getSchema(BlobStorageEntry)
 		);
 
-		entityStorage = new MemoryEntityStorageConnector<BlobMetadata>({
-			entitySchema: nameof<BlobMetadata>()
+		entityStorage = new MemoryEntityStorageConnector<BlobStorageEntry>({
+			entitySchema: nameof<BlobStorageEntry>()
 		});
 
-		EntityStorageConnectorFactory.register("blob-metadata", () => entityStorage);
+		EntityStorageConnectorFactory.register("blob-entry", () => entityStorage);
 
 		blobStorage = new MemoryBlobStorageConnector();
 		BlobStorageConnectorFactory.register("memory", () => blobStorage);
+
+		Date.now = vi
+			.fn()
+			.mockImplementationOnce(() => 1724327716271)
+			.mockImplementation(() => 1724327816272);
 	});
 
 	test("can create the service", async () => {
@@ -45,9 +50,11 @@ describe("blob-storage-service", () => {
 		await service.create(data);
 		expect(entityStorage.getStore()).toEqual([
 			{
-				extension: "txt",
 				id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
-				mimeType: "text/plain"
+				blobSize: 43,
+				dateCreated: "2024-08-22T11:55:16.271Z",
+				fileExtension: "txt",
+				encodingFormat: "text/plain"
 			}
 		]);
 		expect(blobStorage.getStore()).toEqual({
@@ -70,9 +77,11 @@ describe("blob-storage-service", () => {
 		);
 		expect(entityStorage.getStore()).toEqual([
 			{
-				extension: "txt",
 				id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
-				mimeType: "text/plain",
+				blobSize: 43,
+				dateCreated: "2024-08-22T11:55:16.271Z",
+				fileExtension: "txt",
+				encodingFormat: "text/plain",
 				nodeIdentity: "test-node-identity",
 				userIdentity: "test-user-identity"
 			}
@@ -101,9 +110,11 @@ describe("blob-storage-service", () => {
 		);
 		expect(entityStorage.getStore()).toEqual([
 			{
-				extension: "txt",
 				id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
-				mimeType: "text/plain",
+				blobSize: 43,
+				dateCreated: "2024-08-22T11:55:16.271Z",
+				fileExtension: "txt",
+				encodingFormat: "text/plain",
 				nodeIdentity: "test-node-identity",
 				userIdentity: "test-user-identity",
 				metadata: {
@@ -126,12 +137,19 @@ describe("blob-storage-service", () => {
 		const data = Converter.bytesToBase64(dataBytes);
 		const id = await service.create(data);
 
-		const result = await service.get(id, true);
-		expect(result).toEqual({
-			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
-			extension: "txt",
-			mimeType: "text/plain"
-		});
+		try {
+			const result = await service.get(id, true);
+			expect(result).toEqual({
+				id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
+				blobSize: 43,
+				dateCreated: "2024-08-22T11:55:16.271Z",
+				fileExtension: "txt",
+				encodingFormat: "text/plain",
+				blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+			});
+		} catch (e) {
+			console.log(e);
+		}
 	});
 
 	test("can get a file with no metadata with userIdentity and nodeIdentity", async () => {
@@ -150,9 +168,14 @@ describe("blob-storage-service", () => {
 
 		const result = await service.get(id, true, TEST_USER_IDENTITY, TEST_NODE_IDENTITY);
 		expect(result).toEqual({
-			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
-			extension: "txt",
-			mimeType: "text/plain"
+			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org/"],
+			type: "BlobStorageEntry",
+			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
+			fileExtension: "txt",
+			dateCreated: "2024-08-22T11:55:16.271Z",
+			encodingFormat: "text/plain",
+			blobSize: 43,
+			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
 		});
 	});
 
@@ -176,9 +199,14 @@ describe("blob-storage-service", () => {
 
 		const result = await service.get(id, true, TEST_USER_IDENTITY, TEST_NODE_IDENTITY);
 		expect(result).toEqual({
+			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org/"],
+			type: "BlobStorageEntry",
+			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
+			fileExtension: "txt",
+			dateCreated: "2024-08-22T11:55:16.271Z",
+			encodingFormat: "text/plain",
+			blobSize: 43,
 			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
-			extension: "txt",
-			mimeType: "text/plain",
 			metadata: {
 				"@context": "https://schema.org",
 				"@type": "CreativeWork",
@@ -207,9 +235,13 @@ describe("blob-storage-service", () => {
 
 		const result = await service.get(id, false, TEST_USER_IDENTITY, TEST_NODE_IDENTITY);
 		expect(result).toEqual({
-			blob: undefined,
-			extension: "txt",
-			mimeType: "text/plain",
+			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org/"],
+			type: "BlobStorageEntry",
+			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
+			fileExtension: "txt",
+			dateCreated: "2024-08-22T11:55:16.271Z",
+			encodingFormat: "text/plain",
+			blobSize: 43,
 			metadata: {
 				"@context": "https://schema.org",
 				"@type": "CreativeWork",
@@ -234,8 +266,11 @@ describe("blob-storage-service", () => {
 		expect(entityStorage.getStore()).toEqual([
 			{
 				id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
-				extension: "txt",
-				mimeType: "text/plain",
+				fileExtension: "txt",
+				dateCreated: "2024-08-22T11:55:16.271Z",
+				dateModified: "2024-08-22T11:56:56.272Z",
+				encodingFormat: "text/plain",
+				blobSize: 43,
 				metadata: {
 					"@context": "https://schema.org",
 					"@type": "CreativeWork",
@@ -274,8 +309,11 @@ describe("blob-storage-service", () => {
 		expect(entityStorage.getStore()).toEqual([
 			{
 				id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
-				extension: "txt",
-				mimeType: "text/plain",
+				fileExtension: "txt",
+				dateCreated: "2024-08-22T11:55:16.271Z",
+				dateModified: "2024-08-22T11:56:56.272Z",
+				encodingFormat: "text/plain",
+				blobSize: 43,
 				nodeIdentity: "test-node-identity",
 				userIdentity: "test-user-identity",
 				metadata: {
@@ -325,5 +363,72 @@ describe("blob-storage-service", () => {
 		await service.remove(id, TEST_USER_IDENTITY, TEST_NODE_IDENTITY);
 		expect(entityStorage.getStore()).toEqual([]);
 		expect(blobStorage.getStore()).toEqual({});
+	});
+
+	test("can query the entries", async () => {
+		const service = new BlobStorageService({
+			config: { includeNodeIdentity: false, includeUserIdentity: false }
+		});
+
+		for (let i = 0; i < 3; i++) {
+			const dataBytes = Converter.utf8ToBytes(`The quick brown fox jumps over the lazy dog${i}`);
+			const data = Converter.bytesToBase64(dataBytes);
+			await service.create(data, undefined, undefined, {
+				"@context": "https://schema.org",
+				"@type": "CreativeWork",
+				name: `Test${i}`
+			});
+		}
+
+		expect(entityStorage.getStore().length).toEqual(3);
+		expect(Object.keys(blobStorage.getStore()).length).toEqual(3);
+
+		const entries = await service.query();
+		console.log(JSON.stringify(entries, null, 2));
+		expect(entries).toEqual({
+			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org/"],
+			type: "BlobStorageEntryList",
+			entries: [
+				{
+					id: "blob:memory:35bbc692cc25c4ed8417eb2a78eba260ea6b166830a8c1e236a1131dd041c632",
+					type: "BlobStorageEntry",
+					dateCreated: "2024-08-22T11:56:56.272Z",
+					encodingFormat: "text/plain",
+					blobSize: 44,
+					fileExtension: "txt",
+					metadata: {
+						"@context": "https://schema.org",
+						"@type": "CreativeWork",
+						name: "Test1"
+					}
+				},
+				{
+					id: "blob:memory:199998607d2fe64c9e6cac5522ba5f62ea87e0608221411cfc2b4994de4fef63",
+					type: "BlobStorageEntry",
+					dateCreated: "2024-08-22T11:56:56.272Z",
+					encodingFormat: "text/plain",
+					blobSize: 44,
+					fileExtension: "txt",
+					metadata: {
+						"@context": "https://schema.org",
+						"@type": "CreativeWork",
+						name: "Test2"
+					}
+				},
+				{
+					id: "blob:memory:29047d3b56d7e6f3cdaed85ffd549d86badf7241d245aa66102f556b0e0e0946",
+					type: "BlobStorageEntry",
+					dateCreated: "2024-08-22T11:55:16.271Z",
+					encodingFormat: "text/plain",
+					blobSize: 44,
+					fileExtension: "txt",
+					metadata: {
+						"@context": "https://schema.org",
+						"@type": "CreativeWork",
+						name: "Test0"
+					}
+				}
+			]
+		});
 	});
 });

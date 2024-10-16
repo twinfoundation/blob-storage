@@ -11,8 +11,9 @@ import {
 	StorageSharedKeyCredential
 } from "@azure/storage-blob";
 import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
-import { Converter, GeneralError, Guards, Urn } from "@twin.org/core";
+import { BaseError, Converter, GeneralError, Guards, Urn } from "@twin.org/core";
 import { Sha256 } from "@twin.org/crypto";
+import { LoggingConnectorFactory } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import type { IAzureBlobStorageConnectorConfig } from "./models/IAzureBlobStorageConnectorConfig";
 
@@ -30,6 +31,12 @@ export class AzureBlobStorageConnector implements IBlobStorageConnector {
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<AzureBlobStorageConnector>();
+
+	/**
+	 * The configuration for the connector.
+	 * @internal
+	 */
+	private readonly _config: IAzureBlobStorageConnectorConfig;
 
 	/**
 	 * The Azure Service client.
@@ -71,6 +78,8 @@ export class AzureBlobStorageConnector implements IBlobStorageConnector {
 			options.config.containerName
 		);
 
+		this._config = options.config;
+
 		this._azureBlobServiceClient = new BlobServiceClient(
 			(options.config.endpoint ?? "https://{accountName}.blob.core.windows.net/").replace(
 				"{accountName}",
@@ -82,6 +91,66 @@ export class AzureBlobStorageConnector implements IBlobStorageConnector {
 		this._azureContainerClient = this._azureBlobServiceClient.getContainerClient(
 			options.config.containerName
 		);
+	}
+
+	/**
+	 * Bootstrap the component by creating and initializing any resources it needs.
+	 * @param nodeLoggingConnectorType The node logging connector type, defaults to "node-logging".
+	 * @returns True if the bootstrapping process was successful.
+	 */
+	public async bootstrap(nodeLoggingConnectorType?: string): Promise<boolean> {
+		const nodeLogging = LoggingConnectorFactory.getIfExists(
+			nodeLoggingConnectorType ?? "node-logging"
+		);
+
+		try {
+			await nodeLogging?.log({
+				level: "info",
+				source: this.CLASS_NAME,
+				message: "containerCreating",
+				data: {
+					container: this._config.containerName
+				}
+			});
+
+			const exists = await this._azureContainerClient.exists();
+
+			if (exists) {
+				await nodeLogging?.log({
+					level: "info",
+					source: this.CLASS_NAME,
+					message: "containerExists",
+					data: {
+						container: this._config.containerName
+					}
+				});
+			} else {
+				await this._azureContainerClient.create();
+
+				await nodeLogging?.log({
+					level: "info",
+					source: this.CLASS_NAME,
+					message: "containerCreated",
+					data: {
+						container: this._config.containerName
+					}
+				});
+			}
+		} catch (err) {
+			await nodeLogging?.log({
+				level: "error",
+				source: this.CLASS_NAME,
+				message: "containerCreateFailed",
+				data: {
+					container: this._config.containerName
+				},
+				error: BaseError.fromError(err)
+			});
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

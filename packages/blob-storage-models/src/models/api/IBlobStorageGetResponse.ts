@@ -1,33 +1,21 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import type { HeaderTypes, MimeTypes } from "@twin.org/web";
+import type { IBlobStorageEntry } from "../IBlobStorageEntry";
 
 /**
  * Response to get an entry from blob storage.
  */
 export interface IBlobStorageGetResponse {
 	/**
+	 * The headers which can be used to determine the response data type.
+	 */
+	headers?: {
+		[HeaderTypes.ContentType]: typeof MimeTypes.Json | typeof MimeTypes.JsonLd;
+	};
+
+	/**
 	 * The body parameters.
 	 */
-	body: {
-		/**
-		 * The mime type of the blob.
-		 */
-		mimeType?: string;
-
-		/**
-		 * The extension of the blob.
-		 */
-		extension?: string;
-
-		/**
-		 * Custom metadata to associate with the blob as JSON-LD.
-		 */
-		metadata?: IJsonLdNodeObject;
-
-		/**
-		 * The blob in base64 format, if the includeContent flag was set in the request.
-		 */
-		blob?: string;
-	};
+	body: IBlobStorageEntry;
 }

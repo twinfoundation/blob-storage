@@ -96,7 +96,7 @@ export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 	 * Get the memory store.
 	 * @returns The store.
 	 */
-	public getStore(): { [id: string]: Uint8Array } | undefined {
+	public getStore(): { [id: string]: Uint8Array } {
 		return this._store;
 	}
 }

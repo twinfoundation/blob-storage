@@ -11,6 +11,7 @@ import type {
 	IBlobStorageComponent,
 	IBlobStorageCreateRequest,
 	IBlobStorageEntry,
+	IBlobStorageEntryList,
 	IBlobStorageGetRequest,
 	IBlobStorageGetResponse,
 	IBlobStorageListRequest,
@@ -22,7 +23,7 @@ import { Guards, Is, StringHelper, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { EntityCondition, SortDirection } from "@twin.org/entity";
 import { nameof } from "@twin.org/nameof";
-import { HeaderTypes } from "@twin.org/web";
+import { HeaderTypes, MimeTypes } from "@twin.org/web";
 
 /**
  * Client for performing blob storage through to REST endpoints.
@@ -50,16 +51,16 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	/**
 	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
-	 * @param mimeType Mime type for the blob, will be detected if left undefined.
-	 * @param extension Extension for the blob, will be detected if left undefined.
+	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
+	 * @param fileExtension Extension for the blob, will be detected if left undefined.
 	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async create(
 		blob: string,
-		mimeType?: string,
-		extension?: string,
+		encodingFormat?: string,
+		fileExtension?: string,
 		metadata?: IJsonLdNodeObject,
 		namespace?: string
 	): Promise<string> {
@@ -68,8 +69,8 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 		const response = await this.fetch<IBlobStorageCreateRequest, ICreatedResponse>("/", "POST", {
 			body: {
 				blob,
-				mimeType,
-				extension,
+				encodingFormat,
+				fileExtension,
 				metadata,
 				namespace
 			}
@@ -85,21 +86,16 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	 * @returns The metadata and data for the blob if it can be found.
 	 * @throws Not found error if the blob cannot be found.
 	 */
-	public async get(
-		id: string,
-		includeContent: boolean
-	): Promise<{
-		blob?: string;
-		mimeType?: string;
-		extension?: string;
-		metadata?: IJsonLdNodeObject;
-	}> {
+	public async get(id: string, includeContent: boolean): Promise<IBlobStorageEntry> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		const response = await this.fetch<IBlobStorageGetRequest, IBlobStorageGetResponse>(
 			"/:id",
 			"GET",
 			{
+				headers: {
+					[HeaderTypes.Accept]: MimeTypes.JsonLd
+				},
 				pathParams: {
 					id
 				},
@@ -109,27 +105,22 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 			}
 		);
 
-		return {
-			blob: response.body.blob,
-			mimeType: response.body.mimeType,
-			extension: response.body.extension,
-			metadata: response.body.metadata
-		};
+		return response.body;
 	}
 
 	/**
 	 * Update the blob with metadata.
 	 * @param id The id of the blob metadata to update.
-	 * @param mimeType Mime type for the blob, will be detected if left undefined.
-	 * @param extension Extension for the blob, will be detected if left undefined.
+	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
+	 * @param fileExtension Extension for the blob, will be detected if left undefined.
 	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @returns Nothing.
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	public async update(
 		id: string,
-		mimeType?: string,
-		extension?: string,
+		encodingFormat?: string,
+		fileExtension?: string,
 		metadata?: IJsonLdNodeObject
 	): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
@@ -139,8 +130,8 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 				id
 			},
 			body: {
-				mimeType,
-				extension,
+				encodingFormat,
+				fileExtension,
 				metadata
 			}
 		});
@@ -173,26 +164,19 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	public async query(
 		conditions?: EntityCondition<IBlobStorageEntry>,
 		sortProperties?: {
-			property: keyof IBlobStorageEntry;
+			property: keyof Pick<IBlobStorageEntry, "dateCreated" | "dateModified">;
 			sortDirection: SortDirection;
 		}[],
 		cursor?: string,
 		pageSize?: number
-	): Promise<{
-		/**
-		 * The entities.
-		 */
-		entities: IBlobStorageEntry[];
-
-		/**
-		 * An optional cursor, when defined can be used to call find to get more entities.
-		 */
-		cursor?: string;
-	}> {
+	): Promise<IBlobStorageEntryList> {
 		const response = await this.fetch<IBlobStorageListRequest, IBlobStorageListResponse>(
 			"/",
 			"GET",
 			{
+				headers: {
+					[HeaderTypes.Accept]: MimeTypes.JsonLd
+				},
 				query: {
 					conditions: HttpParameterHelper.objectToString(conditions),
 					sortProperties: HttpParameterHelper.objectToString(sortProperties),

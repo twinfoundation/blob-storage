@@ -1,6 +1,14 @@
 {
+	"info": {
+		"s3BlobStorageConnector": {
+			"bucketCreating": "Creating bucket \"{bucket}\"",
+			"bucketCreated": "Created bucket \"{bucket}\"",
+			"bucketExists": "Skipping create bucket \"{bucket}\" as it already exists"
+		}
+	},
 	"error": {
 		"s3BlobStorageConnector": {
+			"bucketCreateFailed": "Creating bucket \"{bucket}\" failed",
 			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
 			"getBlobFailed": "Failed to get blob in S3",
 			"setBlobFailed": "Failed to set blob in S3",

@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { I18n, RandomHelper } from "@twin.org/core";
-import { createTestBucket, TEST_S3_CONFIG } from "./setupTestEnv";
+import { TEST_S3_CONFIG } from "./setupTestEnv";
 import { S3BlobStorageConnector } from "../src/s3BlobStorageConnector";
 
 const TEST_DATA = RandomHelper.generate(32);
@@ -10,11 +10,16 @@ const TEST_DATA_2 = RandomHelper.generate(32);
 describe("S3BlobStorageConnector", () => {
 	beforeAll(async () => {
 		I18n.addDictionary("en", await import("../locales/en.json"));
-		await createTestBucket();
 	});
 
 	test("can construct", async () => {
 		const blobStorage = new S3BlobStorageConnector({ config: TEST_S3_CONFIG });
+		expect(blobStorage).toBeDefined();
+	});
+
+	test("can bootstrap", async () => {
+		const blobStorage = new S3BlobStorageConnector({ config: TEST_S3_CONFIG });
+		await blobStorage.bootstrap();
 		expect(blobStorage).toBeDefined();
 	});
 

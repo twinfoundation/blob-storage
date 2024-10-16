@@ -4,6 +4,18 @@ Query the entries from blob storage.
 
 ## Properties
 
+### headers?
+
+> `optional` **headers**: `object`
+
+The headers which can be used to determine the response data type.
+
+#### accept
+
+> **accept**: `"application/json"` \| `"application/ld+json"`
+
+***
+
 ### query?
 
 > `optional` **query**: `object`

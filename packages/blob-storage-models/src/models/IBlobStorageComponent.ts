@@ -4,6 +4,7 @@ import type { IComponent } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { EntityCondition, SortDirection } from "@twin.org/entity";
 import type { IBlobStorageEntry } from "./IBlobStorageEntry";
+import type { IBlobStorageEntryList } from "./IBlobStorageEntryList";
 
 /**
  * Interface describing an blob storage component.
@@ -12,8 +13,8 @@ export interface IBlobStorageComponent extends IComponent {
 	/**
 	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
-	 * @param mimeType Mime type for the blob, will be detected if left undefined.
-	 * @param extension Extension for the blob, will be detected if left undefined.
+	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
+	 * @param fileExtension Extension for the blob, will be detected if left undefined.
 	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @param userIdentity The user identity to use with storage operations.
@@ -22,8 +23,8 @@ export interface IBlobStorageComponent extends IComponent {
 	 */
 	create(
 		blob: string,
-		mimeType?: string,
-		extension?: string,
+		encodingFormat?: string,
+		fileExtension?: string,
 		metadata?: IJsonLdNodeObject,
 		namespace?: string,
 		userIdentity?: string,
@@ -44,18 +45,13 @@ export interface IBlobStorageComponent extends IComponent {
 		includeContent: boolean,
 		userIdentity?: string,
 		nodeIdentity?: string
-	): Promise<{
-		blob?: string;
-		mimeType?: string;
-		extension?: string;
-		metadata?: IJsonLdNodeObject;
-	}>;
+	): Promise<IBlobStorageEntry>;
 
 	/**
 	 * Update the blob with metadata.
 	 * @param id The id of the blob metadata to update.
-	 * @param mimeType Mime type for the blob, will be detected if left undefined.
-	 * @param extension Extension for the blob, will be detected if left undefined.
+	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
+	 * @param fileExtension Extension for the blob, will be detected if left undefined.
 	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
@@ -64,8 +60,8 @@ export interface IBlobStorageComponent extends IComponent {
 	 */
 	update(
 		id: string,
-		mimeType?: string,
-		extension?: string,
+		encodingFormat?: string,
+		fileExtension?: string,
 		metadata?: IJsonLdNodeObject,
 		userIdentity?: string,
 		nodeIdentity?: string
@@ -95,22 +91,12 @@ export interface IBlobStorageComponent extends IComponent {
 	query(
 		conditions?: EntityCondition<IBlobStorageEntry>,
 		sortProperties?: {
-			property: keyof IBlobStorageEntry;
+			property: keyof Pick<IBlobStorageEntry, "dateCreated" | "dateModified">;
 			sortDirection: SortDirection;
 		}[],
 		cursor?: string,
 		pageSize?: number,
 		userIdentity?: string,
 		nodeIdentity?: string
-	): Promise<{
-		/**
-		 * The entities.
-		 */
-		entities: IBlobStorageEntry[];
-
-		/**
-		 * An optional cursor, when defined can be used to call find to get more entities.
-		 */
-		cursor?: string;
-	}>;
+	): Promise<IBlobStorageEntryList>;
 }

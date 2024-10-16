@@ -1,7 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
-import { BlobServiceClient, StorageSharedKeyCredential } from "@azure/storage-blob";
 import { Guards } from "@twin.org/core";
 import * as dotenv from "dotenv";
 import type { IAzureBlobStorageConnectorConfig } from "../src/models/IAzureBlobStorageConnectorConfig";
@@ -21,32 +20,3 @@ export const TEST_AZURE_CONFIG: IAzureBlobStorageConnectorConfig = {
 	containerName: process.env.TEST_AZURE_CONTAINER,
 	endpoint: process.env.TEST_AZURE_ENDPOINT
 };
-
-/**
- * Create a test container for the tests.
- */
-export async function createTestContainer(): Promise<void> {
-	const azureServiceClient = new BlobServiceClient(
-		(TEST_AZURE_CONFIG.endpoint ?? "https://{accountName}.blob.core.windows.net/").replace(
-			"{accountName}",
-			TEST_AZURE_CONFIG.accountName
-		),
-		new StorageSharedKeyCredential(TEST_AZURE_CONFIG.accountName, TEST_AZURE_CONFIG.accountKey)
-	);
-
-	console.log(`Attempting to connect to Blob endpoint '${process.env.TEST_AZURE_BLOB_ENDPOINT}'`);
-
-	try {
-		const containerClient = azureServiceClient.getContainerClient(
-			process.env.TEST_AZURE_CONTAINER ?? ""
-		);
-
-		const exists = await containerClient.exists();
-
-		if (!exists) {
-			await containerClient.create();
-		}
-	} catch (error) {
-		console.error("Error creating azure container:", error);
-	}
-}

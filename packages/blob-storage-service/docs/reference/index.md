@@ -3,7 +3,7 @@
 ## Classes
 
 - [BlobStorageService](classes/BlobStorageService.md)
-- [BlobMetadata](classes/BlobMetadata.md)
+- [BlobStorageEntry](classes/BlobStorageEntry.md)
 
 ## Interfaces
 
