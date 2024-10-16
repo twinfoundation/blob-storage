@@ -126,6 +126,162 @@
                         }
                     }
                 }
+            },
+            "get": {
+                "operationId": "blobStorageGet",
+                "summary": "Query the items from blob storage",
+                "tags": [
+                    "Blob Storage"
+                ],
+                "parameters": [
+                    {
+                        "name": "conditions",
+                        "description": "The condition for the query as JSON version of EntityCondition type.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortProperties",
+                        "description": "The sort property array as JSON serialization of property,direction.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "description": "The number of entries to return per page.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "cursor",
+                        "description": "The cursor to get next chunk of data, returned in previous response.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response to getting the list of entries from a query.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BlobStorageListResponse"
+                                },
+                                "examples": {
+                                    "blobStorageListResponseExample": {
+                                        "value": {
+                                            "entities": [
+                                                {
+                                                    "id": "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+                                                    "metadata": {
+                                                        "@context": "http://schema.org/",
+                                                        "@type": "DigitalDocument",
+                                                        "name": "myfile.pdf"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the content for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The resource you tried to access does not exist, see the content for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundResponse"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "NotFoundError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "notFoundId": "1"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/blob-storage/{id}": {
@@ -652,6 +808,31 @@
                 "additionalProperties": false,
                 "description": "The body parameters."
             },
+            "BlobStorageEntry": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "The id for the blob."
+                    },
+                    "mimeType": {
+                        "type": "string",
+                        "description": "The mime type for the blob."
+                    },
+                    "extension": {
+                        "type": "string",
+                        "description": "The extension."
+                    },
+                    "metadata": {
+                        "$ref": "#/components/schemas/JsonLdNodeObject"
+                    }
+                },
+                "required": [
+                    "id"
+                ],
+                "additionalProperties": false,
+                "description": "Interface describing a blob storage entry."
+            },
             "BlobStorageGetResponse": {
                 "type": "object",
                 "properties": {
@@ -673,6 +854,27 @@
                 },
                 "additionalProperties": false,
                 "description": "The body parameters."
+            },
+            "BlobStorageListResponse": {
+                "type": "object",
+                "properties": {
+                    "entities": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BlobStorageEntry"
+                        },
+                        "description": "The entities from the query."
+                    },
+                    "cursor": {
+                        "type": "string",
+                        "description": "The cursor for the next page."
+                    }
+                },
+                "required": [
+                    "entities"
+                ],
+                "additionalProperties": false,
+                "description": "The list of entries from the query."
             },
             "BlobStorageUpdateRequest": {
                 "type": "object",

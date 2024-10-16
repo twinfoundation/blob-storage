@@ -198,6 +198,55 @@ Nothing.
 
 ***
 
+### query()
+
+> **query**(`conditions`?, `sortProperties`?, `cursor`?, `pageSize`?): `Promise`\<`object`\>
+
+Query all the blob storage entries which match the conditions.
+
+#### Parameters
+
+• **conditions?**: `EntityCondition`\<`IBlobStorageEntry`\>
+
+The conditions to match for the entries.
+
+• **sortProperties?**: `object`[]
+
+The optional sort order.
+
+• **cursor?**: `string`
+
+The cursor to request the next page of entries.
+
+• **pageSize?**: `number`
+
+The suggested number of entries to return in each chunk, in some scenarios can return a different amount.
+
+#### Returns
+
+`Promise`\<`object`\>
+
+All the entries for the storage matching the conditions,
+and a cursor which can be used to request more entities.
+
+##### entities
+
+> **entities**: `IBlobStorageEntry`[]
+
+The entities.
+
+##### cursor?
+
+> `optional` **cursor**: `string`
+
+An optional cursor, when defined can be used to call find to get more entities.
+
+#### Implementation of
+
+`IBlobStorageComponent.query`
+
+***
+
 ### createDownloadLink()
 
 > **createDownloadLink**(`id`, `download`?, `filename`?): `string`

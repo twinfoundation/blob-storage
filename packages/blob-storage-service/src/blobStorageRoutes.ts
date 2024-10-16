@@ -1,13 +1,14 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type {
-	ICreatedResponse,
-	IHttpRequestContext,
-	INoContentResponse,
-	INotFoundResponse,
-	IRestRoute,
-	IRestRouteResponseOptions,
-	ITag
+import {
+	HttpParameterHelper,
+	type ICreatedResponse,
+	type IHttpRequestContext,
+	type INoContentResponse,
+	type INotFoundResponse,
+	type IRestRoute,
+	type IRestRouteResponseOptions,
+	type ITag
 } from "@twin.org/api-models";
 import type {
 	IBlobStorageComponent,
@@ -16,10 +17,12 @@ import type {
 	IBlobStorageGetContentResponse,
 	IBlobStorageGetRequest,
 	IBlobStorageGetResponse,
+	IBlobStorageListRequest,
+	IBlobStorageListResponse,
 	IBlobStorageRemoveRequest,
 	IBlobStorageUpdateRequest
 } from "@twin.org/blob-storage-models";
-import { ComponentFactory, Converter, Guards, Is, StringHelper } from "@twin.org/core";
+import { Coerce, ComponentFactory, Converter, Guards, Is, StringHelper } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { HeaderTypes, HttpStatusCode, MimeTypeHelper, MimeTypes } from "@twin.org/web";
 
@@ -267,12 +270,59 @@ export function generateRestRoutesBlobStorage(
 		]
 	};
 
+	const blobStorageListRoute: IRestRoute<IBlobStorageListRequest, IBlobStorageListResponse> = {
+		operationId: `${camelTypeName}Get`,
+		summary: `Query the items from ${lowerName}`,
+		tag: options?.tagName ?? tagsBlobStorage[0].name,
+		method: "GET",
+		path: `${baseRouteName}/`,
+		handler: async (httpRequestContext, request) =>
+			blobStorageList(httpRequestContext, componentName, request),
+		requestType: {
+			type: nameof<IBlobStorageListRequest>(),
+			examples: [
+				{
+					id: `${camelTypeName}ListRequestExample`,
+					request: {}
+				}
+			]
+		},
+		responseType: [
+			{
+				type: nameof<IBlobStorageListResponse>(),
+				examples: [
+					{
+						id: `${camelTypeName}ListResponseExample`,
+						response: {
+							body: {
+								entities: [
+									{
+										id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+										metadata: {
+											"@context": "http://schema.org/",
+											"@type": "DigitalDocument",
+											name: "myfile.pdf"
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			{
+				type: nameof<INotFoundResponse>()
+			}
+		]
+	};
+
 	return [
 		blobStorageCreateRoute,
 		blobStorageGetRoute,
 		blobStorageGetContentRoute,
 		blobStorageUpdateRoute,
-		blobStorageRemoveRoute
+		blobStorageRemoveRoute,
+		blobStorageListRoute
 	];
 }
 
@@ -459,5 +509,35 @@ export async function blobStorageRemove(
 
 	return {
 		statusCode: HttpStatusCode.noContent
+	};
+}
+
+/**
+ * List the entries from blob storage.
+ * @param httpRequestContext The request context for the API.
+ * @param componentName The name of the component to use in the routes.
+ * @param request The request.
+ * @returns The response object with additional http response properties.
+ */
+export async function blobStorageList(
+	httpRequestContext: IHttpRequestContext,
+	componentName: string,
+	request: IBlobStorageListRequest
+): Promise<IBlobStorageListResponse> {
+	Guards.object<IBlobStorageListRequest>(ROUTES_SOURCE, nameof(request), request);
+
+	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
+
+	const result = await component.query(
+		HttpParameterHelper.objectFromString(request.query?.conditions),
+		HttpParameterHelper.objectFromString(request.query?.sortProperties),
+		request.query?.cursor,
+		Coerce.number(request.query?.pageSize),
+		httpRequestContext.userIdentity,
+		httpRequestContext.nodeIdentity
+	);
+
+	return {
+		body: result
 	};
 }

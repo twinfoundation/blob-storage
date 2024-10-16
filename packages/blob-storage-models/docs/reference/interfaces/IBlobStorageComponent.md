@@ -177,3 +177,56 @@ Nothing.
 #### Throws
 
 Not found error if the blob cannot be found.
+
+***
+
+### query()
+
+> **query**(`conditions`?, `sortProperties`?, `cursor`?, `pageSize`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`object`\>
+
+Query all the blob storage entries which match the conditions.
+
+#### Parameters
+
+• **conditions?**: `EntityCondition`\<[`IBlobStorageEntry`](IBlobStorageEntry.md)\>
+
+The conditions to match for the entries.
+
+• **sortProperties?**: `object`[]
+
+The optional sort order.
+
+• **cursor?**: `string`
+
+The cursor to request the next page of entries.
+
+• **pageSize?**: `number`
+
+The suggested number of entries to return in each chunk, in some scenarios can return a different amount.
+
+• **userIdentity?**: `string`
+
+The user identity to use with storage operations.
+
+• **nodeIdentity?**: `string`
+
+The node identity to use with storage operations.
+
+#### Returns
+
+`Promise`\<`object`\>
+
+All the entries for the storage matching the conditions,
+and a cursor which can be used to request more entities.
+
+##### entities
+
+> **entities**: [`IBlobStorageEntry`](IBlobStorageEntry.md)[]
+
+The entities.
+
+##### cursor?
+
+> `optional` **cursor**: `string`
+
+An optional cursor, when defined can be used to call find to get more entities.

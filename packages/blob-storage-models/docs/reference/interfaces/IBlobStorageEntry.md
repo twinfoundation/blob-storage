@@ -1,0 +1,35 @@
+# Interface: IBlobStorageEntry
+
+Interface describing a blob storage entry.
+
+## Properties
+
+### id
+
+> **id**: `string`
+
+The id for the blob.
+
+***
+
+### mimeType?
+
+> `optional` **mimeType**: `string`
+
+The mime type for the blob.
+
+***
+
+### extension?
+
+> `optional` **extension**: `string`
+
+The extension.
+
+***
+
+### metadata?
+
+> `optional` **metadata**: `IJsonLdNodeObject`
+
+The metadata for the blob as JSON-LD.

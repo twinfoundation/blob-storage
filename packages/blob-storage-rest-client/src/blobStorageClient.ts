@@ -1,21 +1,26 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { BaseRestClient } from "@twin.org/api-core";
-import type {
-	IBaseRestClientConfig,
-	ICreatedResponse,
-	INoContentResponse
+import {
+	HttpParameterHelper,
+	type IBaseRestClientConfig,
+	type ICreatedResponse,
+	type INoContentResponse
 } from "@twin.org/api-models";
 import type {
 	IBlobStorageComponent,
 	IBlobStorageCreateRequest,
+	IBlobStorageEntry,
 	IBlobStorageGetRequest,
 	IBlobStorageGetResponse,
+	IBlobStorageListRequest,
+	IBlobStorageListResponse,
 	IBlobStorageRemoveRequest,
 	IBlobStorageUpdateRequest
 } from "@twin.org/blob-storage-models";
 import { Guards, Is, StringHelper, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import type { EntityCondition, SortDirection } from "@twin.org/entity";
 import { nameof } from "@twin.org/nameof";
 import { HeaderTypes } from "@twin.org/web";
 
@@ -154,6 +159,50 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 				id
 			}
 		});
+	}
+
+	/**
+	 * Query all the blob storage entries which match the conditions.
+	 * @param conditions The conditions to match for the entries.
+	 * @param sortProperties The optional sort order.
+	 * @param cursor The cursor to request the next page of entries.
+	 * @param pageSize The suggested number of entries to return in each chunk, in some scenarios can return a different amount.
+	 * @returns All the entries for the storage matching the conditions,
+	 * and a cursor which can be used to request more entities.
+	 */
+	public async query(
+		conditions?: EntityCondition<IBlobStorageEntry>,
+		sortProperties?: {
+			property: keyof IBlobStorageEntry;
+			sortDirection: SortDirection;
+		}[],
+		cursor?: string,
+		pageSize?: number
+	): Promise<{
+		/**
+		 * The entities.
+		 */
+		entities: IBlobStorageEntry[];
+
+		/**
+		 * An optional cursor, when defined can be used to call find to get more entities.
+		 */
+		cursor?: string;
+	}> {
+		const response = await this.fetch<IBlobStorageListRequest, IBlobStorageListResponse>(
+			"/",
+			"GET",
+			{
+				query: {
+					conditions: HttpParameterHelper.objectToString(conditions),
+					sortProperties: HttpParameterHelper.objectToString(sortProperties),
+					pageSize,
+					cursor
+				}
+			}
+		);
+
+		return response.body;
 	}
 
 	/**

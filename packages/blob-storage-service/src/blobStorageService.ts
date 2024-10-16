@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	BlobStorageConnectorFactory,
+	type IBlobStorageEntry,
 	type IBlobStorageComponent,
 	type IBlobStorageConnector
 } from "@twin.org/blob-storage-models";
@@ -21,7 +22,8 @@ import {
 	ComparisonOperator,
 	type EntityCondition,
 	EntitySchemaHelper,
-	LogicalOperator
+	LogicalOperator,
+	type SortDirection
 } from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
@@ -383,6 +385,84 @@ export class BlobStorageService implements IBlobStorageComponent {
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "removeFailed", undefined, error);
 		}
+	}
+
+	/**
+	 * Query all the blob storage entries which match the conditions.
+	 * @param conditions The conditions to match for the entries.
+	 * @param sortProperties The optional sort order.
+	 * @param cursor The cursor to request the next page of entries.
+	 * @param pageSize The suggested number of entries to return in each chunk, in some scenarios can return a different amount.
+	 * @param userIdentity The user identity to use with storage operations.
+	 * @param nodeIdentity The node identity to use with storage operations.
+	 * @returns All the entries for the storage matching the conditions,
+	 * and a cursor which can be used to request more entities.
+	 */
+	public async query(
+		conditions?: EntityCondition<IBlobStorageEntry>,
+		sortProperties?: {
+			property: keyof IBlobStorageEntry;
+			sortDirection: SortDirection;
+		}[],
+		cursor?: string,
+		pageSize?: number,
+		userIdentity?: string,
+		nodeIdentity?: string
+	): Promise<{
+		/**
+		 * The entities.
+		 */
+		entities: IBlobStorageEntry[];
+
+		/**
+		 * An optional cursor, when defined can be used to call find to get more entities.
+		 */
+		cursor?: string;
+	}> {
+		const finalConditions: EntityCondition<IBlobStorageEntry> = {
+			conditions: [],
+			logicalOperator: LogicalOperator.And
+		};
+
+		if (this._includeNodeIdentity) {
+			Guards.stringValue(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
+			finalConditions.conditions.push({
+				property: "nodeIdentity",
+				comparison: ComparisonOperator.Equals,
+				value: nodeIdentity
+			});
+		}
+		if (this._includeUserIdentity) {
+			Guards.stringValue(this.CLASS_NAME, nameof(userIdentity), userIdentity);
+			finalConditions.conditions.push({
+				property: "userIdentity",
+				comparison: ComparisonOperator.Equals,
+				value: userIdentity
+			});
+		}
+
+		if (!Is.empty(conditions)) {
+			finalConditions.conditions.push(conditions);
+		}
+
+		const result = await this._metadataEntityStorage.query(
+			finalConditions.conditions.length > 0 ? finalConditions : undefined,
+			sortProperties,
+			undefined,
+			cursor,
+			pageSize
+		);
+
+		for (const entity of result.entities) {
+			ObjectHelper.propertyDelete(entity, "nodeIdentity");
+			ObjectHelper.propertyDelete(entity, "userIdentity");
+		}
+
+		return {
+			// The entries are never Partial as we don't allow custom property requests.
+			entities: result.entities as IBlobStorageEntry[],
+			cursor: result.cursor
+		};
 	}
 
 	/**

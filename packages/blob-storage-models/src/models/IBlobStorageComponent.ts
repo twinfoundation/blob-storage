@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { IComponent } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import type { EntityCondition, SortDirection } from "@twin.org/entity";
+import type { IBlobStorageEntry } from "./IBlobStorageEntry";
 
 /**
  * Interface describing an blob storage component.
@@ -78,4 +80,37 @@ export interface IBlobStorageComponent extends IComponent {
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	remove(id: string, userIdentity?: string, nodeIdentity?: string): Promise<void>;
+
+	/**
+	 * Query all the blob storage entries which match the conditions.
+	 * @param conditions The conditions to match for the entries.
+	 * @param sortProperties The optional sort order.
+	 * @param cursor The cursor to request the next page of entries.
+	 * @param pageSize The suggested number of entries to return in each chunk, in some scenarios can return a different amount.
+	 * @param userIdentity The user identity to use with storage operations.
+	 * @param nodeIdentity The node identity to use with storage operations.
+	 * @returns All the entries for the storage matching the conditions,
+	 * and a cursor which can be used to request more entities.
+	 */
+	query(
+		conditions?: EntityCondition<IBlobStorageEntry>,
+		sortProperties?: {
+			property: keyof IBlobStorageEntry;
+			sortDirection: SortDirection;
+		}[],
+		cursor?: string,
+		pageSize?: number,
+		userIdentity?: string,
+		nodeIdentity?: string
+	): Promise<{
+		/**
+		 * The entities.
+		 */
+		entities: IBlobStorageEntry[];
+
+		/**
+		 * An optional cursor, when defined can be used to call find to get more entities.
+		 */
+		cursor?: string;
+	}>;
 }
