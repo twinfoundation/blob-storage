@@ -96,7 +96,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 	/**
 	 * Create a new instance of BlobStorageService.
 	 * @param options The dependencies for the service.
-	 * @param options.entryEntityStorageType The type of the storage connector for the metadata, defaults to "blob-entry".
+	 * @param options.entryEntityStorageType The type of the storage connector for the metadata, defaults to "blob-storage-entry".
 	 * @param options.vaultConnectorType The type of the vault connector for encryption, if undefined no encryption will be performed.
 	 * @param options.config The configuration for the service.
 	 */
@@ -111,7 +111,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 		}
 
 		this._entryEntityStorage = EntityStorageConnectorFactory.get(
-			options?.entryEntityStorageType ?? "blob-entry"
+			options?.entryEntityStorageType ?? "blob-storage-entry"
 		);
 		if (Is.stringValue(options?.vaultConnectorType)) {
 			this._vaultConnector = VaultConnectorFactory.getIfExists(options.vaultConnectorType);

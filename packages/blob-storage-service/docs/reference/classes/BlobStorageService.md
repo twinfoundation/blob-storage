@@ -22,7 +22,7 @@ The dependencies for the service.
 
 • **options.entryEntityStorageType?**: `string`
 
-The type of the storage connector for the metadata, defaults to "blob-entry".
+The type of the storage connector for the metadata, defaults to "blob-storage-entry".
 
 • **options.vaultConnectorType?**: `string`
 

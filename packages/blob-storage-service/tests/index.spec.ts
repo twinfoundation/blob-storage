@@ -25,7 +25,7 @@ describe("blob-storage-service", () => {
 			entitySchema: nameof<BlobStorageEntry>()
 		});
 
-		EntityStorageConnectorFactory.register("blob-entry", () => entityStorage);
+		EntityStorageConnectorFactory.register("blob-storage-entry", () => entityStorage);
 
 		blobStorage = new MemoryBlobStorageConnector();
 		BlobStorageConnectorFactory.register("memory", () => blobStorage);
