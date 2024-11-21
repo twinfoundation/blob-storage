@@ -1,6 +1,5 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Readable } from "node:stream";
 import {
 	type BlockBlobClient,
 	BlobServiceClient,
@@ -164,19 +163,7 @@ export class AzureBlobStorageConnector implements IBlobStorageConnector {
 		try {
 			const id = Converter.bytesToHex(Sha256.sum256(blob));
 			const blockBlobClient: BlockBlobClient = this._azureContainerClient.getBlockBlobClient(id);
-
-			const readableStream = new Readable({
-				/**
-				 * Reads data from the blob and pushes it into the stream.
-				 * This method is automatically called when the stream is read from.
-				 * It pushes the blob data and signals the end of the stream.
-				 */
-				read() {
-					this.push(blob);
-					this.push(null);
-				}
-			});
-			await blockBlobClient.uploadStream(readableStream);
+			await blockBlobClient.uploadData(blob);
 
 			return `blob:${new Urn(AzureBlobStorageConnector.NAMESPACE, id).toString()}`;
 		} catch (err) {
@@ -203,20 +190,8 @@ export class AzureBlobStorageConnector implements IBlobStorageConnector {
 		try {
 			const key = urnParsed.namespaceSpecific(1);
 			const blobClient: BlobClient = this._azureContainerClient.getBlobClient(key);
-			const downloadResponse = await blobClient.download();
-
-			if (!downloadResponse.errorCode && downloadResponse?.readableStreamBody) {
-				const readableStream = downloadResponse.readableStreamBody as Readable;
-
-				const chunks: Uint8Array[] = [];
-				for await (const chunk of readableStream) {
-					chunks.push(chunk);
-				}
-
-				const buffer = Buffer.concat(chunks);
-				return new Uint8Array(buffer);
-			}
-			return undefined;
+			const buffer = await blobClient.downloadToBuffer();
+			return new Uint8Array(buffer);
 		} catch (err) {
 			throw new GeneralError(
 				this.CLASS_NAME,
