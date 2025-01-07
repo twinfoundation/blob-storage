@@ -15,6 +15,7 @@ import { Sha256 } from "@twin.org/crypto";
 import { LoggingConnectorFactory } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import type { IS3BlobStorageConnectorConfig } from "./models/IS3BlobStorageConnectorConfig";
+import type { IS3BlobStorageConnectorConstructorOptions } from "./models/IS3BlobStorageConnectorConstructorOptions";
 
 /**
  * Class for performing blob storage operations on S3.
@@ -46,9 +47,8 @@ export class S3BlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Create a new instance of S3BlobStorageConnector.
 	 * @param options The options for the connector.
-	 * @param options.config The configuration for the connector.
 	 */
-	constructor(options: { config: IS3BlobStorageConnectorConfig }) {
+	constructor(options: IS3BlobStorageConnectorConstructorOptions) {
 		Guards.object(this.CLASS_NAME, nameof(options), options);
 		Guards.object<IS3BlobStorageConnectorConfig>(
 			this.CLASS_NAME,

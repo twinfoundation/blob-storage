@@ -7,7 +7,7 @@ import { BaseError, Converter, GeneralError, Guards, Urn } from "@twin.org/core"
 import { Sha256 } from "@twin.org/crypto";
 import { LoggingConnectorFactory } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
-import type { IFileBlobStorageConnectorConfig } from "./models/IFileBlobStorageConnectorConfig";
+import type { IFileBlobStorageConnectorConstructorOptions } from "./models/IFileBlobStorageConnectorConstructorOptions";
 
 /**
  * Class for performing blob storage operations in file.
@@ -38,9 +38,8 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Create a new instance of FileBlobStorageConnector.
 	 * @param options The options for the connector.
-	 * @param options.config The configuration for the connector.
 	 */
-	constructor(options: { config: IFileBlobStorageConnectorConfig }) {
+	constructor(options: IFileBlobStorageConnectorConstructorOptions) {
 		Guards.object(this.CLASS_NAME, nameof(options), options);
 		Guards.object(this.CLASS_NAME, nameof(options.config), options.config);
 		Guards.stringValue(this.CLASS_NAME, nameof(options.config.directory), options.config.directory);

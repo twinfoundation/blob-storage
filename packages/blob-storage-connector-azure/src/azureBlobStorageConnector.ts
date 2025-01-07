@@ -15,6 +15,7 @@ import { Sha256 } from "@twin.org/crypto";
 import { LoggingConnectorFactory } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import type { IAzureBlobStorageConnectorConfig } from "./models/IAzureBlobStorageConnectorConfig";
+import type { IAzureBlobStorageConnectorConstructorOptions } from "./models/IAzureBlobStorageConnectorConstructorOptions";
 
 /**
  * Class for performing blob storage operations on Azure.
@@ -52,9 +53,8 @@ export class AzureBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Create a new instance of AzureBlobStorageConnector.
 	 * @param options The options for the connector.
-	 * @param options.config The configuration for the connector.
 	 */
-	constructor(options: { config: IAzureBlobStorageConnectorConfig }) {
+	constructor(options: IAzureBlobStorageConnectorConstructorOptions) {
 		Guards.object(this.CLASS_NAME, nameof(options), options);
 		Guards.object<IAzureBlobStorageConnectorConfig>(
 			this.CLASS_NAME,

@@ -9,6 +9,7 @@ import { nameof } from "@twin.org/nameof";
 import { MimeTypes } from "@twin.org/web";
 import type { JWTInput } from "google-auth-library";
 import type { IGcpBlobStorageConnectorConfig } from "./models/IGcpBlobStorageConnectorConfig";
+import type { IGcpBlobStorageConnectorConstructorOptions } from "./models/IGcpBlobStorageConnectorConstructorOptions";
 
 /**
  * Class for performing blob storage operations on GCP Storage.
@@ -40,9 +41,8 @@ export class GcpBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Create a new instance of GcpBlobStorageConnector.
 	 * @param options The options for the connector.
-	 * @param options.config The configuration for the connector.
 	 */
-	constructor(options: { config: IGcpBlobStorageConnectorConfig }) {
+	constructor(options: IGcpBlobStorageConnectorConstructorOptions) {
 		Guards.object(this.CLASS_NAME, nameof(options), options);
 		Guards.object<IGcpBlobStorageConnectorConfig>(
 			this.CLASS_NAME,

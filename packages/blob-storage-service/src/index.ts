@@ -4,5 +4,6 @@ export * from "./blobStorageRoutes";
 export * from "./blobStorageService";
 export * from "./entities/blobStorageEntry";
 export * from "./models/IBlobStorageServiceConfig";
+export * from "./models/IBlobStorageServiceConstructorOptions";
 export * from "./restEntryPoints";
 export * from "./schema";

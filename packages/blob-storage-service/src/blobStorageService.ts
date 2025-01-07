@@ -40,7 +40,7 @@ import {
 } from "@twin.org/vault-models";
 import { MimeTypeHelper } from "@twin.org/web";
 import type { BlobStorageEntry } from "./entities/blobStorageEntry";
-import type { IBlobStorageServiceConfig } from "./models/IBlobStorageServiceConfig";
+import type { IBlobStorageServiceConstructorOptions } from "./models/IBlobStorageServiceConstructorOptions";
 
 /**
  * Service for performing blob storage operations to a connector.
@@ -95,16 +95,9 @@ export class BlobStorageService implements IBlobStorageComponent {
 
 	/**
 	 * Create a new instance of BlobStorageService.
-	 * @param options The dependencies for the service.
-	 * @param options.entryEntityStorageType The type of the storage connector for the metadata, defaults to "blob-storage-entry".
-	 * @param options.vaultConnectorType The type of the vault connector for encryption, if undefined no encryption will be performed.
-	 * @param options.config The configuration for the service.
+	 * @param options The options for the service.
 	 */
-	constructor(options?: {
-		entryEntityStorageType?: string;
-		vaultConnectorType?: string;
-		config?: IBlobStorageServiceConfig;
-	}) {
+	constructor(options?: IBlobStorageServiceConstructorOptions) {
 		const names = BlobStorageConnectorFactory.names();
 		if (names.length === 0) {
 			throw new GeneralError(this.CLASS_NAME, "noConnectors");

@@ -5,6 +5,7 @@ import { GeneralError, Guards, Is, StringHelper, Urn } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { HeaderTypes, MimeTypes } from "@twin.org/web";
 import type { IIpfsBlobStorageConnectorConfig } from "./models/IIpfsBlobStorageConnectorConfig";
+import type { IIpfsBlobStorageConnectorConstructorOptions } from "./models/IIpfsBlobStorageConnectorConstructorOptions";
 
 /**
  * Class for performing blob storage operations on IPFS.
@@ -30,9 +31,8 @@ export class IpfsBlobStorageConnector implements IBlobStorageConnector {
 	/**
 	 * Create a new instance of IpfsBlobStorageConnector.
 	 * @param options The options for the connector.
-	 * @param options.config The configuration for the connector.
 	 */
-	constructor(options: { config: IIpfsBlobStorageConnectorConfig }) {
+	constructor(options: IIpfsBlobStorageConnectorConstructorOptions) {
 		Guards.object(this.CLASS_NAME, nameof(options), options);
 		Guards.object<IIpfsBlobStorageConnectorConfig>(
 			this.CLASS_NAME,
