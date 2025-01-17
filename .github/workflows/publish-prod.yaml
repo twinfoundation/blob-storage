@@ -8,15 +8,15 @@ on:
         required: true
         type: choice
         options:
-          - blob-storage-models
-          - blob-storage-connector-memory
-          - blob-storage-connector-file
-          - blob-storage-connector-ipfs
-          - blob-storage-service
-          - blob-storage-rest-client,
-          - blob-storage-connector-aws-s3
-          - blob-storage-connector-gcp
-          - blob-storage-connector-azure
+          - 'packages/blob-storage-models'
+          - 'packages/blob-storage-connector-memory'
+          - 'packages/blob-storage-connector-file'
+          - 'packages/blob-storage-connector-ipfs'
+          - 'packages/blob-storage-service'
+          - 'packages/blob-storage-rest-client'
+          - 'packages/blob-storage-connector-aws-s3'
+          - 'packages/blob-storage-connector-gcp'
+          - 'packages/blob-storage-connector-azure'
 
 jobs:
   publish:
@@ -77,7 +77,7 @@ jobs:
 
       - name: Check package version does not contain -next
         run: |
-          cd packages/${{ github.event.inputs.package }}
+          cd ${{ github.event.inputs.package }}
           PACKAGE_VERSION=$(cat package.json | jq '.version' | tr -d '"')
           echo Package Version $PACKAGE_VERSION
           if [[ $PACKAGE_VERSION == *"-next"* ]]; then
@@ -87,19 +87,19 @@ jobs:
 
       - name: Run Dist
         run: |
-          cd packages/${{ github.event.inputs.package }}
+          cd ${{ github.event.inputs.package }}
           npm install
           npm run dist
 
       - name: Cleanup package properties
         run: |
-          cd packages/${{ github.event.inputs.package }}
+          cd ${{ github.event.inputs.package }}
           npm pkg delete scripts
           npm pkg delete devDependencies
 
       - name: Publish
         run: |
-          cd packages/${{ github.event.inputs.package }}
+          cd ${{ github.event.inputs.package }}
           npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

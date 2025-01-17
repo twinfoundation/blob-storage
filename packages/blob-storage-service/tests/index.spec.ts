@@ -137,19 +137,17 @@ describe("blob-storage-service", () => {
 		const data = Converter.bytesToBase64(dataBytes);
 		const id = await service.create(data);
 
-		try {
-			const result = await service.get(id, true);
-			expect(result).toEqual({
-				id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
-				blobSize: 43,
-				dateCreated: "2024-08-22T11:55:16.271Z",
-				fileExtension: "txt",
-				encodingFormat: "text/plain",
-				blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
-			});
-		} catch (e) {
-			console.log(e);
-		}
+		const result = await service.get(id, true);
+		expect(result).toEqual({
+			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org"],
+			type: "BlobStorageEntry",
+			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
+			blobSize: 43,
+			dateCreated: "2024-08-22T11:55:16.271Z",
+			fileExtension: "txt",
+			encodingFormat: "text/plain",
+			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+		});
 	});
 
 	test("can get a file with no metadata with userIdentity and nodeIdentity", async () => {
@@ -168,7 +166,7 @@ describe("blob-storage-service", () => {
 
 		const result = await service.get(id, true, TEST_USER_IDENTITY, TEST_NODE_IDENTITY);
 		expect(result).toEqual({
-			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org/"],
+			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org"],
 			type: "BlobStorageEntry",
 			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 			fileExtension: "txt",
@@ -199,7 +197,7 @@ describe("blob-storage-service", () => {
 
 		const result = await service.get(id, true, TEST_USER_IDENTITY, TEST_NODE_IDENTITY);
 		expect(result).toEqual({
-			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org/"],
+			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org"],
 			type: "BlobStorageEntry",
 			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 			fileExtension: "txt",
@@ -235,7 +233,7 @@ describe("blob-storage-service", () => {
 
 		const result = await service.get(id, false, TEST_USER_IDENTITY, TEST_NODE_IDENTITY);
 		expect(result).toEqual({
-			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org/"],
+			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org"],
 			type: "BlobStorageEntry",
 			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 			fileExtension: "txt",
@@ -384,9 +382,9 @@ describe("blob-storage-service", () => {
 		expect(Object.keys(blobStorage.getStore()).length).toEqual(3);
 
 		const entries = await service.query();
-		console.log(JSON.stringify(entries, null, 2));
+
 		expect(entries).toEqual({
-			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org/"],
+			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org"],
 			type: "BlobStorageEntryList",
 			entries: [
 				{
