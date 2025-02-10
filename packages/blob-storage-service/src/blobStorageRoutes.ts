@@ -24,8 +24,8 @@ import {
 	type IBlobStorageUpdateRequest
 } from "@twin.org/blob-storage-models";
 import { Coerce, ComponentFactory, Converter, Guards, Is, StringHelper } from "@twin.org/core";
-import { SchemaOrgTypes } from "@twin.org/data-schema-org";
 import { nameof } from "@twin.org/nameof";
+import { SchemaOrgTypes } from "@twin.org/standards-schema-org";
 import { HeaderTypes, HttpStatusCode, MimeTypeHelper, MimeTypes } from "@twin.org/web";
 
 /**
@@ -81,7 +81,7 @@ export function generateRestRoutesBlobStorage(
 						body: {
 							blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
 							metadata: {
-								"@context": "http://schema.org/",
+								"@context": "https://schema.org",
 								"@type": "DigitalDocument",
 								name: "myfile.pdf"
 							}
@@ -149,7 +149,7 @@ export function generateRestRoutesBlobStorage(
 								blobSize: 42,
 								fileExtension: "pdf",
 								metadata: {
-									"@context": "http://schema.org/",
+									"@context": "https://schema.org",
 									"@type": "DigitalDocument",
 									name: "myfile.pdf"
 								},
@@ -174,9 +174,8 @@ export function generateRestRoutesBlobStorage(
 								encodingFormat: MimeTypes.Pdf,
 								blobSize: 42,
 								fileExtension: "pdf",
-
 								metadata: {
-									"@context": "http://schema.org/",
+									"@context": "https://schema.org",
 									"@type": "DigitalDocument",
 									name: "myfile.pdf"
 								},
@@ -259,7 +258,7 @@ export function generateRestRoutesBlobStorage(
 						},
 						body: {
 							metadata: {
-								"@context": "http://schema.org/",
+								"@context": "https://schema.org",
 								"@type": "DigitalDocument",
 								name: "myfile.pdf"
 							}
@@ -343,7 +342,7 @@ export function generateRestRoutesBlobStorage(
 										blobSize: 42,
 										fileExtension: "pdf",
 										metadata: {
-											"@context": "http://schema.org/",
+											"@context": "https://schema.org",
 											"@type": "DigitalDocument",
 											name: "myfile.pdf"
 										},
@@ -375,7 +374,7 @@ export function generateRestRoutesBlobStorage(
 										blobSize: 42,
 										fileExtension: "pdf",
 										metadata: {
-											"@context": "http://schema.org/",
+											"@context": "https://schema.org",
 											"@type": "DigitalDocument",
 											name: "myfile.pdf"
 										},
