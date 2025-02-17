@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IJsonLdContextDefinitionElement } from "@twin.org/data-json-ld";
 import type { BlobStorageTypes } from "./blobStorageTypes";
 import type { IBlobStorageEntry } from "./IBlobStorageEntry";
 
@@ -12,7 +13,7 @@ export interface IBlobStorageEntryList {
 	 */
 	"@context":
 		| typeof BlobStorageTypes.ContextRoot
-		| [typeof BlobStorageTypes.ContextRoot, ...string[]];
+		| [typeof BlobStorageTypes.ContextRoot, ...IJsonLdContextDefinitionElement[]];
 
 	/**
 	 * JSON-LD Type.

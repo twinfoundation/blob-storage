@@ -1016,7 +1016,7 @@
 									}
 								],
 								"additionalItems": {
-									"type": "string"
+									"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
 								}
 							}
 						],
