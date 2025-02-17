@@ -6,7 +6,7 @@ Interface describing a blob storage entry.
 
 ### @context
 
-> **@context**: `"https://schema.twindev.org/blob-storage/"` \| \[`"https://schema.twindev.org/blob-storage/"`, `...string[]`\]
+> **@context**: `"https://schema.twindev.org/blob-storage/"` \| \[`"https://schema.twindev.org/blob-storage/"`, `...IJsonLdContextDefinitionElement[]`\]
 
 JSON-LD Context.
 
@@ -80,4 +80,4 @@ The metadata for the blob as JSON-LD.
 
 > `optional` **blob**: `string`
 
-The blob in base64 format, if the includeContent flag was set in the request.
+The blob in base64 format, included if the includeContent flag was set in the request.

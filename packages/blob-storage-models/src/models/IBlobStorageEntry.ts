@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import type { IJsonLdContextDefinitionElement, IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { BlobStorageTypes } from "./blobStorageTypes";
 
 /**
@@ -12,7 +12,7 @@ export interface IBlobStorageEntry {
 	 */
 	"@context":
 		| typeof BlobStorageTypes.ContextRoot
-		| [typeof BlobStorageTypes.ContextRoot, ...string[]];
+		| [typeof BlobStorageTypes.ContextRoot, ...IJsonLdContextDefinitionElement[]];
 
 	/**
 	 * JSON-LD Type.
@@ -55,7 +55,7 @@ export interface IBlobStorageEntry {
 	metadata?: IJsonLdNodeObject;
 
 	/**
-	 * The blob in base64 format, if the includeContent flag was set in the request.
+	 * The blob in base64 format, included if the includeContent flag was set in the request.
 	 */
 	blob?: string;
 }

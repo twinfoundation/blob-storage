@@ -17,7 +17,7 @@
 						}
 					],
 					"additionalItems": {
-						"type": "string"
+						"$ref": "https://schema.twindev.org/json-ld/JsonLdContextDefinitionElement"
 					}
 				}
 			],
@@ -58,7 +58,7 @@
 		},
 		"blob": {
 			"type": "string",
-			"description": "The blob in base64 format, if the includeContent flag was set in the request."
+			"description": "The blob in base64 format, included if the includeContent flag was set in the request."
 		}
 	},
 	"required": [

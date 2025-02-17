@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/blob-storage-connector-gcp",
-	"version": "0.0.1-next.20",
+	"version": "0.0.1-next.21",
 	"description": "Blob Storage connector implementation using Google Cloud Storage",
 	"repository": {
 		"type": "git",
@@ -30,8 +30,8 @@
 		"prepare": "ts-patch install -s"
 	},
 	"dependencies": {
-		"@google-cloud/storage": "^7.15.0",
-		"@twin.org/blob-storage-models": "0.0.1-next.20",
+		"@google-cloud/storage": "^7.15.1",
+		"@twin.org/blob-storage-models": "0.0.1-next.21",
 		"@twin.org/core": "next",
 		"@twin.org/crypto": "next",
 		"@twin.org/logging-models": "next",
@@ -45,7 +45,7 @@
 		"copyfiles": "2.4.1",
 		"dotenv": "16.4.7",
 		"rimraf": "6.0.1",
-		"rollup": "4.34.6",
+		"rollup": "4.34.8",
 		"rollup-plugin-copy": "3.5.0",
 		"ts-patch": "3.3.0",
 		"tsc-watch": "6.2.1",
