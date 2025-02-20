@@ -45,7 +45,7 @@
 								"blobStorageCreateRequestExample": {
 									"value": {
 										"blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
-										"metadata": {
+										"annotationObject": {
 											"@context": "https://schema.org",
 											"@type": "DigitalDocument",
 											"name": "myfile.pdf"
@@ -210,13 +210,15 @@
 									"blobStorageListResponseExample": {
 										"value": {
 											"@context": [
-												"https://schema.twindev.org/blob-storage/"
+												"https://schema.twindev.org/blob-storage/",
+												"https://schema.twindev.org/common/"
 											],
 											"type": "BlobStorageEntryList",
 											"entries": [
 												{
 													"@context": [
 														"https://schema.twindev.org/blob-storage/",
+														"https://schema.twindev.org/common/",
 														"https://schema.org"
 													],
 													"type": "BlobStorageEntry",
@@ -224,8 +226,9 @@
 													"dateCreated": "2024-01-01T00:00:00Z",
 													"encodingFormat": "application/pdf",
 													"blobSize": 42,
+													"blobHash": "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 													"fileExtension": "pdf",
-													"metadata": {
+													"annotationObject": {
 														"@context": "https://schema.org",
 														"@type": "DigitalDocument",
 														"name": "myfile.pdf"
@@ -245,13 +248,15 @@
 									"blobStorageListResponseJsonLdExample": {
 										"value": {
 											"@context": [
-												"https://schema.twindev.org/blob-storage/"
+												"https://schema.twindev.org/blob-storage/",
+												"https://schema.twindev.org/common/"
 											],
 											"type": "BlobStorageEntryList",
 											"entries": [
 												{
 													"@context": [
 														"https://schema.twindev.org/blob-storage/",
+														"https://schema.twindev.org/common/",
 														"https://schema.org"
 													],
 													"type": "BlobStorageEntry",
@@ -259,8 +264,9 @@
 													"dateCreated": "2024-01-01T00:00:00Z",
 													"encodingFormat": "application/pdf",
 													"blobSize": 42,
+													"blobHash": "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 													"fileExtension": "pdf",
-													"metadata": {
+													"annotationObject": {
 														"@context": "https://schema.org",
 														"@type": "DigitalDocument",
 														"name": "myfile.pdf"
@@ -358,7 +364,7 @@
 		"/blob-storage/{id}": {
 			"get": {
 				"operationId": "blobStorageGet",
-				"summary": "Get the metadata for an item from blob storage",
+				"summary": "Get the annotation for an item from blob storage",
 				"tags": [
 					"Blob Storage"
 				],
@@ -376,7 +382,7 @@
 					},
 					{
 						"name": "includeContent",
-						"description": "Include the content in the response, otherwise only metadata is returned.",
+						"description": "Include the content in the response, otherwise only annotation is returned.",
 						"in": "query",
 						"required": false,
 						"schema": {
@@ -412,6 +418,7 @@
 										"value": {
 											"@context": [
 												"https://schema.twindev.org/blob-storage/",
+												"https://schema.twindev.org/common/",
 												"https://schema.org"
 											],
 											"type": "BlobStorageEntry",
@@ -419,8 +426,9 @@
 											"dateCreated": "2024-01-01T00:00:00Z",
 											"encodingFormat": "application/pdf",
 											"blobSize": 42,
+											"blobHash": "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 											"fileExtension": "pdf",
-											"metadata": {
+											"annotationObject": {
 												"@context": "https://schema.org",
 												"@type": "DigitalDocument",
 												"name": "myfile.pdf"
@@ -439,6 +447,7 @@
 										"value": {
 											"@context": [
 												"https://schema.twindev.org/blob-storage/",
+												"https://schema.twindev.org/common/",
 												"https://schema.org"
 											],
 											"type": "BlobStorageEntry",
@@ -446,8 +455,9 @@
 											"dateCreated": "2024-01-01T00:00:00Z",
 											"encodingFormat": "application/pdf",
 											"blobSize": 42,
+											"blobHash": "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 											"fileExtension": "pdf",
-											"metadata": {
+											"annotationObject": {
 												"@context": "https://schema.org",
 												"@type": "DigitalDocument",
 												"name": "myfile.pdf"
@@ -541,7 +551,7 @@
 			},
 			"put": {
 				"operationId": "blobStorageUpdate",
-				"summary": "Update the metadata for an item in blob storage",
+				"summary": "Update the annotation for an item in blob storage",
 				"tags": [
 					"Blob Storage"
 				],
@@ -574,7 +584,7 @@
 							"examples": {
 								"blobStorageUpdateRequestExample": {
 									"value": {
-										"metadata": {
+										"annotationObject": {
 											"@context": "https://schema.org",
 											"@type": "DigitalDocument",
 											"name": "myfile.pdf"
@@ -911,7 +921,7 @@
 						"type": "string",
 						"description": "The extension of the blob, will be detected if left undefined."
 					},
-					"metadata": {
+					"annotationObject": {
 						"$ref": "#/components/schemas/JsonLdNodeObject"
 					},
 					"namespace": {
@@ -929,25 +939,21 @@
 				"type": "object",
 				"properties": {
 					"@context": {
-						"anyOf": [
+						"type": "array",
+						"minItems": 2,
+						"items": [
 							{
 								"type": "string",
 								"const": "https://schema.twindev.org/blob-storage/"
 							},
 							{
-								"type": "array",
-								"minItems": 1,
-								"items": [
-									{
-										"type": "string",
-										"const": "https://schema.twindev.org/blob-storage/"
-									}
-								],
-								"additionalItems": {
-									"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
-								}
+								"type": "string",
+								"const": "https://schema.twindev.org/common/"
 							}
 						],
+						"additionalItems": {
+							"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
+						},
 						"description": "JSON-LD Context."
 					},
 					"type": {
@@ -971,6 +977,10 @@
 						"type": "number",
 						"description": "The size of the data in the blob."
 					},
+					"blobHash": {
+						"type": "string",
+						"description": "The hash of the data in the blob."
+					},
 					"encodingFormat": {
 						"type": "string",
 						"description": "The mime type for the blob."
@@ -979,7 +989,7 @@
 						"type": "string",
 						"description": "The extension."
 					},
-					"metadata": {
+					"annotationObject": {
 						"$ref": "#/components/schemas/JsonLdNodeObject"
 					},
 					"blob": {
@@ -992,7 +1002,8 @@
 					"type",
 					"id",
 					"dateCreated",
-					"blobSize"
+					"blobSize",
+					"blobHash"
 				],
 				"additionalProperties": false,
 				"description": "Interface describing a blob storage entry."
@@ -1001,25 +1012,21 @@
 				"type": "object",
 				"properties": {
 					"@context": {
-						"anyOf": [
+						"type": "array",
+						"minItems": 2,
+						"items": [
 							{
 								"type": "string",
 								"const": "https://schema.twindev.org/blob-storage/"
 							},
 							{
-								"type": "array",
-								"minItems": 1,
-								"items": [
-									{
-										"type": "string",
-										"const": "https://schema.twindev.org/blob-storage/"
-									}
-								],
-								"additionalItems": {
-									"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
-								}
+								"type": "string",
+								"const": "https://schema.twindev.org/common/"
 							}
 						],
+						"additionalItems": {
+							"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
+						},
 						"description": "JSON-LD Context."
 					},
 					"type": {
@@ -1058,7 +1065,7 @@
 						"type": "string",
 						"description": "The extension of the blob, will be detected if left undefined."
 					},
-					"metadata": {
+					"annotationObject": {
 						"$ref": "#/components/schemas/JsonLdNodeObject"
 					}
 				},
@@ -1108,7 +1115,8 @@
 					"@id",
 					"@graph",
 					"@type"
-				]
+				],
+				"description": "Helper Types"
 			},
 			"JsonLdContainerTypeArray": {
 				"anyOf": [
@@ -1284,28 +1292,40 @@
 						],
 						"maxItems": 2
 					}
-				]
+				],
+				"description": "Helper Types."
 			},
 			"JsonLdContextDefinition": {
 				"type": "object",
 				"properties": {
 					"@base": {
-						"$ref": "#/components/schemas/JsonLdKeyword"
+						"type": [
+							"string",
+							"null"
+						]
 					},
 					"@direction": {
-						"$ref": "#/components/schemas/JsonLdKeyword"
+						"type": [
+							"string",
+							"null"
+						],
+						"enum": [
+							"ltr",
+							"rtl",
+							null
+						]
 					},
 					"@import": {
-						"$ref": "#/components/schemas/JsonLdKeyword"
+						"type": "string"
 					},
 					"@language": {
-						"$ref": "#/components/schemas/JsonLdKeyword"
+						"type": "string"
 					},
 					"@propagate": {
-						"$ref": "#/components/schemas/JsonLdKeyword"
+						"type": "boolean"
 					},
 					"@protected": {
-						"$ref": "#/components/schemas/JsonLdKeyword"
+						"type": "boolean"
 					},
 					"@type": {
 						"type": "object",
@@ -1315,7 +1335,7 @@
 								"const": "@set"
 							},
 							"@protected": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"type": "boolean"
 							}
 						},
 						"required": [
@@ -1324,10 +1344,14 @@
 						"additionalProperties": false
 					},
 					"@version": {
-						"$ref": "#/components/schemas/JsonLdKeyword"
+						"type": "string",
+						"const": "1.1"
 					},
 					"@vocab": {
-						"$ref": "#/components/schemas/JsonLdKeyword"
+						"type": [
+							"string",
+							"null"
+						]
 					}
 				},
 				"additionalProperties": {
@@ -1382,7 +1406,13 @@
 							"@id": {
 								"anyOf": [
 									{
-										"$ref": "#/components/schemas/JsonLdKeyword"
+										"type": "string"
+									},
+									{
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
 									},
 									{
 										"type": "null"
@@ -1393,28 +1423,64 @@
 								"type": "string"
 							},
 							"@container": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"anyOf": [
+									{
+										"type": "string",
+										"const": "@list"
+									},
+									{
+										"type": "string",
+										"const": "@set"
+									},
+									{
+										"$ref": "#/components/schemas/JsonLdContainerType"
+									},
+									{
+										"type": "array",
+										"items": {
+											"anyOf": [
+												{
+													"type": "string",
+													"const": "@list"
+												},
+												{
+													"type": "string",
+													"const": "@set"
+												},
+												{
+													"$ref": "#/components/schemas/JsonLdContainerType"
+												}
+											]
+										}
+									},
+									{
+										"$ref": "#/components/schemas/JsonLdContainerTypeArray"
+									},
+									{
+										"type": "null"
+									}
+								]
 							},
 							"@type": {
 								"type": "string"
 							},
 							"@language": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"type": "string"
 							},
 							"@index": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"type": "string"
 							},
 							"@context": {
 								"$ref": "#/components/schemas/JsonLdContextDefinition"
 							},
 							"@prefix": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"type": "boolean"
 							},
 							"@propagate": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"type": "boolean"
 							},
 							"@protected": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"type": "boolean"
 							}
 						}
 					},
@@ -1423,7 +1489,7 @@
 						"additionalProperties": false,
 						"properties": {
 							"@reverse": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"type": "string"
 							},
 							"@container": {
 								"type": [
@@ -1440,22 +1506,22 @@
 								"type": "string"
 							},
 							"@language": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"type": "string"
 							},
 							"@index": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"type": "string"
 							},
 							"@context": {
 								"$ref": "#/components/schemas/JsonLdContextDefinition"
 							},
 							"@prefix": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"type": "boolean"
 							},
 							"@propagate": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"type": "boolean"
 							},
 							"@protected": {
-								"$ref": "#/components/schemas/JsonLdKeyword"
+								"type": "boolean"
 							}
 						},
 						"required": [
@@ -1482,23 +1548,13 @@
 						]
 					},
 					"@index": {
-						"type": "string"
+						"$ref": "#/components/schemas/JsonLdKeyword"
 					},
 					"@id": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "array",
-								"items": {
-									"type": "string"
-								}
-							}
-						]
+						"$ref": "#/components/schemas/JsonLdKeyword"
 					},
 					"@context": {
-						"$ref": "#/components/schemas/JsonLdContextDefinitionRoot"
+						"$ref": "#/components/schemas/JsonLdKeyword"
 					}
 				},
 				"required": [
@@ -1578,7 +1634,8 @@
 				"type": "array",
 				"items": {
 					"$ref": "#/components/schemas/JsonLdJsonValue"
-				}
+				},
+				"description": "JSON Type for array."
 			},
 			"JsonLdJsonObject": {
 				"type": "object",
@@ -1591,7 +1648,8 @@
 							"not": {}
 						}
 					]
-				}
+				},
+				"description": "JSON Type for object."
 			},
 			"JsonLdJsonPrimitive": {
 				"type": [
@@ -1599,7 +1657,8 @@
 					"number",
 					"boolean",
 					"null"
-				]
+				],
+				"description": "JSON Primitive."
 			},
 			"JsonLdJsonValue": {
 				"anyOf": [
@@ -1612,7 +1671,8 @@
 					{
 						"$ref": "#/components/schemas/JsonLdJsonObject"
 					}
-				]
+				],
+				"description": "JSON Value."
 			},
 			"JsonLdKeyword": {
 				"type": "object",
@@ -1847,20 +1907,10 @@
 				"type": "object",
 				"properties": {
 					"@list": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/JsonLdListOrSetItem"
-							},
-							{
-								"type": "array",
-								"items": {
-									"$ref": "#/components/schemas/JsonLdListOrSetItem"
-								}
-							}
-						]
+						"$ref": "#/components/schemas/JsonLdKeyword"
 					},
 					"@index": {
-						"type": "string"
+						"$ref": "#/components/schemas/JsonLdKeyword"
 					}
 				},
 				"required": [
@@ -1921,23 +1971,13 @@
 				},
 				"properties": {
 					"@context": {
-						"$ref": "#/components/schemas/JsonLdContextDefinitionRoot"
+						"$ref": "#/components/schemas/JsonLdKeyword"
 					},
 					"@id": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "array",
-								"items": {
-									"type": "string"
-								}
-							}
-						]
+						"$ref": "#/components/schemas/JsonLdKeyword"
 					},
 					"@included": {
-						"$ref": "#/components/schemas/JsonLdIncludedBlock"
+						"$ref": "#/components/schemas/JsonLdKeyword"
 					},
 					"@graph": {
 						"anyOf": [
@@ -1968,12 +2008,12 @@
 					"@type": {
 						"anyOf": [
 							{
-								"type": "string"
+								"$ref": "#/components/schemas/JsonLdKeyword"
 							},
 							{
 								"type": "array",
 								"items": {
-									"type": "string"
+									"$ref": "#/components/schemas/JsonLdKeyword"
 								}
 							}
 						]
@@ -1981,11 +2021,11 @@
 					"@reverse": {
 						"type": "object",
 						"additionalProperties": {
-							"type": "string"
+							"$ref": "#/components/schemas/JsonLdKeyword"
 						}
 					},
 					"@index": {
-						"type": "string"
+						"$ref": "#/components/schemas/JsonLdKeyword"
 					}
 				},
 				"description": "A node object represents zero or more properties of a node in the graph serialized by the JSON-LD document."
@@ -2026,20 +2066,10 @@
 				"type": "object",
 				"properties": {
 					"@set": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/JsonLdListOrSetItem"
-							},
-							{
-								"type": "array",
-								"items": {
-									"$ref": "#/components/schemas/JsonLdListOrSetItem"
-								}
-							}
-						]
+						"$ref": "#/components/schemas/JsonLdKeyword"
 					},
 					"@index": {
-						"type": "string"
+						"$ref": "#/components/schemas/JsonLdKeyword"
 					}
 				},
 				"required": [

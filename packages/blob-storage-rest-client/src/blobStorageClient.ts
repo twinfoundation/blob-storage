@@ -49,11 +49,11 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	}
 
 	/**
-	 * Create the blob with some metadata.
+	 * Create the blob with some annotation.
 	 * @param blob The data for the blob in base64 format.
 	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
 	 * @param fileExtension Extension for the blob, will be detected if left undefined.
-	 * @param metadata Data for the custom metadata as JSON-LD.
+	 * @param annotationObject Data for the custom annotation as JSON-LD.
 	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @returns The id of the stored blob in urn format.
 	 */
@@ -61,7 +61,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 		blob: string,
 		encodingFormat?: string,
 		fileExtension?: string,
-		metadata?: IJsonLdNodeObject,
+		annotationObject?: IJsonLdNodeObject,
 		namespace?: string
 	): Promise<string> {
 		Guards.stringBase64(this.CLASS_NAME, nameof(blob), blob);
@@ -71,7 +71,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 				blob,
 				encodingFormat,
 				fileExtension,
-				metadata,
+				annotationObject,
 				namespace
 			}
 		});
@@ -80,10 +80,10 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	}
 
 	/**
-	 * Get the blob and metadata.
+	 * Get the blob and annotation.
 	 * @param id The id of the blob to get in urn format.
-	 * @param includeContent Include the content, or just get the metadata.
-	 * @returns The metadata and data for the blob if it can be found.
+	 * @param includeContent Include the content, or just get the annotation.
+	 * @returns The annotation and data for the blob if it can be found.
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	public async get(id: string, includeContent: boolean): Promise<IBlobStorageEntry> {
@@ -109,11 +109,11 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	}
 
 	/**
-	 * Update the blob with metadata.
-	 * @param id The id of the blob metadata to update.
+	 * Update the blob with annotation.
+	 * @param id The id of the blob annotation to update.
 	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
 	 * @param fileExtension Extension for the blob, will be detected if left undefined.
-	 * @param metadata Data for the custom metadata as JSON-LD.
+	 * @param annotationObject Data for the custom annotation as JSON-LD.
 	 * @returns Nothing.
 	 * @throws Not found error if the blob cannot be found.
 	 */
@@ -121,7 +121,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 		id: string,
 		encodingFormat?: string,
 		fileExtension?: string,
-		metadata?: IJsonLdNodeObject
+		annotationObject?: IJsonLdNodeObject
 	): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
@@ -132,7 +132,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 			body: {
 				encodingFormat,
 				fileExtension,
-				metadata
+				annotationObject
 			}
 		});
 	}

@@ -41,7 +41,7 @@ describe("blob-storage-service", () => {
 		expect(service).toBeDefined();
 	});
 
-	test("can add a file with no metadata", async () => {
+	test("can add a file with no annotation", async () => {
 		const service = new BlobStorageService({
 			config: { includeNodeIdentity: false, includeUserIdentity: false }
 		});
@@ -52,6 +52,7 @@ describe("blob-storage-service", () => {
 			{
 				id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 				blobSize: 43,
+				blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 				dateCreated: "2024-08-22T11:55:16.271Z",
 				fileExtension: "txt",
 				encodingFormat: "text/plain"
@@ -62,7 +63,7 @@ describe("blob-storage-service", () => {
 		});
 	});
 
-	test("can add a file with no metadata with userIdentity and nodeIdentity", async () => {
+	test("can add a file with no annotation with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -79,6 +80,7 @@ describe("blob-storage-service", () => {
 			{
 				id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 				blobSize: 43,
+				blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 				dateCreated: "2024-08-22T11:55:16.271Z",
 				fileExtension: "txt",
 				encodingFormat: "text/plain",
@@ -91,7 +93,7 @@ describe("blob-storage-service", () => {
 		});
 	});
 
-	test("can add a file with metadata with userIdentity and nodeIdentity", async () => {
+	test("can add a file with annotation with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -112,12 +114,13 @@ describe("blob-storage-service", () => {
 			{
 				id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 				blobSize: 43,
+				blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 				dateCreated: "2024-08-22T11:55:16.271Z",
 				fileExtension: "txt",
 				encodingFormat: "text/plain",
 				nodeIdentity: "test-node-identity",
 				userIdentity: "test-user-identity",
-				metadata: {
+				annotationObject: {
 					"@context": "https://schema.org",
 					"@type": "CreativeWork",
 					name: "Test"
@@ -129,7 +132,7 @@ describe("blob-storage-service", () => {
 		});
 	});
 
-	test("can get a file with no metadata", async () => {
+	test("can get a file with no annotation", async () => {
 		const service = new BlobStorageService({
 			config: { includeNodeIdentity: false, includeUserIdentity: false }
 		});
@@ -139,10 +142,15 @@ describe("blob-storage-service", () => {
 
 		const result = await service.get(id, true);
 		expect(result).toEqual({
-			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org"],
+			"@context": [
+				"https://schema.twindev.org/blob-storage/",
+				"https://schema.twindev.org/common/",
+				"https://schema.org"
+			],
 			type: "BlobStorageEntry",
 			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 			blobSize: 43,
+			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 			dateCreated: "2024-08-22T11:55:16.271Z",
 			fileExtension: "txt",
 			encodingFormat: "text/plain",
@@ -150,7 +158,7 @@ describe("blob-storage-service", () => {
 		});
 	});
 
-	test("can get a file with no metadata with userIdentity and nodeIdentity", async () => {
+	test("can get a file with no annotation with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -166,18 +174,23 @@ describe("blob-storage-service", () => {
 
 		const result = await service.get(id, true, TEST_USER_IDENTITY, TEST_NODE_IDENTITY);
 		expect(result).toEqual({
-			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org"],
+			"@context": [
+				"https://schema.twindev.org/blob-storage/",
+				"https://schema.twindev.org/common/",
+				"https://schema.org"
+			],
 			type: "BlobStorageEntry",
 			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 			fileExtension: "txt",
 			dateCreated: "2024-08-22T11:55:16.271Z",
 			encodingFormat: "text/plain",
 			blobSize: 43,
+			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
 		});
 	});
 
-	test("can get a file with metadata with userIdentity and nodeIdentity", async () => {
+	test("can get a file with annotation with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -197,23 +210,27 @@ describe("blob-storage-service", () => {
 
 		const result = await service.get(id, true, TEST_USER_IDENTITY, TEST_NODE_IDENTITY);
 		expect(result).toEqual({
-			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org"],
+			"@context": [
+				"https://schema.twindev.org/blob-storage/",
+				"https://schema.twindev.org/common/",
+				"https://schema.org"
+			],
 			type: "BlobStorageEntry",
 			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 			fileExtension: "txt",
 			dateCreated: "2024-08-22T11:55:16.271Z",
 			encodingFormat: "text/plain",
 			blobSize: 43,
+			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
-			metadata: {
-				"@context": "https://schema.org",
-				"@type": "CreativeWork",
+			annotationObject: {
+				type: "CreativeWork",
 				name: "Test"
 			}
 		});
 	});
 
-	test("can get a file metadata only with userIdentity and nodeIdentity", async () => {
+	test("can get a file annotation only with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -233,22 +250,26 @@ describe("blob-storage-service", () => {
 
 		const result = await service.get(id, false, TEST_USER_IDENTITY, TEST_NODE_IDENTITY);
 		expect(result).toEqual({
-			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org"],
+			"@context": [
+				"https://schema.twindev.org/blob-storage/",
+				"https://schema.twindev.org/common/",
+				"https://schema.org"
+			],
 			type: "BlobStorageEntry",
 			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 			fileExtension: "txt",
 			dateCreated: "2024-08-22T11:55:16.271Z",
 			encodingFormat: "text/plain",
 			blobSize: 43,
-			metadata: {
-				"@context": "https://schema.org",
-				"@type": "CreativeWork",
+			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
+			annotationObject: {
+				type: "CreativeWork",
 				name: "Test"
 			}
 		});
 	});
 
-	test("can update a file with metadata", async () => {
+	test("can update a file with annotation", async () => {
 		const service = new BlobStorageService({
 			config: { includeNodeIdentity: false, includeUserIdentity: false }
 		});
@@ -269,7 +290,8 @@ describe("blob-storage-service", () => {
 				dateModified: "2024-08-22T11:56:56.272Z",
 				encodingFormat: "text/plain",
 				blobSize: 43,
-				metadata: {
+				blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
+				annotationObject: {
 					"@context": "https://schema.org",
 					"@type": "CreativeWork",
 					name: "Test2"
@@ -278,7 +300,7 @@ describe("blob-storage-service", () => {
 		]);
 	});
 
-	test("can update a file with metadata with userIdentity and nodeIdentity", async () => {
+	test("can update a file with annotation with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -312,9 +334,10 @@ describe("blob-storage-service", () => {
 				dateModified: "2024-08-22T11:56:56.272Z",
 				encodingFormat: "text/plain",
 				blobSize: 43,
+				blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 				nodeIdentity: "test-node-identity",
 				userIdentity: "test-user-identity",
-				metadata: {
+				annotationObject: {
 					"@context": "https://schema.org",
 					"@type": "CreativeWork",
 					name: "Test2"
@@ -323,7 +346,7 @@ describe("blob-storage-service", () => {
 		]);
 	});
 
-	test("can remove a file with metadata", async () => {
+	test("can remove a file with annotation", async () => {
 		const service = new BlobStorageService({
 			config: { includeNodeIdentity: false, includeUserIdentity: false }
 		});
@@ -340,7 +363,7 @@ describe("blob-storage-service", () => {
 		expect(blobStorage.getStore()).toEqual({});
 	});
 
-	test("can remove a file with metadata with userIdentity and nodeIdentity", async () => {
+	test("can remove a file with annotation with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -384,7 +407,11 @@ describe("blob-storage-service", () => {
 		const entries = await service.query();
 
 		expect(entries).toEqual({
-			"@context": ["https://schema.twindev.org/blob-storage/", "https://schema.org"],
+			"@context": [
+				"https://schema.twindev.org/blob-storage/",
+				"https://schema.twindev.org/common/",
+				"https://schema.org"
+			],
 			type: "BlobStorageEntryList",
 			entries: [
 				{
@@ -393,10 +420,10 @@ describe("blob-storage-service", () => {
 					dateCreated: "2024-08-22T11:56:56.272Z",
 					encodingFormat: "text/plain",
 					blobSize: 44,
+					blobHash: "sha256:NbvGkswlxO2EF+sqeOuiYOprFmgwqMHiNqETHdBBxjI=",
 					fileExtension: "txt",
-					metadata: {
-						"@context": "https://schema.org",
-						"@type": "CreativeWork",
+					annotationObject: {
+						type: "CreativeWork",
 						name: "Test1"
 					}
 				},
@@ -406,10 +433,10 @@ describe("blob-storage-service", () => {
 					dateCreated: "2024-08-22T11:56:56.272Z",
 					encodingFormat: "text/plain",
 					blobSize: 44,
+					blobHash: "sha256:GZmYYH0v5kyebKxVIrpfYuqH4GCCIUEc/CtJlN5P72M=",
 					fileExtension: "txt",
-					metadata: {
-						"@context": "https://schema.org",
-						"@type": "CreativeWork",
+					annotationObject: {
+						type: "CreativeWork",
 						name: "Test2"
 					}
 				},
@@ -419,10 +446,10 @@ describe("blob-storage-service", () => {
 					dateCreated: "2024-08-22T11:55:16.271Z",
 					encodingFormat: "text/plain",
 					blobSize: 44,
+					blobHash: "sha256:KQR9O1bX5vPNrthf/VSdhrrfckHSRapmEC9Vaw4OCUY=",
 					fileExtension: "txt",
-					metadata: {
-						"@context": "https://schema.org",
-						"@type": "CreativeWork",
+					annotationObject: {
+						type: "CreativeWork",
 						name: "Test0"
 					}
 				}

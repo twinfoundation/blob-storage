@@ -50,9 +50,9 @@ Runtime name for the class.
 
 ### create()
 
-> **create**(`blob`, `encodingFormat`?, `fileExtension`?, `metadata`?, `namespace`?): `Promise`\<`string`\>
+> **create**(`blob`, `encodingFormat`?, `fileExtension`?, `annotationObject`?, `namespace`?): `Promise`\<`string`\>
 
-Create the blob with some metadata.
+Create the blob with some annotation.
 
 #### Parameters
 
@@ -74,11 +74,11 @@ Mime type for the blob, will be detected if left undefined.
 
 Extension for the blob, will be detected if left undefined.
 
-##### metadata?
+##### annotationObject?
 
 `IJsonLdNodeObject`
 
-Data for the custom metadata as JSON-LD.
+Data for the custom annotation as JSON-LD.
 
 ##### namespace?
 
@@ -102,7 +102,7 @@ The id of the stored blob in urn format.
 
 > **get**(`id`, `includeContent`): `Promise`\<`IBlobStorageEntry`\>
 
-Get the blob and metadata.
+Get the blob and annotation.
 
 #### Parameters
 
@@ -116,13 +116,13 @@ The id of the blob to get in urn format.
 
 `boolean`
 
-Include the content, or just get the metadata.
+Include the content, or just get the annotation.
 
 #### Returns
 
 `Promise`\<`IBlobStorageEntry`\>
 
-The metadata and data for the blob if it can be found.
+The annotation and data for the blob if it can be found.
 
 #### Throws
 
@@ -136,9 +136,9 @@ Not found error if the blob cannot be found.
 
 ### update()
 
-> **update**(`id`, `encodingFormat`?, `fileExtension`?, `metadata`?): `Promise`\<`void`\>
+> **update**(`id`, `encodingFormat`?, `fileExtension`?, `annotationObject`?): `Promise`\<`void`\>
 
-Update the blob with metadata.
+Update the blob with annotation.
 
 #### Parameters
 
@@ -146,7 +146,7 @@ Update the blob with metadata.
 
 `string`
 
-The id of the blob metadata to update.
+The id of the blob annotation to update.
 
 ##### encodingFormat?
 
@@ -160,11 +160,11 @@ Mime type for the blob, will be detected if left undefined.
 
 Extension for the blob, will be detected if left undefined.
 
-##### metadata?
+##### annotationObject?
 
 `IJsonLdNodeObject`
 
-Data for the custom metadata as JSON-LD.
+Data for the custom annotation as JSON-LD.
 
 #### Returns
 

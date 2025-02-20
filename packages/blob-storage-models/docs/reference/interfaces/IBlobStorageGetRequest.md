@@ -40,7 +40,7 @@ The query parameters.
 
 > `optional` **includeContent**: `boolean`
 
-Include the content in the response, otherwise only metadata is returned.
+Include the content in the response, otherwise only annotation is returned.
 
 ##### Default
 

@@ -80,7 +80,7 @@ export function generateRestRoutesBlobStorage(
 					request: {
 						body: {
 							blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
-							metadata: {
+							annotationObject: {
 								"@context": "https://schema.org",
 								"@type": "DigitalDocument",
 								name: "myfile.pdf"
@@ -111,7 +111,7 @@ export function generateRestRoutesBlobStorage(
 
 	const blobStorageGetRoute: IRestRoute<IBlobStorageGetRequest, IBlobStorageGetResponse> = {
 		operationId: `${camelTypeName}Get`,
-		summary: `Get the metadata for an item from ${lowerName}`,
+		summary: `Get the annotation for an item from ${lowerName}`,
 		tag: options?.tagName ?? tagsBlobStorage[0].name,
 		method: "GET",
 		path: `${baseRouteName}/:id`,
@@ -141,14 +141,19 @@ export function generateRestRoutesBlobStorage(
 						id: `${camelTypeName}GetResponseExample`,
 						response: {
 							body: {
-								"@context": [BlobStorageTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+								"@context": [
+									BlobStorageTypes.ContextRoot,
+									BlobStorageTypes.ContextRootCommon,
+									SchemaOrgTypes.ContextRoot
+								],
 								type: BlobStorageTypes.Entry,
 								id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 								dateCreated: "2024-01-01T00:00:00Z",
 								encodingFormat: MimeTypes.Pdf,
 								blobSize: 42,
+								blobHash: "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 								fileExtension: "pdf",
-								metadata: {
+								annotationObject: {
 									"@context": "https://schema.org",
 									"@type": "DigitalDocument",
 									name: "myfile.pdf"
@@ -167,14 +172,19 @@ export function generateRestRoutesBlobStorage(
 						id: `${camelTypeName}GetResponseJsonLdExample`,
 						response: {
 							body: {
-								"@context": [BlobStorageTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+								"@context": [
+									BlobStorageTypes.ContextRoot,
+									BlobStorageTypes.ContextRootCommon,
+									SchemaOrgTypes.ContextRoot
+								],
 								type: BlobStorageTypes.Entry,
 								id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 								dateCreated: "2024-01-01T00:00:00Z",
 								encodingFormat: MimeTypes.Pdf,
 								blobSize: 42,
+								blobHash: "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 								fileExtension: "pdf",
-								metadata: {
+								annotationObject: {
 									"@context": "https://schema.org",
 									"@type": "DigitalDocument",
 									name: "myfile.pdf"
@@ -241,7 +251,7 @@ export function generateRestRoutesBlobStorage(
 
 	const blobStorageUpdateRoute: IRestRoute<IBlobStorageUpdateRequest, INoContentResponse> = {
 		operationId: `${camelTypeName}Update`,
-		summary: `Update the metadata for an item in ${lowerName}`,
+		summary: `Update the annotation for an item in ${lowerName}`,
 		tag: options?.tagName ?? tagsBlobStorage[0].name,
 		method: "PUT",
 		path: `${baseRouteName}/:id`,
@@ -257,7 +267,7 @@ export function generateRestRoutesBlobStorage(
 							id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
 						},
 						body: {
-							metadata: {
+							annotationObject: {
 								"@context": "https://schema.org",
 								"@type": "DigitalDocument",
 								name: "myfile.pdf"
@@ -330,18 +340,24 @@ export function generateRestRoutesBlobStorage(
 						id: `${camelTypeName}ListResponseExample`,
 						response: {
 							body: {
-								"@context": [BlobStorageTypes.ContextRoot],
+								"@context": [BlobStorageTypes.ContextRoot, BlobStorageTypes.ContextRootCommon],
 								type: BlobStorageTypes.EntryList,
 								entries: [
 									{
-										"@context": [BlobStorageTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+										"@context": [
+											BlobStorageTypes.ContextRoot,
+											BlobStorageTypes.ContextRootCommon,
+											SchemaOrgTypes.ContextRoot
+										],
 										type: BlobStorageTypes.Entry,
 										id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 										dateCreated: "2024-01-01T00:00:00Z",
 										encodingFormat: MimeTypes.Pdf,
 										blobSize: 42,
+										blobHash:
+											"sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 										fileExtension: "pdf",
-										metadata: {
+										annotationObject: {
 											"@context": "https://schema.org",
 											"@type": "DigitalDocument",
 											name: "myfile.pdf"
@@ -362,18 +378,24 @@ export function generateRestRoutesBlobStorage(
 						id: `${camelTypeName}ListResponseJsonLdExample`,
 						response: {
 							body: {
-								"@context": [BlobStorageTypes.ContextRoot],
+								"@context": [BlobStorageTypes.ContextRoot, BlobStorageTypes.ContextRootCommon],
 								type: BlobStorageTypes.EntryList,
 								entries: [
 									{
-										"@context": [BlobStorageTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+										"@context": [
+											BlobStorageTypes.ContextRoot,
+											BlobStorageTypes.ContextRootCommon,
+											SchemaOrgTypes.ContextRoot
+										],
 										type: BlobStorageTypes.Entry,
 										id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 										dateCreated: "2024-01-01T00:00:00Z",
 										encodingFormat: MimeTypes.Pdf,
 										blobSize: 42,
+										blobHash:
+											"sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 										fileExtension: "pdf",
-										metadata: {
+										annotationObject: {
 											"@context": "https://schema.org",
 											"@type": "DigitalDocument",
 											name: "myfile.pdf"
@@ -427,7 +449,7 @@ export async function blobStorageCreate(
 		request.body.blob,
 		request.body.encodingFormat,
 		request.body.fileExtension,
-		request.body.metadata,
+		request.body.annotationObject,
 		request.body.namespace,
 		httpRequestContext.userIdentity,
 		httpRequestContext.nodeIdentity
@@ -526,7 +548,7 @@ export async function blobStorageGetContent(
 }
 
 /**
- * Update the blob storage metadata.
+ * Update the blob storage annotation.
  * @param httpRequestContext The request context for the API.
  * @param componentName The name of the component to use in the routes.
  * @param request The request.
@@ -551,7 +573,7 @@ export async function blobStorageUpdate(
 		request.pathParams.id,
 		request.body.encodingFormat,
 		request.body.fileExtension,
-		request.body.metadata,
+		request.body.annotationObject,
 		httpRequestContext.userIdentity,
 		httpRequestContext.nodeIdentity
 	);

@@ -7,9 +7,14 @@
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BlobStorageTypes = {
 	/**
-	 * The context root for the auditable item blob storage types.
+	 * The context root for the blob storage types.
 	 */
 	ContextRoot: "https://schema.twindev.org/blob-storage/",
+
+	/**
+	 * The context root for the common types.
+	 */
+	ContextRootCommon: "https://schema.twindev.org/common/",
 
 	/**
 	 * Represents blob storage entry.

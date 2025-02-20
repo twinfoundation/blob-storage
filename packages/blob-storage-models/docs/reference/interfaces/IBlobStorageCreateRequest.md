@@ -28,11 +28,11 @@ The mime type of the blob, will be detected if left undefined.
 
 The extension of the blob, will be detected if left undefined.
 
-#### metadata?
+#### annotationObject?
 
-> `optional` **metadata**: `IJsonLdNodeObject`
+> `optional` **annotationObject**: `IJsonLdNodeObject`
 
-Custom metadata to associate with the blob as JSON-LD.
+Custom annotation object to associate with the blob as JSON-LD.
 
 #### namespace?
 

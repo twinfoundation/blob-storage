@@ -33,6 +33,12 @@ export class BlobStorageEntry {
 	public blobSize!: number;
 
 	/**
+	 * The hash of the data in the blob.
+	 */
+	@property({ type: "string" })
+	public blobHash!: string;
+
+	/**
 	 * The mime type for the blob.
 	 */
 	@property({ type: "string" })
@@ -45,10 +51,10 @@ export class BlobStorageEntry {
 	public fileExtension?: string;
 
 	/**
-	 * The metadata for the blob as JSON-LD.
+	 * The annotation object for the blob as JSON-LD.
 	 */
 	@property({ type: "object", itemTypeRef: "IJsonLdNodeObject" })
-	public metadata?: IJsonLdNodeObject;
+	public annotationObject?: IJsonLdNodeObject;
 
 	/**
 	 * The user identity that created the blob.

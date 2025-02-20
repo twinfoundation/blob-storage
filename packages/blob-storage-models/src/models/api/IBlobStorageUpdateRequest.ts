@@ -31,8 +31,8 @@ export interface IBlobStorageUpdateRequest {
 		fileExtension?: string;
 
 		/**
-		 * Custom metadata to associate with the blob as JSON-LD.
+		 * Custom annotation to associate with the blob as JSON-LD.
 		 */
-		metadata?: IJsonLdNodeObject;
+		annotationObject?: IJsonLdNodeObject;
 	};
 }

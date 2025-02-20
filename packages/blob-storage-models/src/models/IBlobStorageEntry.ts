@@ -10,9 +10,11 @@ export interface IBlobStorageEntry {
 	/**
 	 * JSON-LD Context.
 	 */
-	"@context":
-		| typeof BlobStorageTypes.ContextRoot
-		| [typeof BlobStorageTypes.ContextRoot, ...IJsonLdContextDefinitionElement[]];
+	"@context": [
+		typeof BlobStorageTypes.ContextRoot,
+		typeof BlobStorageTypes.ContextRootCommon,
+		...IJsonLdContextDefinitionElement[]
+	];
 
 	/**
 	 * JSON-LD Type.
@@ -40,6 +42,11 @@ export interface IBlobStorageEntry {
 	blobSize: number;
 
 	/**
+	 * The hash of the data in the blob.
+	 */
+	blobHash: string;
+
+	/**
 	 * The mime type for the blob.
 	 */
 	encodingFormat?: string;
@@ -50,9 +57,9 @@ export interface IBlobStorageEntry {
 	fileExtension?: string;
 
 	/**
-	 * The metadata for the blob as JSON-LD.
+	 * The annotation object for the blob as JSON-LD.
 	 */
-	metadata?: IJsonLdNodeObject;
+	annotationObject?: IJsonLdNodeObject;
 
 	/**
 	 * The blob in base64 format, included if the includeContent flag was set in the request.

@@ -30,11 +30,12 @@ describe("BlobStorageDataTypes", () => {
 			"",
 			BlobStorageTypes.Entry,
 			{
-				"@context": BlobStorageTypes.ContextRoot,
+				"@context": [BlobStorageTypes.ContextRoot, BlobStorageTypes.ContextRootCommon],
 				type: BlobStorageTypes.Entry,
 				dateCreated: new Date().toISOString(),
 				id: "1111",
-				blobSize: 100
+				blobSize: 100,
+				blobHash: "abc"
 			},
 			validationFailures
 		);

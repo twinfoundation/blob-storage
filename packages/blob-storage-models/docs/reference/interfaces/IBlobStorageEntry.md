@@ -6,7 +6,7 @@ Interface describing a blob storage entry.
 
 ### @context
 
-> **@context**: `"https://schema.twindev.org/blob-storage/"` \| \[`"https://schema.twindev.org/blob-storage/"`, `...IJsonLdContextDefinitionElement[]`\]
+> **@context**: \[`"https://schema.twindev.org/blob-storage/"`, `"https://schema.twindev.org/common/"`, `...IJsonLdContextDefinitionElement[]`\]
 
 JSON-LD Context.
 
@@ -52,6 +52,14 @@ The size of the data in the blob.
 
 ***
 
+### blobHash
+
+> **blobHash**: `string`
+
+The hash of the data in the blob.
+
+***
+
 ### encodingFormat?
 
 > `optional` **encodingFormat**: `string`
@@ -68,11 +76,11 @@ The extension.
 
 ***
 
-### metadata?
+### annotationObject?
 
-> `optional` **metadata**: `IJsonLdNodeObject`
+> `optional` **annotationObject**: `IJsonLdNodeObject`
 
-The metadata for the blob as JSON-LD.
+The annotation object for the blob as JSON-LD.
 
 ***
 

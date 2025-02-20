@@ -50,9 +50,9 @@ Runtime name for the class.
 
 ### create()
 
-> **create**(`blob`, `encodingFormat`?, `fileExtension`?, `metadata`?, `namespace`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`string`\>
+> **create**(`blob`, `encodingFormat`?, `fileExtension`?, `annotationObject`?, `namespace`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`string`\>
 
-Create the blob with some metadata.
+Create the blob with some annotation.
 
 #### Parameters
 
@@ -74,11 +74,11 @@ Mime type for the blob, will be detected if left undefined.
 
 Extension for the blob, will be detected if left undefined.
 
-##### metadata?
+##### annotationObject?
 
 `IJsonLdNodeObject`
 
-Data for the custom metadata as JSON-LD.
+Data for the custom annotation as JSON-LD.
 
 ##### namespace?
 
@@ -128,7 +128,7 @@ The id of the blob to get in urn format.
 
 `boolean`
 
-Include the content, or just get the metadata.
+Include the content, or just get the annotation.
 
 ##### userIdentity?
 
@@ -160,9 +160,9 @@ Not found error if the blob cannot be found.
 
 ### update()
 
-> **update**(`id`, `encodingFormat`?, `fileExtension`?, `metadata`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`void`\>
+> **update**(`id`, `encodingFormat`?, `fileExtension`?, `annotationObject`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`void`\>
 
-Update the blob with metadata.
+Update the blob with annotation.
 
 #### Parameters
 
@@ -184,11 +184,11 @@ Mime type for the blob, will be detected if left undefined.
 
 Extension for the blob, will be detected if left undefined.
 
-##### metadata?
+##### annotationObject?
 
 `IJsonLdNodeObject`
 
-Data for the custom metadata as JSON-LD.
+Data for the custom annotation as JSON-LD.
 
 ##### userIdentity?
 

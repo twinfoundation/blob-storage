@@ -8,7 +8,7 @@ Options for the Blob Storage Service constructor.
 
 > `optional` **entryEntityStorageType**: `string`
 
-The type of the storage connector for the metadata.
+The type of the storage connector for the annotation.
 
 #### Default
 

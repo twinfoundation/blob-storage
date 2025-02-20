@@ -11,9 +11,11 @@ export interface IBlobStorageEntryList {
 	/**
 	 * JSON-LD Context.
 	 */
-	"@context":
-		| typeof BlobStorageTypes.ContextRoot
-		| [typeof BlobStorageTypes.ContextRoot, ...IJsonLdContextDefinitionElement[]];
+	"@context": [
+		typeof BlobStorageTypes.ContextRoot,
+		typeof BlobStorageTypes.ContextRootCommon,
+		...IJsonLdContextDefinitionElement[]
+	];
 
 	/**
 	 * JSON-LD Type.
