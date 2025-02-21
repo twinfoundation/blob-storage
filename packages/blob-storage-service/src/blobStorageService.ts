@@ -275,7 +275,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 			}
 
 			const jsonLd = this.entryToJsonLd(blobEntry, returnBlob);
-			return JsonLdProcessor.compact(jsonLd);
+			return JsonLdProcessor.compact(jsonLd, jsonLd["@context"]);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "getFailed", undefined, error);
 		}
@@ -467,7 +467,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 			cursor: result.cursor
 		};
 
-		return JsonLdProcessor.compact(jsonLd);
+		return JsonLdProcessor.compact(jsonLd, jsonLd["@context"]);
 	}
 
 	/**
