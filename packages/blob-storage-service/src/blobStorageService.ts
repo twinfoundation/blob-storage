@@ -455,15 +455,26 @@ export class BlobStorageService implements IBlobStorageComponent {
 			ObjectHelper.propertyDelete(entity, "userIdentity");
 		}
 
-		const jsonLd: IBlobStorageEntryList = {
-			"@context": [
-				BlobStorageTypes.ContextRoot,
-				BlobStorageTypes.ContextRootCommon,
-				SchemaOrgTypes.ContextRoot
-			],
-			type: BlobStorageTypes.EntryList,
+		let context: IBlobStorageEntryList["@context"] = [
+			BlobStorageTypes.ContextRoot,
+			BlobStorageTypes.ContextRootCommon,
+			SchemaOrgTypes.ContextRoot
+		];
+		const entriesJsonLd = [];
+
+		for (const entry of result.entities) {
 			// The entries are never Partial as we don't allow custom property requests.
-			entries: result.entities.map(entry => this.entryToJsonLd(entry as IBlobStorageEntry)),
+			entriesJsonLd.push(this.entryToJsonLd(entry as BlobStorageEntry));
+			context = JsonLdProcessor.combineContexts(
+				context,
+				entry.annotationObject?.["@context"]
+			) as IBlobStorageEntryList["@context"];
+		}
+
+		const jsonLd: IBlobStorageEntryList = {
+			"@context": context,
+			type: BlobStorageTypes.EntryList,
+			entries: entriesJsonLd,
 			cursor: result.cursor
 		};
 
@@ -567,12 +578,15 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 * @internal
 	 */
 	private entryToJsonLd(entry: BlobStorageEntry, blob?: Uint8Array): IBlobStorageEntry {
-		return {
-			"@context": [
-				BlobStorageTypes.ContextRoot,
-				BlobStorageTypes.ContextRootCommon,
-				SchemaOrgTypes.ContextRoot
-			],
+		const jsonLd: IBlobStorageEntry = {
+			"@context": JsonLdProcessor.combineContexts(
+				[
+					BlobStorageTypes.ContextRoot,
+					BlobStorageTypes.ContextRootCommon,
+					SchemaOrgTypes.ContextRoot
+				],
+				entry?.annotationObject?.["@context"]
+			) as IBlobStorageEntry["@context"],
 			id: entry.id,
 			type: BlobStorageTypes.Entry,
 			dateCreated: entry.dateCreated,
@@ -584,5 +598,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 			annotationObject: entry?.annotationObject,
 			blob: Is.uint8Array(blob) ? Converter.bytesToBase64(blob) : undefined
 		};
+
+		return jsonLd;
 	}
 }

@@ -239,9 +239,18 @@ describe("blob-storage-service", () => {
 			undefined,
 			undefined,
 			{
-				"@context": "https://schema.org",
-				"@type": "CreativeWork",
-				name: "Test"
+				"@context": "https://www.w3.org/ns/activitystreams",
+				type: "Create",
+				actor: {
+					type: "Person",
+					id: "acct:person@example.org",
+					name: "Person"
+				},
+				object: {
+					type: "Note",
+					content: "This is a simple note"
+				},
+				published: "2015-01-25T12:34:56Z"
 			},
 			undefined,
 			TEST_USER_IDENTITY,
@@ -253,7 +262,8 @@ describe("blob-storage-service", () => {
 			"@context": [
 				"https://schema.twindev.org/blob-storage/",
 				"https://schema.twindev.org/common/",
-				"https://schema.org"
+				"https://schema.org",
+				"https://www.w3.org/ns/activitystreams"
 			],
 			type: "BlobStorageEntry",
 			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
@@ -263,8 +273,17 @@ describe("blob-storage-service", () => {
 			blobSize: 43,
 			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 			annotationObject: {
-				type: "CreativeWork",
-				name: "Test"
+				type: "Create",
+				actor: {
+					type: "Person",
+					id: "acct:person@example.org",
+					name: "Person"
+				},
+				object: {
+					type: "Note",
+					content: "This is a simple note"
+				},
+				published: "2015-01-25T12:34:56Z"
 			}
 		});
 	});
@@ -395,9 +414,18 @@ describe("blob-storage-service", () => {
 			const dataBytes = Converter.utf8ToBytes(`The quick brown fox jumps over the lazy dog${i}`);
 			const data = Converter.bytesToBase64(dataBytes);
 			await service.create(data, undefined, undefined, {
-				"@context": "https://schema.org",
-				"@type": "CreativeWork",
-				name: `Test${i}`
+				"@context": "https://www.w3.org/ns/activitystreams",
+				type: "Create",
+				actor: {
+					type: `Person${i}`,
+					id: "acct:person@example.org",
+					name: "Person"
+				},
+				object: {
+					type: "Note",
+					content: "This is a simple note"
+				},
+				published: "2015-01-25T12:34:56Z"
 			});
 		}
 
@@ -410,7 +438,8 @@ describe("blob-storage-service", () => {
 			"@context": [
 				"https://schema.twindev.org/blob-storage/",
 				"https://schema.twindev.org/common/",
-				"https://schema.org"
+				"https://schema.org",
+				"https://www.w3.org/ns/activitystreams"
 			],
 			type: "BlobStorageEntryList",
 			entries: [
@@ -423,8 +452,17 @@ describe("blob-storage-service", () => {
 					blobHash: "sha256:NbvGkswlxO2EF+sqeOuiYOprFmgwqMHiNqETHdBBxjI=",
 					fileExtension: "txt",
 					annotationObject: {
-						type: "CreativeWork",
-						name: "Test1"
+						type: "Create",
+						actor: {
+							type: "Person1",
+							id: "acct:person@example.org",
+							name: "Person"
+						},
+						object: {
+							type: "Note",
+							content: "This is a simple note"
+						},
+						published: "2015-01-25T12:34:56Z"
 					}
 				},
 				{
@@ -436,8 +474,17 @@ describe("blob-storage-service", () => {
 					blobHash: "sha256:GZmYYH0v5kyebKxVIrpfYuqH4GCCIUEc/CtJlN5P72M=",
 					fileExtension: "txt",
 					annotationObject: {
-						type: "CreativeWork",
-						name: "Test2"
+						type: "Create",
+						actor: {
+							type: "Person2",
+							id: "acct:person@example.org",
+							name: "Person"
+						},
+						object: {
+							type: "Note",
+							content: "This is a simple note"
+						},
+						published: "2015-01-25T12:34:56Z"
 					}
 				},
 				{
@@ -449,8 +496,17 @@ describe("blob-storage-service", () => {
 					blobHash: "sha256:KQR9O1bX5vPNrthf/VSdhrrfckHSRapmEC9Vaw4OCUY=",
 					fileExtension: "txt",
 					annotationObject: {
-						type: "CreativeWork",
-						name: "Test0"
+						type: "Create",
+						actor: {
+							type: "Person0",
+							id: "acct:person@example.org",
+							name: "Person"
+						},
+						object: {
+							type: "Note",
+							content: "This is a simple note"
+						},
+						published: "2015-01-25T12:34:56Z"
 					}
 				}
 			]
