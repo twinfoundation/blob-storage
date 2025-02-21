@@ -224,7 +224,8 @@ describe("blob-storage-service", () => {
 			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
 			annotationObject: {
-				type: "CreativeWork",
+				"@context": "https://schema.org",
+				"@type": "CreativeWork",
 				name: "Test"
 			}
 		});
@@ -263,7 +264,8 @@ describe("blob-storage-service", () => {
 			blobSize: 43,
 			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 			annotationObject: {
-				type: "CreativeWork",
+				"@context": "https://schema.org",
+				"@type": "CreativeWork",
 				name: "Test"
 			}
 		});
@@ -423,7 +425,8 @@ describe("blob-storage-service", () => {
 					blobHash: "sha256:NbvGkswlxO2EF+sqeOuiYOprFmgwqMHiNqETHdBBxjI=",
 					fileExtension: "txt",
 					annotationObject: {
-						type: "CreativeWork",
+						"@context": "https://schema.org",
+						"@type": "CreativeWork",
 						name: "Test1"
 					}
 				},
@@ -436,7 +439,8 @@ describe("blob-storage-service", () => {
 					blobHash: "sha256:GZmYYH0v5kyebKxVIrpfYuqH4GCCIUEc/CtJlN5P72M=",
 					fileExtension: "txt",
 					annotationObject: {
-						type: "CreativeWork",
+						"@context": "https://schema.org",
+						"@type": "CreativeWork",
 						name: "Test2"
 					}
 				},
@@ -449,7 +453,8 @@ describe("blob-storage-service", () => {
 					blobHash: "sha256:KQR9O1bX5vPNrthf/VSdhrrfckHSRapmEC9Vaw4OCUY=",
 					fileExtension: "txt",
 					annotationObject: {
-						type: "CreativeWork",
+						"@context": "https://schema.org",
+						"@type": "CreativeWork",
 						name: "Test0"
 					}
 				}
