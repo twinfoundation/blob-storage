@@ -70,11 +70,11 @@ The extension.
 
 ***
 
-### annotationObject?
+### metadata?
 
-> `optional` **annotationObject**: `IJsonLdNodeObject`
+> `optional` **metadata**: `IJsonLdNodeObject`
 
-The annotation object for the blob as JSON-LD.
+The metadata for the blob as JSON-LD.
 
 ***
 

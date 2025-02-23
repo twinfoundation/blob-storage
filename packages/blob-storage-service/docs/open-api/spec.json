@@ -45,7 +45,7 @@
 								"blobStorageCreateRequestExample": {
 									"value": {
 										"blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
-										"annotationObject": {
+										"metadata": {
 											"@context": "https://schema.org",
 											"@type": "DigitalDocument",
 											"name": "myfile.pdf"
@@ -228,7 +228,7 @@
 													"blobSize": 42,
 													"blobHash": "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 													"fileExtension": "pdf",
-													"annotationObject": {
+													"metadata": {
 														"@context": "https://schema.org",
 														"@type": "DigitalDocument",
 														"name": "myfile.pdf"
@@ -266,7 +266,7 @@
 													"blobSize": 42,
 													"blobHash": "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 													"fileExtension": "pdf",
-													"annotationObject": {
+													"metadata": {
 														"@context": "https://schema.org",
 														"@type": "DigitalDocument",
 														"name": "myfile.pdf"
@@ -364,7 +364,7 @@
 		"/blob-storage/{id}": {
 			"get": {
 				"operationId": "blobStorageGet",
-				"summary": "Get the annotation for an item from blob storage",
+				"summary": "Get the metadata for an item from blob storage",
 				"tags": [
 					"Blob Storage"
 				],
@@ -382,7 +382,7 @@
 					},
 					{
 						"name": "includeContent",
-						"description": "Include the content in the response, otherwise only annotation is returned.",
+						"description": "Include the content in the response, otherwise only metadata is returned.",
 						"in": "query",
 						"required": false,
 						"schema": {
@@ -428,7 +428,7 @@
 											"blobSize": 42,
 											"blobHash": "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 											"fileExtension": "pdf",
-											"annotationObject": {
+											"metadata": {
 												"@context": "https://schema.org",
 												"@type": "DigitalDocument",
 												"name": "myfile.pdf"
@@ -457,7 +457,7 @@
 											"blobSize": 42,
 											"blobHash": "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
 											"fileExtension": "pdf",
-											"annotationObject": {
+											"metadata": {
 												"@context": "https://schema.org",
 												"@type": "DigitalDocument",
 												"name": "myfile.pdf"
@@ -551,7 +551,7 @@
 			},
 			"put": {
 				"operationId": "blobStorageUpdate",
-				"summary": "Update the annotation for an item in blob storage",
+				"summary": "Update the metadata for an item in blob storage",
 				"tags": [
 					"Blob Storage"
 				],
@@ -584,7 +584,7 @@
 							"examples": {
 								"blobStorageUpdateRequestExample": {
 									"value": {
-										"annotationObject": {
+										"metadata": {
 											"@context": "https://schema.org",
 											"@type": "DigitalDocument",
 											"name": "myfile.pdf"
@@ -921,7 +921,7 @@
 						"type": "string",
 						"description": "The extension of the blob, will be detected if left undefined."
 					},
-					"annotationObject": {
+					"metadata": {
 						"$ref": "#/components/schemas/JsonLdNodeObject"
 					},
 					"namespace": {
@@ -989,7 +989,7 @@
 						"type": "string",
 						"description": "The extension."
 					},
-					"annotationObject": {
+					"metadata": {
 						"$ref": "#/components/schemas/JsonLdNodeObject"
 					},
 					"blob": {
@@ -1065,7 +1065,7 @@
 						"type": "string",
 						"description": "The extension of the blob, will be detected if left undefined."
 					},
-					"annotationObject": {
+					"metadata": {
 						"$ref": "#/components/schemas/JsonLdNodeObject"
 					}
 				},

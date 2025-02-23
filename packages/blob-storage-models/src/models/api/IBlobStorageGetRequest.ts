@@ -28,7 +28,7 @@ export interface IBlobStorageGetRequest {
 	 */
 	query?: {
 		/**
-		 * Include the content in the response, otherwise only annotation is returned.
+		 * Include the content in the response, otherwise only metadata is returned.
 		 * @default false
 		 */
 		includeContent?: boolean;

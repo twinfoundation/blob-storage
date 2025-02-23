@@ -7,7 +7,7 @@ import type { IBlobStorageServiceConfig } from "./IBlobStorageServiceConfig";
  */
 export interface IBlobStorageServiceConstructorOptions {
 	/**
-	 * The type of the storage connector for the annotation.
+	 * The type of the storage connector for the metadata.
 	 * @default blob-storage-entry
 	 */
 	entryEntityStorageType?: string;

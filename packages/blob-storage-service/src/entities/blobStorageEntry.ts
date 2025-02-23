@@ -51,10 +51,10 @@ export class BlobStorageEntry {
 	public fileExtension?: string;
 
 	/**
-	 * The annotation object for the blob as JSON-LD.
+	 * The metadata for the blob as JSON-LD.
 	 */
 	@property({ type: "object", itemTypeRef: "IJsonLdNodeObject" })
-	public annotationObject?: IJsonLdNodeObject;
+	public metadata?: IJsonLdNodeObject;
 
 	/**
 	 * The user identity that created the blob.

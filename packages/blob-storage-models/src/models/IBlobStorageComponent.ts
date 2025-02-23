@@ -11,11 +11,11 @@ import type { IBlobStorageEntryList } from "./IBlobStorageEntryList";
  */
 export interface IBlobStorageComponent extends IComponent {
 	/**
-	 * Create the blob with some annotation.
+	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
 	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
 	 * @param fileExtension Extension for the blob, will be detected if left undefined.
-	 * @param annotationObject Data for the custom annotation as JSON-LD.
+	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
@@ -25,19 +25,19 @@ export interface IBlobStorageComponent extends IComponent {
 		blob: string,
 		encodingFormat?: string,
 		fileExtension?: string,
-		annotationObject?: IJsonLdNodeObject,
+		metadata?: IJsonLdNodeObject,
 		namespace?: string,
 		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<string>;
 
 	/**
-	 * Get the blob and annotation.
+	 * Get the blob and metadata.
 	 * @param id The id of the blob to get in urn format.
-	 * @param includeContent Include the content, or just get the annotation.
+	 * @param includeContent Include the content, or just get the metadata.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
-	 * @returns The data and annotation for the blob if it can be found.
+	 * @returns The data and metadata for the blob if it can be found.
 	 * @throws Not found error if the blob cannot be found.
 	 */
 	get(
@@ -48,11 +48,11 @@ export interface IBlobStorageComponent extends IComponent {
 	): Promise<IBlobStorageEntry>;
 
 	/**
-	 * Update the blob with annotation.
-	 * @param id The id of the blob annotation to update.
+	 * Update the blob with metadata.
+	 * @param id The id of the blob metadata to update.
 	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
 	 * @param fileExtension Extension for the blob, will be detected if left undefined.
-	 * @param annotationObject Data for the custom annotation object as JSON-LD.
+	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns Nothing.
@@ -62,7 +62,7 @@ export interface IBlobStorageComponent extends IComponent {
 		id: string,
 		encodingFormat?: string,
 		fileExtension?: string,
-		annotationObject?: IJsonLdNodeObject,
+		metadata?: IJsonLdNodeObject,
 		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<void>;

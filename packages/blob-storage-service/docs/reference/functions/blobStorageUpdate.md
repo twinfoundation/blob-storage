@@ -2,7 +2,7 @@
 
 > **blobStorageUpdate**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`INoContentResponse`\>
 
-Update the blob storage annotation.
+Update the blob storage metadata.
 
 ## Parameters
 

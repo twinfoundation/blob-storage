@@ -10,9 +10,9 @@ Interface describing an blob storage component.
 
 ### create()
 
-> **create**(`blob`, `encodingFormat`?, `fileExtension`?, `annotationObject`?, `namespace`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`string`\>
+> **create**(`blob`, `encodingFormat`?, `fileExtension`?, `metadata`?, `namespace`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`string`\>
 
-Create the blob with some annotation.
+Create the blob with some metadata.
 
 #### Parameters
 
@@ -34,11 +34,11 @@ Mime type for the blob, will be detected if left undefined.
 
 Extension for the blob, will be detected if left undefined.
 
-##### annotationObject?
+##### metadata?
 
 `IJsonLdNodeObject`
 
-Data for the custom annotation as JSON-LD.
+Data for the custom metadata as JSON-LD.
 
 ##### namespace?
 
@@ -70,7 +70,7 @@ The id of the stored blob in urn format.
 
 > **get**(`id`, `includeContent`, `userIdentity`?, `nodeIdentity`?): `Promise`\<[`IBlobStorageEntry`](IBlobStorageEntry.md)\>
 
-Get the blob and annotation.
+Get the blob and metadata.
 
 #### Parameters
 
@@ -84,7 +84,7 @@ The id of the blob to get in urn format.
 
 `boolean`
 
-Include the content, or just get the annotation.
+Include the content, or just get the metadata.
 
 ##### userIdentity?
 
@@ -102,7 +102,7 @@ The node identity to use with storage operations.
 
 `Promise`\<[`IBlobStorageEntry`](IBlobStorageEntry.md)\>
 
-The data and annotation for the blob if it can be found.
+The data and metadata for the blob if it can be found.
 
 #### Throws
 
@@ -112,9 +112,9 @@ Not found error if the blob cannot be found.
 
 ### update()
 
-> **update**(`id`, `encodingFormat`?, `fileExtension`?, `annotationObject`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`void`\>
+> **update**(`id`, `encodingFormat`?, `fileExtension`?, `metadata`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`void`\>
 
-Update the blob with annotation.
+Update the blob with metadata.
 
 #### Parameters
 
@@ -122,7 +122,7 @@ Update the blob with annotation.
 
 `string`
 
-The id of the blob annotation to update.
+The id of the blob metadata to update.
 
 ##### encodingFormat?
 
@@ -136,11 +136,11 @@ Mime type for the blob, will be detected if left undefined.
 
 Extension for the blob, will be detected if left undefined.
 
-##### annotationObject?
+##### metadata?
 
 `IJsonLdNodeObject`
 
-Data for the custom annotation object as JSON-LD.
+Data for the custom metadata as JSON-LD.
 
 ##### userIdentity?
 

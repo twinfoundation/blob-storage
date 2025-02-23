@@ -65,7 +65,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 	private readonly _defaultNamespace: string;
 
 	/**
-	 * The storage connector for the annotation.
+	 * The storage connector for the metadata.
 	 * @internal
 	 */
 	private readonly _entryEntityStorage: IEntityStorageConnector<BlobStorageEntry>;
@@ -120,11 +120,11 @@ export class BlobStorageService implements IBlobStorageComponent {
 	}
 
 	/**
-	 * Create the blob with some annotation.
+	 * Create the blob with some metadata.
 	 * @param blob The data for the blob in base64 format.
 	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
 	 * @param fileExtension Extension for the blob, will be detected if left undefined.
-	 * @param annotationObject Data for the custom annotation as JSON-LD.
+	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
@@ -134,7 +134,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 		blob: string,
 		encodingFormat?: string,
 		fileExtension?: string,
-		annotationObject?: IJsonLdNodeObject,
+		metadata?: IJsonLdNodeObject,
 		namespace?: string,
 		userIdentity?: string,
 		nodeIdentity?: string
@@ -168,10 +168,10 @@ export class BlobStorageService implements IBlobStorageComponent {
 				fileExtension = await MimeTypeHelper.defaultExtension(encodingFormat);
 			}
 
-			if (Is.object(annotationObject)) {
+			if (Is.object(metadata)) {
 				const validationFailures: IValidationFailure[] = [];
-				JsonLdHelper.validate(annotationObject, validationFailures);
-				Validation.asValidationError(this.CLASS_NAME, nameof(annotationObject), validationFailures);
+				JsonLdHelper.validate(metadata, validationFailures);
+				Validation.asValidationError(this.CLASS_NAME, nameof(metadata), validationFailures);
 			}
 
 			const blobHash = `sha256:${Converter.bytesToBase64(Sha256.sum256(storeBlob))}`;
@@ -196,7 +196,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 				blobHash,
 				encodingFormat,
 				fileExtension,
-				annotationObject
+				metadata
 			};
 
 			const conditions: { property: keyof BlobStorageEntry; value: unknown }[] = [];
@@ -220,7 +220,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 	/**
 	 * Get the blob entry.
 	 * @param id The id of the blob to get in urn format.
-	 * @param includeContent Include the content, or just get the annotation.
+	 * @param includeContent Include the content, or just get the metadata.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns The entry and data for the blob if it can be found.
@@ -282,11 +282,11 @@ export class BlobStorageService implements IBlobStorageComponent {
 	}
 
 	/**
-	 * Update the blob with annotation.
+	 * Update the blob with metadata.
 	 * @param id The id of the blob entry to update.
 	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
 	 * @param fileExtension Extension for the blob, will be detected if left undefined.
-	 * @param annotationObject Data for the custom annotation as JSON-LD.
+	 * @param metadata Data for the custom metadata as JSON-LD.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns Nothing.
@@ -296,7 +296,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 		id: string,
 		encodingFormat?: string,
 		fileExtension?: string,
-		annotationObject?: IJsonLdNodeObject,
+		metadata?: IJsonLdNodeObject,
 		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<void> {
@@ -315,10 +315,10 @@ export class BlobStorageService implements IBlobStorageComponent {
 				throw new NotFoundError(this.CLASS_NAME, "blobNotFound", id);
 			}
 
-			if (Is.object(annotationObject)) {
+			if (Is.object(metadata)) {
 				const validationFailures: IValidationFailure[] = [];
-				await JsonLdHelper.validate(annotationObject, validationFailures);
-				Validation.asValidationError(this.CLASS_NAME, nameof(annotationObject), validationFailures);
+				await JsonLdHelper.validate(metadata, validationFailures);
+				Validation.asValidationError(this.CLASS_NAME, nameof(metadata), validationFailures);
 			}
 
 			// Now store the entry in entity storage
@@ -330,7 +330,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 				blobHash: blobEntry.blobHash,
 				encodingFormat: encodingFormat ?? blobEntry.encodingFormat,
 				fileExtension: fileExtension ?? blobEntry.fileExtension,
-				annotationObject: annotationObject ?? blobEntry.annotationObject
+				metadata: metadata ?? blobEntry.metadata
 			};
 
 			const conditions: { property: keyof BlobStorageEntry; value: unknown }[] = [];
@@ -467,7 +467,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 			entriesJsonLd.push(this.entryToJsonLd(entry as BlobStorageEntry));
 			context = JsonLdProcessor.combineContexts(
 				context,
-				entry.annotationObject?.["@context"]
+				entry.metadata?.["@context"]
 			) as IBlobStorageEntryList["@context"];
 		}
 
@@ -585,7 +585,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 					BlobStorageTypes.ContextRootCommon,
 					SchemaOrgTypes.ContextRoot
 				],
-				entry?.annotationObject?.["@context"]
+				entry?.metadata?.["@context"]
 			) as IBlobStorageEntry["@context"],
 			id: entry.id,
 			type: BlobStorageTypes.Entry,
@@ -595,7 +595,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 			blobHash: entry.blobHash,
 			encodingFormat: entry?.encodingFormat,
 			fileExtension: entry?.fileExtension,
-			annotationObject: entry?.annotationObject,
+			metadata: entry?.metadata,
 			blob: Is.uint8Array(blob) ? Converter.bytesToBase64(blob) : undefined
 		};
 

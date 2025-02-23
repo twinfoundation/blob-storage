@@ -26,9 +26,9 @@ export interface IBlobStorageCreateRequest {
 		fileExtension?: string;
 
 		/**
-		 * Custom annotation object to associate with the blob as JSON-LD.
+		 * Custom metadata to associate with the blob as JSON-LD.
 		 */
-		annotationObject?: IJsonLdNodeObject;
+		metadata?: IJsonLdNodeObject;
 
 		/**
 		 * The namespace to store the data in, defaults to component configured namespace.

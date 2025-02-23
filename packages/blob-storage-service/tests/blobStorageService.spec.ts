@@ -41,7 +41,7 @@ describe("blob-storage-service", () => {
 		expect(service).toBeDefined();
 	});
 
-	test("can add a file with no annotation", async () => {
+	test("can add a file with no metadata", async () => {
 		const service = new BlobStorageService({
 			config: { includeNodeIdentity: false, includeUserIdentity: false }
 		});
@@ -63,7 +63,7 @@ describe("blob-storage-service", () => {
 		});
 	});
 
-	test("can add a file with no annotation with userIdentity and nodeIdentity", async () => {
+	test("can add a file with no metadata with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -93,7 +93,7 @@ describe("blob-storage-service", () => {
 		});
 	});
 
-	test("can add a file with annotation with userIdentity and nodeIdentity", async () => {
+	test("can add a file with metadata with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -120,7 +120,7 @@ describe("blob-storage-service", () => {
 				encodingFormat: "text/plain",
 				nodeIdentity: "test-node-identity",
 				userIdentity: "test-user-identity",
-				annotationObject: {
+				metadata: {
 					"@context": "https://schema.org",
 					"@type": "CreativeWork",
 					name: "Test"
@@ -132,7 +132,7 @@ describe("blob-storage-service", () => {
 		});
 	});
 
-	test("can get a file with no annotation", async () => {
+	test("can get a file with no metadata", async () => {
 		const service = new BlobStorageService({
 			config: { includeNodeIdentity: false, includeUserIdentity: false }
 		});
@@ -158,7 +158,7 @@ describe("blob-storage-service", () => {
 		});
 	});
 
-	test("can get a file with no annotation with userIdentity and nodeIdentity", async () => {
+	test("can get a file with no metadata with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -190,7 +190,7 @@ describe("blob-storage-service", () => {
 		});
 	});
 
-	test("can get a file with annotation with userIdentity and nodeIdentity", async () => {
+	test("can get a file with metadata with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -223,14 +223,14 @@ describe("blob-storage-service", () => {
 			blobSize: 43,
 			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
-			annotationObject: {
+			metadata: {
 				type: "CreativeWork",
 				name: "Test"
 			}
 		});
 	});
 
-	test("can get a file annotation only with userIdentity and nodeIdentity", async () => {
+	test("can get a file metadata only with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -272,7 +272,7 @@ describe("blob-storage-service", () => {
 			encodingFormat: "text/plain",
 			blobSize: 43,
 			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
-			annotationObject: {
+			metadata: {
 				type: "Create",
 				actor: {
 					type: "Person",
@@ -288,7 +288,7 @@ describe("blob-storage-service", () => {
 		});
 	});
 
-	test("can update a file with annotation", async () => {
+	test("can update a file with metadata", async () => {
 		const service = new BlobStorageService({
 			config: { includeNodeIdentity: false, includeUserIdentity: false }
 		});
@@ -310,7 +310,7 @@ describe("blob-storage-service", () => {
 				encodingFormat: "text/plain",
 				blobSize: 43,
 				blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
-				annotationObject: {
+				metadata: {
 					"@context": "https://schema.org",
 					"@type": "CreativeWork",
 					name: "Test2"
@@ -319,7 +319,7 @@ describe("blob-storage-service", () => {
 		]);
 	});
 
-	test("can update a file with annotation with userIdentity and nodeIdentity", async () => {
+	test("can update a file with metadata with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -356,7 +356,7 @@ describe("blob-storage-service", () => {
 				blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 				nodeIdentity: "test-node-identity",
 				userIdentity: "test-user-identity",
-				annotationObject: {
+				metadata: {
 					"@context": "https://schema.org",
 					"@type": "CreativeWork",
 					name: "Test2"
@@ -365,7 +365,7 @@ describe("blob-storage-service", () => {
 		]);
 	});
 
-	test("can remove a file with annotation", async () => {
+	test("can remove a file with metadata", async () => {
 		const service = new BlobStorageService({
 			config: { includeNodeIdentity: false, includeUserIdentity: false }
 		});
@@ -382,7 +382,7 @@ describe("blob-storage-service", () => {
 		expect(blobStorage.getStore()).toEqual({});
 	});
 
-	test("can remove a file with annotation with userIdentity and nodeIdentity", async () => {
+	test("can remove a file with metadata with userIdentity and nodeIdentity", async () => {
 		const service = new BlobStorageService();
 		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
 		const data = Converter.bytesToBase64(dataBytes);
@@ -451,7 +451,7 @@ describe("blob-storage-service", () => {
 					blobSize: 44,
 					blobHash: "sha256:NbvGkswlxO2EF+sqeOuiYOprFmgwqMHiNqETHdBBxjI=",
 					fileExtension: "txt",
-					annotationObject: {
+					metadata: {
 						type: "Create",
 						actor: {
 							type: "Person1",
@@ -473,7 +473,7 @@ describe("blob-storage-service", () => {
 					blobSize: 44,
 					blobHash: "sha256:GZmYYH0v5kyebKxVIrpfYuqH4GCCIUEc/CtJlN5P72M=",
 					fileExtension: "txt",
-					annotationObject: {
+					metadata: {
 						type: "Create",
 						actor: {
 							type: "Person2",
@@ -495,7 +495,7 @@ describe("blob-storage-service", () => {
 					blobSize: 44,
 					blobHash: "sha256:KQR9O1bX5vPNrthf/VSdhrrfckHSRapmEC9Vaw4OCUY=",
 					fileExtension: "txt",
-					annotationObject: {
+					metadata: {
 						type: "Create",
 						actor: {
 							type: "Person0",

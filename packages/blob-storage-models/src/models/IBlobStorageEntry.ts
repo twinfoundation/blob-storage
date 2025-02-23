@@ -57,9 +57,9 @@ export interface IBlobStorageEntry {
 	fileExtension?: string;
 
 	/**
-	 * The annotation object for the blob as JSON-LD.
+	 * The metadata for the blob as JSON-LD.
 	 */
-	annotationObject?: IJsonLdNodeObject;
+	metadata?: IJsonLdNodeObject;
 
 	/**
 	 * The blob in base64 format, included if the includeContent flag was set in the request.
