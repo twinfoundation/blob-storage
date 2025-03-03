@@ -61,14 +61,7 @@
 			"description": "The blob in base64 format, included if the includeContent flag was set in the request."
 		}
 	},
-	"required": [
-		"@context",
-		"type",
-		"id",
-		"dateCreated",
-		"blobSize",
-		"blobHash"
-	],
+	"required": ["@context", "type", "id", "dateCreated", "blobSize", "blobHash"],
 	"additionalProperties": false,
 	"description": "Interface describing a blob storage entry."
 }
