@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	BlobStorageConnectorFactory,
+	BlobStorageContexts,
 	BlobStorageTypes,
 	type IBlobStorageComponent,
 	type IBlobStorageConnector,
@@ -33,7 +34,7 @@ import {
 	type IEntityStorageConnector
 } from "@twin.org/entity-storage-models";
 import { nameof } from "@twin.org/nameof";
-import { SchemaOrgDataTypes, SchemaOrgTypes } from "@twin.org/standards-schema-org";
+import { SchemaOrgContexts, SchemaOrgDataTypes } from "@twin.org/standards-schema-org";
 import {
 	VaultConnectorFactory,
 	VaultEncryptionType,
@@ -456,9 +457,9 @@ export class BlobStorageService implements IBlobStorageComponent {
 		}
 
 		let context: IBlobStorageEntryList["@context"] = [
-			BlobStorageTypes.ContextRoot,
-			BlobStorageTypes.ContextRootCommon,
-			SchemaOrgTypes.ContextRoot
+			BlobStorageContexts.ContextRoot,
+			BlobStorageContexts.ContextRootCommon,
+			SchemaOrgContexts.ContextRoot
 		];
 		const entriesJsonLd = [];
 
@@ -581,9 +582,9 @@ export class BlobStorageService implements IBlobStorageComponent {
 		const jsonLd: IBlobStorageEntry = {
 			"@context": JsonLdProcessor.combineContexts(
 				[
-					BlobStorageTypes.ContextRoot,
-					BlobStorageTypes.ContextRootCommon,
-					SchemaOrgTypes.ContextRoot
+					BlobStorageContexts.ContextRoot,
+					BlobStorageContexts.ContextRootCommon,
+					SchemaOrgContexts.ContextRoot
 				],
 				entry?.metadata?.["@context"]
 			) as IBlobStorageEntry["@context"],

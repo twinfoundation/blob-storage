@@ -11,6 +11,7 @@ import {
 	type ITag
 } from "@twin.org/api-models";
 import {
+	BlobStorageContexts,
 	BlobStorageTypes,
 	type IBlobStorageComponent,
 	type IBlobStorageCreateRequest,
@@ -25,7 +26,7 @@ import {
 } from "@twin.org/blob-storage-models";
 import { Coerce, ComponentFactory, Converter, Guards, Is, StringHelper } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
-import { SchemaOrgTypes } from "@twin.org/standards-schema-org";
+import { SchemaOrgContexts } from "@twin.org/standards-schema-org";
 import { HeaderTypes, HttpStatusCode, MimeTypeHelper, MimeTypes } from "@twin.org/web";
 
 /**
@@ -142,9 +143,9 @@ export function generateRestRoutesBlobStorage(
 						response: {
 							body: {
 								"@context": [
-									BlobStorageTypes.ContextRoot,
-									BlobStorageTypes.ContextRootCommon,
-									SchemaOrgTypes.ContextRoot
+									BlobStorageContexts.ContextRoot,
+									BlobStorageContexts.ContextRootCommon,
+									SchemaOrgContexts.ContextRoot
 								],
 								type: BlobStorageTypes.Entry,
 								id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
@@ -173,9 +174,9 @@ export function generateRestRoutesBlobStorage(
 						response: {
 							body: {
 								"@context": [
-									BlobStorageTypes.ContextRoot,
-									BlobStorageTypes.ContextRootCommon,
-									SchemaOrgTypes.ContextRoot
+									BlobStorageContexts.ContextRoot,
+									BlobStorageContexts.ContextRootCommon,
+									SchemaOrgContexts.ContextRoot
 								],
 								type: BlobStorageTypes.Entry,
 								id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
@@ -340,14 +341,17 @@ export function generateRestRoutesBlobStorage(
 						id: `${camelTypeName}ListResponseExample`,
 						response: {
 							body: {
-								"@context": [BlobStorageTypes.ContextRoot, BlobStorageTypes.ContextRootCommon],
+								"@context": [
+									BlobStorageContexts.ContextRoot,
+									BlobStorageContexts.ContextRootCommon
+								],
 								type: BlobStorageTypes.EntryList,
 								entries: [
 									{
 										"@context": [
-											BlobStorageTypes.ContextRoot,
-											BlobStorageTypes.ContextRootCommon,
-											SchemaOrgTypes.ContextRoot
+											BlobStorageContexts.ContextRoot,
+											BlobStorageContexts.ContextRootCommon,
+											SchemaOrgContexts.ContextRoot
 										],
 										type: BlobStorageTypes.Entry,
 										id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
@@ -378,14 +382,17 @@ export function generateRestRoutesBlobStorage(
 						id: `${camelTypeName}ListResponseJsonLdExample`,
 						response: {
 							body: {
-								"@context": [BlobStorageTypes.ContextRoot, BlobStorageTypes.ContextRootCommon],
+								"@context": [
+									BlobStorageContexts.ContextRoot,
+									BlobStorageContexts.ContextRootCommon
+								],
 								type: BlobStorageTypes.EntryList,
 								entries: [
 									{
 										"@context": [
-											BlobStorageTypes.ContextRoot,
-											BlobStorageTypes.ContextRootCommon,
-											SchemaOrgTypes.ContextRoot
+											BlobStorageContexts.ContextRoot,
+											BlobStorageContexts.ContextRootCommon,
+											SchemaOrgContexts.ContextRoot
 										],
 										type: BlobStorageTypes.Entry,
 										id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",

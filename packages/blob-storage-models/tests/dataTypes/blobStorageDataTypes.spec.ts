@@ -4,6 +4,7 @@ import type { IValidationFailure } from "@twin.org/core";
 import { DataTypeHelper } from "@twin.org/data-core";
 import { JsonLdDataTypes } from "@twin.org/data-json-ld";
 import { BlobStorageDataTypes } from "../../src/dataTypes/blobStorageDataTypes";
+import { BlobStorageContexts } from "../../src/models/blobStorageContexts";
 import { BlobStorageTypes } from "../../src/models/blobStorageTypes";
 
 describe("BlobStorageDataTypes", () => {
@@ -30,7 +31,7 @@ describe("BlobStorageDataTypes", () => {
 			"",
 			BlobStorageTypes.Entry,
 			{
-				"@context": [BlobStorageTypes.ContextRoot, BlobStorageTypes.ContextRootCommon],
+				"@context": [BlobStorageContexts.ContextRoot, BlobStorageContexts.ContextRootCommon],
 				type: BlobStorageTypes.Entry,
 				dateCreated: new Date().toISOString(),
 				id: "1111",
