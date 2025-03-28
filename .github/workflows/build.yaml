@@ -1,0 +1,80 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dist-all-packages:
+    runs-on: ubuntu-latest
+
+    # Add env vars for tests
+    env:
+      TEST_MNEMONIC: ${{ secrets.TEST_MNEMONIC }}
+      TEST_2_MNEMONIC: ${{ secrets.TEST_2_MNEMONIC }}
+      TEST_NODE_MNEMONIC: ${{ secrets.TEST_NODE_MNEMONIC }}
+
+    steps:
+      # Get the code
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Setup Node
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Setup any services required for tests here
+      - name: Start IPFS Kubo
+        run: |
+          docker run -d \
+            --name ipfs \
+            -p 4001:4001 \
+            -p 4001:4001/udp \
+            -p 8080:8080 \
+            -p 5001:5001 \
+            ipfs/kubo:latest
+
+      - name: Start LocalStack
+        run: |
+          docker run -d \
+            --name localstack \
+            -p 4566:4566 \
+            -p 4571:4571 \
+            -e AWS_DEFAULT_REGION=eu-central-1 \
+            -e AWS_ACCESS_KEY_ID=test \
+            -e AWS_SECRET_ACCESS_KEY=test \
+            -e SERVICES=s3 \
+            localstack/localstack:latest
+
+      - name: Start Azurite
+        run: |
+          docker run -d \
+            --name azurite \
+            -p 10000:10000 \
+            -e AZURITE_ACCOUNTS=testAccount:testKey \
+            mcr.microsoft.com/azure-storage/azurite:latest
+
+      - name: Start GCP Storage Emulator
+        run: |
+          docker run -d \
+            -p 4443:4443 \
+            --name gcp-storage-emulator \
+            fsouza/fake-gcs-server:latest \
+            -scheme http
+      # End setup for tests
+
+      # Run Lint and Dist
+      - name: Run Lint and Dist
+        run: |
+          npm run lint
+          npm run dist
