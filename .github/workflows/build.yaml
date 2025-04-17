@@ -72,7 +72,6 @@ jobs:
             fsouza/fake-gcs-server:latest \
             -scheme http
       # End setup for tests
-
       # Run Lint and Dist
       - name: Run Lint and Dist
         run: |
