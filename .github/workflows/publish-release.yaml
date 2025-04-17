@@ -132,7 +132,6 @@ jobs:
             fsouza/fake-gcs-server:latest \
             -scheme http
       # End setup for tests
-
       # Remove the root package.json to prevent dependency conflicts
       - name: Remove Mono-Repo Node Modules
         run: |
