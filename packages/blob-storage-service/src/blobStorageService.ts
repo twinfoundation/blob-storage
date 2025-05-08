@@ -34,7 +34,11 @@ import {
 	type IEntityStorageConnector
 } from "@twin.org/entity-storage-models";
 import { nameof } from "@twin.org/nameof";
-import { SchemaOrgContexts, SchemaOrgDataTypes } from "@twin.org/standards-schema-org";
+import {
+	SchemaOrgContexts,
+	SchemaOrgDataTypes,
+	SchemaOrgTypes
+} from "@twin.org/standards-schema-org";
 import {
 	VaultConnectorFactory,
 	VaultEncryptionType,
@@ -457,9 +461,9 @@ export class BlobStorageService implements IBlobStorageComponent {
 		}
 
 		let context: IBlobStorageEntryList["@context"] = [
+			SchemaOrgContexts.ContextRoot,
 			BlobStorageContexts.ContextRoot,
-			BlobStorageContexts.ContextRootCommon,
-			SchemaOrgContexts.ContextRoot
+			BlobStorageContexts.ContextRootCommon
 		];
 		const entriesJsonLd = [];
 
@@ -474,9 +478,9 @@ export class BlobStorageService implements IBlobStorageComponent {
 
 		const jsonLd: IBlobStorageEntryList = {
 			"@context": context,
-			type: BlobStorageTypes.EntryList,
-			entries: entriesJsonLd,
-			cursor: result.cursor
+			type: SchemaOrgTypes.ItemList,
+			[SchemaOrgTypes.ItemListElement]: entriesJsonLd,
+			[SchemaOrgTypes.NextItem]: result.cursor
 		};
 
 		return JsonLdProcessor.compact(jsonLd, jsonLd["@context"]);

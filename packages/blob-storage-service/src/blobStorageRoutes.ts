@@ -26,7 +26,7 @@ import {
 } from "@twin.org/blob-storage-models";
 import { Coerce, ComponentFactory, Converter, Guards, Is, StringHelper } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
-import { SchemaOrgContexts } from "@twin.org/standards-schema-org";
+import { SchemaOrgContexts, SchemaOrgTypes } from "@twin.org/standards-schema-org";
 import { HeaderTypes, HttpStatusCode, MimeTypeHelper, MimeTypes } from "@twin.org/web";
 
 /**
@@ -342,11 +342,12 @@ export function generateRestRoutesBlobStorage(
 						response: {
 							body: {
 								"@context": [
+									SchemaOrgContexts.ContextRoot,
 									BlobStorageContexts.ContextRoot,
 									BlobStorageContexts.ContextRootCommon
 								],
-								type: BlobStorageTypes.EntryList,
-								entries: [
+								type: SchemaOrgTypes.ItemList,
+								[SchemaOrgTypes.ItemListElement]: [
 									{
 										"@context": [
 											BlobStorageContexts.ContextRoot,
@@ -383,11 +384,12 @@ export function generateRestRoutesBlobStorage(
 						response: {
 							body: {
 								"@context": [
+									SchemaOrgContexts.ContextRoot,
 									BlobStorageContexts.ContextRoot,
 									BlobStorageContexts.ContextRootCommon
 								],
-								type: BlobStorageTypes.EntryList,
-								entries: [
+								type: SchemaOrgTypes.ItemList,
+								[SchemaOrgTypes.ItemListElement]: [
 									{
 										"@context": [
 											BlobStorageContexts.ContextRoot,

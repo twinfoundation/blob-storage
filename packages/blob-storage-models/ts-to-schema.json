@@ -1,7 +1,7 @@
 {
 	"baseUrl": "https://schema.twindev.org/blob-storage/",
 	"sources": ["./src/models/**/*.ts"],
-	"types": ["IBlobStorageEntry", "IBlobStorageEntryList"],
+	"types": ["IBlobStorageEntry"],
 	"externalReferences": {
 		"IJsonLd(.*)": "https://schema.twindev.org/json-ld/JsonLd$1"
 	}

@@ -436,13 +436,13 @@ describe("blob-storage-service", () => {
 
 		expect(entries).toEqual({
 			"@context": [
+				"https://schema.org",
 				"https://schema.twindev.org/blob-storage/",
 				"https://schema.twindev.org/common/",
-				"https://schema.org",
 				"https://www.w3.org/ns/activitystreams"
 			],
-			type: "BlobStorageEntryList",
-			entries: [
+			type: "ItemList",
+			itemListElement: [
 				{
 					id: "blob:memory:35bbc692cc25c4ed8417eb2a78eba260ea6b166830a8c1e236a1131dd041c632",
 					type: "BlobStorageEntry",

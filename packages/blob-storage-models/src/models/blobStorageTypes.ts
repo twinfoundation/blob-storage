@@ -9,12 +9,7 @@ export const BlobStorageTypes = {
 	/**
 	 * Represents blob storage entry.
 	 */
-	Entry: "BlobStorageEntry",
-
-	/**
-	 * Represents blob storage entry list.
-	 */
-	EntryList: "BlobStorageEntryList"
+	Entry: "BlobStorageEntry"
 } as const;
 
 /**
