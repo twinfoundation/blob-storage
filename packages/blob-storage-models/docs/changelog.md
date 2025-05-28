@@ -1,5 +1,12 @@
 # @twin.org/blob-storage-models - Changelog
 
+## [0.0.1-next.32](https://github.com/twinfoundation/blob-storage/compare/blob-storage-models-v0.0.1-next.31...blob-storage-models-v0.0.1-next.32) (2025-05-28)
+
+
+### Features
+
+* update to support fully qualified data type names ([3297d69](https://github.com/twinfoundation/blob-storage/commit/3297d69d332058b0f0141002087f56ba230620e1))
+
 ## [0.0.1-next.31](https://github.com/twinfoundation/blob-storage/compare/blob-storage-models-v0.0.1-next.30...blob-storage-models-v0.0.1-next.31) (2025-05-08)
 
 
