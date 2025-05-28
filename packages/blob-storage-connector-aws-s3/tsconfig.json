@@ -8,6 +8,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"stripInternal": true,
 		"noEmitHelpers": true,
+		"skipLibCheck": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"erasableSyntaxOnly": true,

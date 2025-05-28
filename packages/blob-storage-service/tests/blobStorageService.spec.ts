@@ -115,7 +115,7 @@ describe("blob-storage-service", () => {
 				id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 				blobSize: 43,
 				blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
-				dateCreated: "2024-08-22T11:55:16.271Z",
+				dateCreated: "2024-08-22T11:56:56.272Z",
 				fileExtension: "txt",
 				encodingFormat: "text/plain",
 				nodeIdentity: "test-node-identity",
@@ -218,7 +218,7 @@ describe("blob-storage-service", () => {
 			type: "BlobStorageEntry",
 			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 			fileExtension: "txt",
-			dateCreated: "2024-08-22T11:55:16.271Z",
+			dateCreated: "2024-08-22T11:56:56.272Z",
 			encodingFormat: "text/plain",
 			blobSize: 43,
 			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
@@ -268,7 +268,7 @@ describe("blob-storage-service", () => {
 			type: "BlobStorageEntry",
 			id: "blob:memory:d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592",
 			fileExtension: "txt",
-			dateCreated: "2024-08-22T11:55:16.271Z",
+			dateCreated: "2024-08-22T11:56:56.272Z",
 			encodingFormat: "text/plain",
 			blobSize: 43,
 			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
@@ -444,6 +444,28 @@ describe("blob-storage-service", () => {
 			type: "ItemList",
 			itemListElement: [
 				{
+					id: "blob:memory:29047d3b56d7e6f3cdaed85ffd549d86badf7241d245aa66102f556b0e0e0946",
+					type: "BlobStorageEntry",
+					dateCreated: "2024-08-22T11:56:56.272Z",
+					encodingFormat: "text/plain",
+					blobSize: 44,
+					blobHash: "sha256:KQR9O1bX5vPNrthf/VSdhrrfckHSRapmEC9Vaw4OCUY=",
+					fileExtension: "txt",
+					metadata: {
+						type: "Create",
+						actor: {
+							type: "Person0",
+							id: "acct:person@example.org",
+							name: "Person"
+						},
+						object: {
+							type: "Note",
+							content: "This is a simple note"
+						},
+						published: "2015-01-25T12:34:56Z"
+					}
+				},
+				{
 					id: "blob:memory:35bbc692cc25c4ed8417eb2a78eba260ea6b166830a8c1e236a1131dd041c632",
 					type: "BlobStorageEntry",
 					dateCreated: "2024-08-22T11:56:56.272Z",
@@ -477,28 +499,6 @@ describe("blob-storage-service", () => {
 						type: "Create",
 						actor: {
 							type: "Person2",
-							id: "acct:person@example.org",
-							name: "Person"
-						},
-						object: {
-							type: "Note",
-							content: "This is a simple note"
-						},
-						published: "2015-01-25T12:34:56Z"
-					}
-				},
-				{
-					id: "blob:memory:29047d3b56d7e6f3cdaed85ffd549d86badf7241d245aa66102f556b0e0e0946",
-					type: "BlobStorageEntry",
-					dateCreated: "2024-08-22T11:55:16.271Z",
-					encodingFormat: "text/plain",
-					blobSize: 44,
-					blobHash: "sha256:KQR9O1bX5vPNrthf/VSdhrrfckHSRapmEC9Vaw4OCUY=",
-					fileExtension: "txt",
-					metadata: {
-						type: "Create",
-						actor: {
-							type: "Person0",
 							id: "acct:person@example.org",
 							name: "Person"
 						},
