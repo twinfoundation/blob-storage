@@ -1,5 +1,19 @@
 # @twin.org/blob-storage-connector-ipfs - Changelog
 
+## [0.0.1-next.33](https://github.com/twinfoundation/blob-storage/compare/blob-storage-connector-ipfs-v0.0.1-next.32...blob-storage-connector-ipfs-v0.0.1-next.33) (2025-06-03)
+
+
+### Miscellaneous Chores
+
+* **blob-storage-connector-ipfs:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/blob-storage-models bumped from 0.0.1-next.32 to 0.0.1-next.33
+
 ## [0.0.1-next.32](https://github.com/twinfoundation/blob-storage/compare/blob-storage-connector-ipfs-v0.0.1-next.31...blob-storage-connector-ipfs-v0.0.1-next.32) (2025-05-28)
 
 
