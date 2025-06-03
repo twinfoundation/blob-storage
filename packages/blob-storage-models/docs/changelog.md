@@ -1,5 +1,12 @@
 # @twin.org/blob-storage-models - Changelog
 
+## [0.0.1-next.33](https://github.com/twinfoundation/blob-storage/compare/blob-storage-models-v0.0.1-next.32...blob-storage-models-v0.0.1-next.33) (2025-06-03)
+
+
+### Features
+
+* update ts-to-schema generation ([03439c7](https://github.com/twinfoundation/blob-storage/commit/03439c726108bf645941290e41824c57a6a23de3))
+
 ## [0.0.1-next.32](https://github.com/twinfoundation/blob-storage/compare/blob-storage-models-v0.0.1-next.31...blob-storage-models-v0.0.1-next.32) (2025-05-28)
 
 
