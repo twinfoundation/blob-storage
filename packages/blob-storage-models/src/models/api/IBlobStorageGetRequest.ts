@@ -31,6 +31,18 @@ export interface IBlobStorageGetRequest {
 		 * Include the content in the response, otherwise only metadata is returned.
 		 * @default false
 		 */
-		includeContent?: boolean;
+		includeContent?: string;
+
+		/**
+		 * Disables decryption if enabled by default.
+		 * @default false
+		 */
+		disableDecryption?: string;
+
+		/**
+		 * Use a different vault key id for decryption, if not provided the default vault key id will be used.
+		 * @default undefined
+		 */
+		overrideVaultKeyId?: string;
 	};
 }

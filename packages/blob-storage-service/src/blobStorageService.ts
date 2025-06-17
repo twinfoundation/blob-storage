@@ -85,7 +85,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 * The id of the vault key to use for encryption if the service has a vault connector configured.
 	 * @internal
 	 */
-	private readonly _vaultKeyId: string;
+	private readonly _vaultKeyId: string | undefined;
 
 	/**
 	 * Include the node identity when performing storage operations, defaults to true.
@@ -113,11 +113,11 @@ export class BlobStorageService implements IBlobStorageComponent {
 			options?.entryEntityStorageType ?? "blob-storage-entry"
 		);
 		if (Is.stringValue(options?.vaultConnectorType)) {
-			this._vaultConnector = VaultConnectorFactory.getIfExists(options.vaultConnectorType);
+			this._vaultConnector = VaultConnectorFactory.get(options.vaultConnectorType);
 		}
 
 		this._defaultNamespace = options?.config?.defaultNamespace ?? names[0];
-		this._vaultKeyId = options?.config?.vaultKeyId ?? "blob-storage";
+		this._vaultKeyId = options?.config?.vaultKeyId;
 		this._includeNodeIdentity = options?.config?.includeNodeIdentity ?? true;
 		this._includeUserIdentity = options?.config?.includeUserIdentity ?? true;
 
@@ -130,7 +130,10 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
 	 * @param fileExtension Extension for the blob, will be detected if left undefined.
 	 * @param metadata Data for the custom metadata as JSON-LD.
-	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
+	 * @param options Optional options for the creation of the blob.
+	 * @param options.disableEncryption Disables encryption if enabled by default.
+	 * @param options.overrideVaultKeyId Use a different vault key id for encryption, if not provided the default vault key id will be used.
+	 * @param options.namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns The id of the stored blob in urn format.
@@ -140,7 +143,11 @@ export class BlobStorageService implements IBlobStorageComponent {
 		encodingFormat?: string,
 		fileExtension?: string,
 		metadata?: IJsonLdNodeObject,
-		namespace?: string,
+		options?: {
+			disableEncryption?: boolean;
+			overrideVaultKeyId?: string;
+			namespace?: string;
+		},
 		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<string> {
@@ -148,12 +155,17 @@ export class BlobStorageService implements IBlobStorageComponent {
 		if (this._includeUserIdentity) {
 			Guards.stringValue(this.CLASS_NAME, nameof(userIdentity), userIdentity);
 		}
-		if (this._includeNodeIdentity || Is.notEmpty(this._vaultConnector)) {
+
+		const disableEncryption = options?.disableEncryption ?? false;
+		const vaultKeyId = options?.overrideVaultKeyId ?? this._vaultKeyId;
+		const encryptionEnabled = !disableEncryption && Is.stringValue(vaultKeyId);
+
+		if (this._includeNodeIdentity || encryptionEnabled) {
 			Guards.stringValue(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
 		}
 
 		try {
-			const connectorNamespace = namespace ?? this._defaultNamespace;
+			const connectorNamespace = options?.namespace ?? this._defaultNamespace;
 
 			const blobStorageConnector =
 				BlobStorageConnectorFactory.get<IBlobStorageConnector>(connectorNamespace);
@@ -182,9 +194,13 @@ export class BlobStorageService implements IBlobStorageComponent {
 			const blobHash = `sha256:${Converter.bytesToBase64(Sha256.sum256(storeBlob))}`;
 
 			// If we have a vault connector then encrypt the data.
-			if (this._vaultConnector) {
+
+			if (encryptionEnabled) {
+				if (Is.empty(this._vaultConnector)) {
+					throw new GeneralError(this.CLASS_NAME, "vaultConnectorNotConfigured");
+				}
 				storeBlob = await this._vaultConnector.encrypt(
-					`${nodeIdentity}/${this._vaultKeyId}`,
+					`${nodeIdentity}/${vaultKeyId}`,
 					VaultEncryptionType.ChaCha20Poly1305,
 					storeBlob
 				);
@@ -201,7 +217,8 @@ export class BlobStorageService implements IBlobStorageComponent {
 				blobHash,
 				encodingFormat,
 				fileExtension,
-				metadata
+				metadata,
+				isEncrypted: encryptionEnabled
 			};
 
 			const conditions: { property: keyof BlobStorageEntry; value: unknown }[] = [];
@@ -225,7 +242,10 @@ export class BlobStorageService implements IBlobStorageComponent {
 	/**
 	 * Get the blob entry.
 	 * @param id The id of the blob to get in urn format.
-	 * @param includeContent Include the content, or just get the metadata.
+	 * @param options Optional options for the retrieval of the blob.
+	 * @param options.includeContent Include the content, or just get the metadata.
+	 * @param options.disableDecryption Disables decryption if enabled by default.
+	 * @param options.overrideVaultKeyId Use a different vault key id for decryption, if not provided the default vault key id will be used.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns The entry and data for the blob if it can be found.
@@ -233,11 +253,20 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 */
 	public async get(
 		id: string,
-		includeContent: boolean,
+		options?: {
+			includeContent?: boolean;
+			disableDecryption?: boolean;
+			overrideVaultKeyId?: string;
+		},
 		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<IBlobStorageEntry> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
+
+		const includeContent = options?.includeContent ?? false;
+		const disableEncryption = options?.disableDecryption ?? false;
+		const vaultKeyId = options?.overrideVaultKeyId ?? this._vaultKeyId;
+		const decryptionEnabled = !disableEncryption && Is.stringValue(vaultKeyId);
 
 		const conditions: EntityCondition<BlobStorageEntry>[] = [];
 
@@ -270,9 +299,12 @@ export class BlobStorageService implements IBlobStorageComponent {
 				}
 
 				// If we have a vault connector then decrypt the data.
-				if (this._vaultConnector) {
+				if (decryptionEnabled) {
+					if (Is.empty(this._vaultConnector)) {
+						throw new GeneralError(this.CLASS_NAME, "vaultConnectorNotConfigured");
+					}
 					returnBlob = await this._vaultConnector.decrypt(
-						`${nodeIdentity}/${this._vaultKeyId}`,
+						`${nodeIdentity}/${vaultKeyId}`,
 						VaultEncryptionType.ChaCha20Poly1305,
 						returnBlob
 					);
@@ -335,7 +367,8 @@ export class BlobStorageService implements IBlobStorageComponent {
 				blobHash: blobEntry.blobHash,
 				encodingFormat: encodingFormat ?? blobEntry.encodingFormat,
 				fileExtension: fileExtension ?? blobEntry.fileExtension,
-				metadata: metadata ?? blobEntry.metadata
+				metadata: metadata ?? blobEntry.metadata,
+				isEncrypted: blobEntry.isEncrypted
 			};
 
 			const conditions: { property: keyof BlobStorageEntry; value: unknown }[] = [];

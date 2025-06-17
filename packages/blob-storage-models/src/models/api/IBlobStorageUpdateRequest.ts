@@ -34,5 +34,17 @@ export interface IBlobStorageUpdateRequest {
 		 * Custom metadata to associate with the blob as JSON-LD.
 		 */
 		metadata?: IJsonLdNodeObject;
+
+		/**
+		 * Disables encryption if enabled by default.
+		 * @default false
+		 */
+		disableEncryption?: boolean;
+
+		/**
+		 * Use a different vault key id for encryption, if not provided the default vault key id will be used.
+		 * @default undefined
+		 */
+		overrideVaultKeyId?: string;
 	};
 }

@@ -10,5 +10,8 @@
 		{
 			"packageRoot": "./"
 		}
-	]
+	],
+	"externalReferences": {
+		"IJsonLd(.*)": "https://schema.twindev.org/json-ld/JsonLd$1"
+	}
 }

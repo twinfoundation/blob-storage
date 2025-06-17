@@ -128,7 +128,7 @@ export function generateRestRoutesBlobStorage(
 							id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
 						},
 						query: {
-							includeContent: true
+							includeContent: "true"
 						}
 					}
 				}
@@ -223,7 +223,7 @@ export function generateRestRoutesBlobStorage(
 							id: "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
 						},
 						query: {
-							download: true,
+							download: "true",
 							filename: "my-file.pdf"
 						}
 					}
@@ -317,7 +317,7 @@ export function generateRestRoutesBlobStorage(
 	};
 
 	const blobStorageListRoute: IRestRoute<IBlobStorageListRequest, IBlobStorageListResponse> = {
-		operationId: `${camelTypeName}Get`,
+		operationId: `${camelTypeName}Query`,
 		summary: `Query the items from ${lowerName}`,
 		tag: options?.tagName ?? tagsBlobStorage[0].name,
 		method: "GET",
@@ -459,7 +459,11 @@ export async function blobStorageCreate(
 		request.body.encodingFormat,
 		request.body.fileExtension,
 		request.body.metadata,
-		request.body.namespace,
+		{
+			disableEncryption: request.body.disableEncryption,
+			overrideVaultKeyId: request.body.overrideVaultKeyId,
+			namespace: request.body.namespace
+		},
 		httpRequestContext.userIdentity,
 		httpRequestContext.nodeIdentity
 	);
@@ -498,7 +502,11 @@ export async function blobStorageGet(
 
 	const result = await component.get(
 		request.pathParams.id,
-		request.query?.includeContent ?? false,
+		{
+			includeContent: Coerce.boolean(request.query?.includeContent),
+			disableDecryption: Coerce.boolean(request.query?.disableDecryption),
+			overrideVaultKeyId: request.query?.overrideVaultKeyId
+		},
 		httpRequestContext.userIdentity,
 		httpRequestContext.nodeIdentity
 	);
@@ -535,7 +543,11 @@ export async function blobStorageGetContent(
 
 	const result = await component.get(
 		request.pathParams.id,
-		true,
+		{
+			includeContent: true,
+			disableDecryption: Coerce.boolean(request.query?.disableDecryption),
+			overrideVaultKeyId: request.query?.overrideVaultKeyId
+		},
 		httpRequestContext.userIdentity,
 		httpRequestContext.nodeIdentity
 	);

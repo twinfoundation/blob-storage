@@ -6,8 +6,7 @@
  */
 export interface IBlobStorageServiceConfig {
 	/**
-	 * The name of the vault key to use for encryption if the service has a vault connector configured.
-	 * @default blob-storage.
+	 * The name of the vault key to use for encryption, if not configured no encryption will happen.
 	 */
 	vaultKeyId?: string;
 

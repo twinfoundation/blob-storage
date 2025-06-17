@@ -53,6 +53,11 @@ export interface IBlobStorageEntry {
 	encodingFormat?: string;
 
 	/**
+	 * Indicates if the blob is encrypted.
+	 */
+	isEncrypted?: boolean;
+
+	/**
 	 * The extension.
 	 */
 	fileExtension?: string;

@@ -19,7 +19,7 @@ import type {
 	IBlobStorageRemoveRequest,
 	IBlobStorageUpdateRequest
 } from "@twin.org/blob-storage-models";
-import { Guards, Is, StringHelper, Urn } from "@twin.org/core";
+import { Coerce, Guards, Is, StringHelper, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { EntityCondition, SortDirection } from "@twin.org/entity";
 import { nameof } from "@twin.org/nameof";
@@ -54,7 +54,10 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
 	 * @param fileExtension Extension for the blob, will be detected if left undefined.
 	 * @param metadata Data for the custom metadata as JSON-LD.
-	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
+	 * @param options Optional options for the creation of the blob.
+	 * @param options.disableEncryption Disables encryption if enabled by default.
+	 * @param options.overrideVaultKeyId Use a different vault key id for encryption, if not provided the default vault key id will be used.
+	 * @param options.namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @returns The id of the stored blob in urn format.
 	 */
 	public async create(
@@ -62,7 +65,11 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 		encodingFormat?: string,
 		fileExtension?: string,
 		metadata?: IJsonLdNodeObject,
-		namespace?: string
+		options?: {
+			disableEncryption?: boolean;
+			overrideVaultKeyId?: string;
+			namespace?: string;
+		}
 	): Promise<string> {
 		Guards.stringBase64(this.CLASS_NAME, nameof(blob), blob);
 
@@ -72,7 +79,9 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 				encodingFormat,
 				fileExtension,
 				metadata,
-				namespace
+				disableEncryption: options?.disableEncryption,
+				overrideVaultKeyId: options?.overrideVaultKeyId,
+				namespace: options?.namespace
 			}
 		});
 
@@ -82,11 +91,21 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	/**
 	 * Get the blob and metadata.
 	 * @param id The id of the blob to get in urn format.
-	 * @param includeContent Include the content, or just get the metadata.
+	 * @param options Optional options for the retrieval of the blob.
+	 * @param options.includeContent Include the content, or just get the metadata.
+	 * @param options.disableDecryption Disables decryption if enabled by default.
+	 * @param options.overrideVaultKeyId Use a different vault key id for decryption, if not provided the default vault key id will be used.
 	 * @returns The metadata and data for the blob if it can be found.
 	 * @throws Not found error if the blob cannot be found.
 	 */
-	public async get(id: string, includeContent: boolean): Promise<IBlobStorageEntry> {
+	public async get(
+		id: string,
+		options?: {
+			includeContent?: boolean;
+			disableDecryption?: boolean;
+			overrideVaultKeyId?: string;
+		}
+	): Promise<IBlobStorageEntry> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		const response = await this.fetch<IBlobStorageGetRequest, IBlobStorageGetResponse>(
@@ -100,7 +119,9 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 					id
 				},
 				query: {
-					includeContent
+					includeContent: Coerce.string(options?.includeContent),
+					disableDecryption: Coerce.string(options?.disableDecryption),
+					overrideVaultKeyId: options?.overrideVaultKeyId
 				}
 			}
 		);

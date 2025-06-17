@@ -16,7 +16,10 @@ export interface IBlobStorageComponent extends IComponent {
 	 * @param encodingFormat Mime type for the blob, will be detected if left undefined.
 	 * @param fileExtension Extension for the blob, will be detected if left undefined.
 	 * @param metadata Data for the custom metadata as JSON-LD.
-	 * @param namespace The namespace to use for storing, defaults to component configured namespace.
+	 * @param options Optional options for the creation of the blob.
+	 * @param options.disableEncryption Disables encryption if enabled by default.
+	 * @param options.overrideVaultKeyId Use a different vault key id for encryption, if not provided the default vault key id will be used.
+	 * @param options.namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns The id of the stored blob in urn format.
@@ -26,7 +29,11 @@ export interface IBlobStorageComponent extends IComponent {
 		encodingFormat?: string,
 		fileExtension?: string,
 		metadata?: IJsonLdNodeObject,
-		namespace?: string,
+		options?: {
+			disableEncryption?: boolean;
+			overrideVaultKeyId?: string;
+			namespace?: string;
+		},
 		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<string>;
@@ -34,7 +41,10 @@ export interface IBlobStorageComponent extends IComponent {
 	/**
 	 * Get the blob and metadata.
 	 * @param id The id of the blob to get in urn format.
-	 * @param includeContent Include the content, or just get the metadata.
+	 * @param options Optional options for the retrieval of the blob.
+	 * @param options.includeContent Include the content, or just get the metadata.
+	 * @param options.disableDecryption Disables decryption if enabled by default.
+	 * @param options.overrideVaultKeyId Use a different vault key id for decryption, if not provided the default vault key id will be used.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns The data and metadata for the blob if it can be found.
@@ -42,7 +52,11 @@ export interface IBlobStorageComponent extends IComponent {
 	 */
 	get(
 		id: string,
-		includeContent: boolean,
+		options?: {
+			includeContent?: boolean;
+			disableDecryption?: boolean;
+			overrideVaultKeyId?: string;
+		},
 		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<IBlobStorageEntry>;

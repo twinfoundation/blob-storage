@@ -31,6 +31,18 @@ export interface IBlobStorageCreateRequest {
 		metadata?: IJsonLdNodeObject;
 
 		/**
+		 * Disables encryption if enabled by default.
+		 * @default false
+		 */
+		disableEncryption?: boolean;
+
+		/**
+		 * Use a different vault key id for encryption, if not provided the default vault key id will be used.
+		 * @default undefined
+		 */
+		overrideVaultKeyId?: string;
+
+		/**
 		 * The namespace to store the data in, defaults to component configured namespace.
 		 */
 		namespace?: string;

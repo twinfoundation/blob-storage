@@ -62,6 +62,12 @@ export class BlobStorageEntry {
 	public metadata?: IJsonLdNodeObject;
 
 	/**
+	 * Is the entry encrypted.
+	 */
+	@property({ type: "boolean" })
+	public isEncrypted!: boolean;
+
+	/**
 	 * The user identity that created the blob.
 	 */
 	@property({ type: "string", optional: true })
