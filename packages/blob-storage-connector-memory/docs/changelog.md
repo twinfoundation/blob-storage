@@ -1,5 +1,19 @@
 # @twin.org/blob-storage-connector-memory - Changelog
 
+## [0.0.1-next.35](https://github.com/twinfoundation/blob-storage/compare/blob-storage-connector-memory-v0.0.1-next.34...blob-storage-connector-memory-v0.0.1-next.35) (2025-06-17)
+
+
+### Miscellaneous Chores
+
+* **blob-storage-connector-memory:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/blob-storage-models bumped from 0.0.1-next.34 to 0.0.1-next.35
+
 ## [0.0.1-next.34](https://github.com/twinfoundation/blob-storage/compare/blob-storage-connector-memory-v0.0.1-next.33...blob-storage-connector-memory-v0.0.1-next.34) (2025-06-12)
 
 
