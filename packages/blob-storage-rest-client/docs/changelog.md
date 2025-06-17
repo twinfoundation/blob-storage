@@ -1,5 +1,19 @@
 # @twin.org/blob-storage-rest-client - Changelog
 
+## [0.0.1-next.35](https://github.com/twinfoundation/blob-storage/compare/blob-storage-rest-client-v0.0.1-next.34...blob-storage-rest-client-v0.0.1-next.35) (2025-06-17)
+
+
+### Features
+
+* additional encryption options on per item basis ([4b95a65](https://github.com/twinfoundation/blob-storage/commit/4b95a656d19e3b571cea905e36f29b679b13e1e8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/blob-storage-models bumped from 0.0.1-next.34 to 0.0.1-next.35
+
 ## [0.0.1-next.34](https://github.com/twinfoundation/blob-storage/compare/blob-storage-rest-client-v0.0.1-next.33...blob-storage-rest-client-v0.0.1-next.34) (2025-06-12)
 
 
