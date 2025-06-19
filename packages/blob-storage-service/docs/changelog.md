@@ -1,5 +1,21 @@
 # @twin.org/blob-storage-service - Changelog
 
+## [0.0.1-next.36](https://github.com/twinfoundation/blob-storage/compare/blob-storage-service-v0.0.1-next.35...blob-storage-service-v0.0.1-next.36) (2025-06-19)
+
+
+### Features
+
+* add compression support ([67d239b](https://github.com/twinfoundation/blob-storage/commit/67d239bca8321bd90bf4ff93167c564130309730))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/blob-storage-models bumped from 0.0.1-next.35 to 0.0.1-next.36
+  * devDependencies
+    * @twin.org/blob-storage-connector-memory bumped from 0.0.1-next.35 to 0.0.1-next.36
+
 ## [0.0.1-next.35](https://github.com/twinfoundation/blob-storage/compare/blob-storage-service-v0.0.1-next.34...blob-storage-service-v0.0.1-next.35) (2025-06-17)
 
 
