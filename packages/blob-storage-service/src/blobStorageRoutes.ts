@@ -11,6 +11,7 @@ import {
 	type ITag
 } from "@twin.org/api-models";
 import {
+	BlobStorageCompressionType,
 	BlobStorageContexts,
 	BlobStorageTypes,
 	type IBlobStorageComponent,
@@ -504,7 +505,7 @@ export async function blobStorageGet(
 		request.pathParams.id,
 		{
 			includeContent: Coerce.boolean(request.query?.includeContent),
-			disableDecryption: Coerce.boolean(request.query?.disableDecryption),
+			decompress: Coerce.boolean(request.query?.decompress),
 			overrideVaultKeyId: request.query?.overrideVaultKeyId
 		},
 		httpRequestContext.userIdentity,
@@ -541,11 +542,13 @@ export async function blobStorageGetContent(
 
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
+	const decompress = Coerce.boolean(request.query?.decompress);
+
 	const result = await component.get(
 		request.pathParams.id,
 		{
 			includeContent: true,
-			disableDecryption: Coerce.boolean(request.query?.disableDecryption),
+			decompress,
 			overrideVaultKeyId: request.query?.overrideVaultKeyId
 		},
 		httpRequestContext.userIdentity,
@@ -553,15 +556,27 @@ export async function blobStorageGetContent(
 	);
 
 	const encodingFormat = result?.encodingFormat ?? MimeTypes.OctetStream;
+	let compressedEncodingFormat: MimeTypes | undefined;
+	let compressedExtension: string = "";
+
+	// If the entry is compressed and we are not decompressing
+	// we need to override the encoding format to the compressed type
+	// and append an additional extension to the filename.
+	if (result.compression && !decompress) {
+		compressedEncodingFormat =
+			result.compression === BlobStorageCompressionType.Gzip ? MimeTypes.Gzip : MimeTypes.Zlib;
+		compressedExtension = `.${MimeTypeHelper.defaultExtension(compressedEncodingFormat)}`;
+	}
+
 	let filename = request.query?.filename;
 	if (!Is.stringValue(filename)) {
-		filename = `file.${result.fileExtension ?? MimeTypeHelper.defaultExtension(encodingFormat)}`;
+		filename = `file.${result.fileExtension ?? MimeTypeHelper.defaultExtension(encodingFormat)}${compressedExtension}`;
 	}
 
 	return {
 		body: Is.stringBase64(result.blob) ? Converter.base64ToBytes(result.blob) : new Uint8Array(),
 		attachment: {
-			mimeType: encodingFormat,
+			mimeType: compressedEncodingFormat ?? encodingFormat,
 			filename,
 			inline: !(request.query?.download ?? false)
 		}

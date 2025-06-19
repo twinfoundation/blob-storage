@@ -9,7 +9,12 @@ export const BlobStorageTypes = {
 	/**
 	 * Represents blob storage entry.
 	 */
-	Entry: "BlobStorageEntry"
+	Entry: "BlobStorageEntry",
+
+	/**
+	 * Represents blob storage entry compression.
+	 */
+	CompressionType: "BlobStorageCompressionType"
 } as const;
 
 /**

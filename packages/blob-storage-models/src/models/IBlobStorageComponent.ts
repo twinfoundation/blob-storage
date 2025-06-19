@@ -3,6 +3,7 @@
 import type { IComponent } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { EntityCondition, SortDirection } from "@twin.org/entity";
+import type { BlobStorageCompressionType } from "./blobStorageCompressionType";
 import type { IBlobStorageEntry } from "./IBlobStorageEntry";
 import type { IBlobStorageEntryList } from "./IBlobStorageEntryList";
 
@@ -19,6 +20,7 @@ export interface IBlobStorageComponent extends IComponent {
 	 * @param options Optional options for the creation of the blob.
 	 * @param options.disableEncryption Disables encryption if enabled by default.
 	 * @param options.overrideVaultKeyId Use a different vault key id for encryption, if not provided the default vault key id will be used.
+	 * @param options.compress Optional compression type to use for the blob, defaults to no compression.
 	 * @param options.namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
@@ -32,6 +34,7 @@ export interface IBlobStorageComponent extends IComponent {
 		options?: {
 			disableEncryption?: boolean;
 			overrideVaultKeyId?: string;
+			compress?: BlobStorageCompressionType;
 			namespace?: string;
 		},
 		userIdentity?: string,
@@ -43,8 +46,8 @@ export interface IBlobStorageComponent extends IComponent {
 	 * @param id The id of the blob to get in urn format.
 	 * @param options Optional options for the retrieval of the blob.
 	 * @param options.includeContent Include the content, or just get the metadata.
-	 * @param options.disableDecryption Disables decryption if enabled by default.
 	 * @param options.overrideVaultKeyId Use a different vault key id for decryption, if not provided the default vault key id will be used.
+	 * @param options.decompress If the content should be decompressed, if it was compressed when stored, defaults to true.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns The data and metadata for the blob if it can be found.
@@ -54,7 +57,7 @@ export interface IBlobStorageComponent extends IComponent {
 		id: string,
 		options?: {
 			includeContent?: boolean;
-			disableDecryption?: boolean;
+			decompress?: boolean;
 			overrideVaultKeyId?: string;
 		},
 		userIdentity?: string,

@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import {
+	type BlobStorageCompressionType,
 	BlobStorageConnectorFactory,
 	BlobStorageContexts,
 	BlobStorageTypes,
@@ -10,6 +11,7 @@ import {
 	type IBlobStorageEntryList
 } from "@twin.org/blob-storage-models";
 import {
+	Compression,
 	Converter,
 	GeneralError,
 	Guards,
@@ -133,6 +135,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 * @param options Optional options for the creation of the blob.
 	 * @param options.disableEncryption Disables encryption if enabled by default.
 	 * @param options.overrideVaultKeyId Use a different vault key id for encryption, if not provided the default vault key id will be used.
+	 * @param options.compress Optional compression type to use for the blob, defaults to no compression.*
 	 * @param options.namespace The namespace to use for storing, defaults to component configured namespace.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
@@ -146,6 +149,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 		options?: {
 			disableEncryption?: boolean;
 			overrideVaultKeyId?: string;
+			compress?: BlobStorageCompressionType;
 			namespace?: string;
 		},
 		userIdentity?: string,
@@ -193,8 +197,11 @@ export class BlobStorageService implements IBlobStorageComponent {
 
 			const blobHash = `sha256:${Converter.bytesToBase64(Sha256.sum256(storeBlob))}`;
 
-			// If we have a vault connector then encrypt the data.
+			if (!Is.empty(options?.compress)) {
+				storeBlob = await Compression.compress(storeBlob, options.compress);
+			}
 
+			// If we have a vault connector then encrypt the data.
 			if (encryptionEnabled) {
 				if (Is.empty(this._vaultConnector)) {
 					throw new GeneralError(this.CLASS_NAME, "vaultConnectorNotConfigured");
@@ -218,7 +225,8 @@ export class BlobStorageService implements IBlobStorageComponent {
 				encodingFormat,
 				fileExtension,
 				metadata,
-				isEncrypted: encryptionEnabled
+				isEncrypted: encryptionEnabled,
+				compression: options?.compress
 			};
 
 			const conditions: { property: keyof BlobStorageEntry; value: unknown }[] = [];
@@ -244,8 +252,8 @@ export class BlobStorageService implements IBlobStorageComponent {
 	 * @param id The id of the blob to get in urn format.
 	 * @param options Optional options for the retrieval of the blob.
 	 * @param options.includeContent Include the content, or just get the metadata.
-	 * @param options.disableDecryption Disables decryption if enabled by default.
 	 * @param options.overrideVaultKeyId Use a different vault key id for decryption, if not provided the default vault key id will be used.
+	 * @param options.decompress If the content should be decompressed, if it was compressed when stored, defaults to true.
 	 * @param userIdentity The user identity to use with storage operations.
 	 * @param nodeIdentity The node identity to use with storage operations.
 	 * @returns The entry and data for the blob if it can be found.
@@ -255,7 +263,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 		id: string,
 		options?: {
 			includeContent?: boolean;
-			disableDecryption?: boolean;
+			decompress?: boolean;
 			overrideVaultKeyId?: string;
 		},
 		userIdentity?: string,
@@ -264,9 +272,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		const includeContent = options?.includeContent ?? false;
-		const disableEncryption = options?.disableDecryption ?? false;
 		const vaultKeyId = options?.overrideVaultKeyId ?? this._vaultKeyId;
-		const decryptionEnabled = !disableEncryption && Is.stringValue(vaultKeyId);
 
 		const conditions: EntityCondition<BlobStorageEntry>[] = [];
 
@@ -298,7 +304,8 @@ export class BlobStorageService implements IBlobStorageComponent {
 					throw new NotFoundError(this.CLASS_NAME, "blobNotFound", id);
 				}
 
-				// If we have a vault connector then decrypt the data.
+				// If the data is encrypted then decrypt it.
+				const decryptionEnabled = blobEntry.isEncrypted && Is.stringValue(vaultKeyId);
 				if (decryptionEnabled) {
 					if (Is.empty(this._vaultConnector)) {
 						throw new GeneralError(this.CLASS_NAME, "vaultConnectorNotConfigured");
@@ -308,6 +315,10 @@ export class BlobStorageService implements IBlobStorageComponent {
 						VaultEncryptionType.ChaCha20Poly1305,
 						returnBlob
 					);
+				}
+
+				if (!Is.empty(blobEntry.compression) && (options?.decompress ?? true)) {
+					returnBlob = await Compression.decompress(returnBlob, blobEntry.compression);
 				}
 			}
 
@@ -368,7 +379,8 @@ export class BlobStorageService implements IBlobStorageComponent {
 				encodingFormat: encodingFormat ?? blobEntry.encodingFormat,
 				fileExtension: fileExtension ?? blobEntry.fileExtension,
 				metadata: metadata ?? blobEntry.metadata,
-				isEncrypted: blobEntry.isEncrypted
+				isEncrypted: blobEntry.isEncrypted,
+				compression: blobEntry.compression
 			};
 
 			const conditions: { property: keyof BlobStorageEntry; value: unknown }[] = [];
@@ -488,11 +500,6 @@ export class BlobStorageService implements IBlobStorageComponent {
 			pageSize
 		);
 
-		for (const entity of result.entities) {
-			ObjectHelper.propertyDelete(entity, "nodeIdentity");
-			ObjectHelper.propertyDelete(entity, "userIdentity");
-		}
-
 		let context: IBlobStorageEntryList["@context"] = [
 			SchemaOrgContexts.ContextRoot,
 			BlobStorageContexts.ContextRoot,
@@ -602,10 +609,7 @@ export class BlobStorageService implements IBlobStorageComponent {
 			throw new NotFoundError(this.CLASS_NAME, "entityNotFound", id);
 		}
 
-		ObjectHelper.propertyDelete(entity, "nodeIdentity");
-		ObjectHelper.propertyDelete(entity, "userIdentity");
-
-		return entity;
+		return ObjectHelper.omit(entity, ["nodeIdentity", "userIdentity"]) as BlobStorageEntry;
 	}
 
 	/**
@@ -634,7 +638,9 @@ export class BlobStorageService implements IBlobStorageComponent {
 			encodingFormat: entry?.encodingFormat,
 			fileExtension: entry?.fileExtension,
 			metadata: entry?.metadata,
-			blob: Is.uint8Array(blob) ? Converter.bytesToBase64(blob) : undefined
+			blob: Is.uint8Array(blob) ? Converter.bytesToBase64(blob) : undefined,
+			isEncrypted: entry.isEncrypted,
+			compression: entry.compression
 		};
 
 		return jsonLd;

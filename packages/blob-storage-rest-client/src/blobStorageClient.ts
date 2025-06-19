@@ -93,8 +93,8 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 	 * @param id The id of the blob to get in urn format.
 	 * @param options Optional options for the retrieval of the blob.
 	 * @param options.includeContent Include the content, or just get the metadata.
-	 * @param options.disableDecryption Disables decryption if enabled by default.
 	 * @param options.overrideVaultKeyId Use a different vault key id for decryption, if not provided the default vault key id will be used.
+	 * @param options.decompress If the content should be decompressed, if it was compressed when stored, defaults to true.
 	 * @returns The metadata and data for the blob if it can be found.
 	 * @throws Not found error if the blob cannot be found.
 	 */
@@ -102,7 +102,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 		id: string,
 		options?: {
 			includeContent?: boolean;
-			disableDecryption?: boolean;
+			decompress?: boolean;
 			overrideVaultKeyId?: string;
 		}
 	): Promise<IBlobStorageEntry> {
@@ -120,7 +120,7 @@ export class BlobStorageClient extends BaseRestClient implements IBlobStorageCom
 				},
 				query: {
 					includeContent: Coerce.string(options?.includeContent),
-					disableDecryption: Coerce.string(options?.disableDecryption),
+					decompress: Coerce.string(options?.decompress),
 					overrideVaultKeyId: options?.overrideVaultKeyId
 				}
 			}

@@ -11,6 +11,7 @@ export * from "./models/api/IBlobStorageListRequest";
 export * from "./models/api/IBlobStorageListResponse";
 export * from "./models/api/IBlobStorageRemoveRequest";
 export * from "./models/api/IBlobStorageUpdateRequest";
+export * from "./models/blobStorageCompressionType";
 export * from "./models/blobStorageContexts";
 export * from "./models/blobStorageTypes";
 export * from "./models/IBlobStorageComponent";

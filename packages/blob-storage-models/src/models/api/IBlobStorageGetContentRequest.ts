@@ -20,10 +20,10 @@ export interface IBlobStorageGetContentRequest {
 	 */
 	query?: {
 		/**
-		 * Disables decryption if enabled by default.
-		 * @default false
+		 * If the content should be decompressed, if it was compressed when stored, defaults to true.
+		 * @default true
 		 */
-		disableDecryption?: string;
+		decompress?: string;
 
 		/**
 		 * Use a different vault key id for decryption, if not provided the default vault key id will be used.

@@ -24,16 +24,16 @@ The id of the blob to get in urn format.
 
 The query parameters.
 
-#### disableDecryption?
+#### decompress?
 
-> `optional` **disableDecryption**: `string`
+> `optional` **decompress**: `string`
 
-Disables decryption if enabled by default.
+If the content should be decompressed, if it was compressed when stored, defaults to true.
 
 ##### Default
 
 ```ts
-false
+true
 ```
 
 #### overrideVaultKeyId?

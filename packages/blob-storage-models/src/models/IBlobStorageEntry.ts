@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IJsonLdContextDefinitionElement, IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import type { BlobStorageCompressionType } from "./blobStorageCompressionType";
 import type { BlobStorageContexts } from "./blobStorageContexts";
 import type { BlobStorageTypes } from "./blobStorageTypes";
 
@@ -56,6 +57,11 @@ export interface IBlobStorageEntry {
 	 * Indicates if the blob is encrypted.
 	 */
 	isEncrypted?: boolean;
+
+	/**
+	 * The type of compression used for the blob, if not set it is not stored with compression.
+	 */
+	compression?: BlobStorageCompressionType;
 
 	/**
 	 * The extension.

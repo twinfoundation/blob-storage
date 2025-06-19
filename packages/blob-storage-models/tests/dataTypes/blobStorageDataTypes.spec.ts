@@ -21,6 +21,7 @@ describe("BlobStorageDataTypes", () => {
 			{},
 			validationFailures
 		);
+
 		expect(validationFailures.length).toEqual(1);
 		expect(isValid).toEqual(false);
 	});

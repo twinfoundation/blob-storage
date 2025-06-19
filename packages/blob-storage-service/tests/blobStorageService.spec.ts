@@ -1,7 +1,10 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { MemoryBlobStorageConnector } from "@twin.org/blob-storage-connector-memory";
-import { BlobStorageConnectorFactory } from "@twin.org/blob-storage-models";
+import {
+	BlobStorageCompressionType,
+	BlobStorageConnectorFactory
+} from "@twin.org/blob-storage-models";
 import { Converter } from "@twin.org/core";
 import { EntitySchemaFactory, EntitySchemaHelper } from "@twin.org/entity";
 import { MemoryEntityStorageConnector } from "@twin.org/entity-storage-connector-memory";
@@ -166,7 +169,8 @@ describe("blob-storage-service", () => {
 			dateCreated: "2024-08-22T11:55:16.271Z",
 			fileExtension: "txt",
 			encodingFormat: "text/plain",
-			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
+			isEncrypted: false
 		});
 	});
 
@@ -203,7 +207,8 @@ describe("blob-storage-service", () => {
 			encodingFormat: "text/plain",
 			blobSize: 43,
 			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
-			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
+			isEncrypted: false
 		});
 	});
 
@@ -245,6 +250,7 @@ describe("blob-storage-service", () => {
 			blobSize: 43,
 			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
 			blob: "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
+			isEncrypted: false,
 			metadata: {
 				type: "CreativeWork",
 				name: "Test"
@@ -294,6 +300,7 @@ describe("blob-storage-service", () => {
 			encodingFormat: "text/plain",
 			blobSize: 43,
 			blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
+			isEncrypted: false,
 			metadata: {
 				type: "Create",
 				actor: {
@@ -475,6 +482,7 @@ describe("blob-storage-service", () => {
 					blobSize: 44,
 					blobHash: "sha256:KQR9O1bX5vPNrthf/VSdhrrfckHSRapmEC9Vaw4OCUY=",
 					fileExtension: "txt",
+					isEncrypted: false,
 					metadata: {
 						type: "Create",
 						actor: {
@@ -497,6 +505,7 @@ describe("blob-storage-service", () => {
 					blobSize: 44,
 					blobHash: "sha256:NbvGkswlxO2EF+sqeOuiYOprFmgwqMHiNqETHdBBxjI=",
 					fileExtension: "txt",
+					isEncrypted: false,
 					metadata: {
 						type: "Create",
 						actor: {
@@ -519,6 +528,7 @@ describe("blob-storage-service", () => {
 					blobSize: 44,
 					blobHash: "sha256:GZmYYH0v5kyebKxVIrpfYuqH4GCCIUEc/CtJlN5P72M=",
 					fileExtension: "txt",
+					isEncrypted: false,
 					metadata: {
 						type: "Create",
 						actor: {
@@ -676,7 +686,7 @@ describe("blob-storage-service", () => {
 
 		const decryptedData = await service.get(
 			result,
-			{ includeContent: true, disableDecryption: true },
+			{ includeContent: true },
 			TEST_USER_IDENTITY,
 			TEST_NODE_IDENTITY
 		);
@@ -743,6 +753,60 @@ describe("blob-storage-service", () => {
 			TEST_NODE_IDENTITY
 		);
 		expect(Converter.base64ToBytes(decryptedData.blob ?? "")).toEqual(
+			Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog")
+		);
+	});
+
+	test("can add a file with compression", async () => {
+		const service = new BlobStorageService({
+			config: {}
+		});
+		const dataBytes = Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog");
+		const data = Converter.bytesToBase64(dataBytes);
+		const result = await service.create(
+			data,
+			undefined,
+			undefined,
+			undefined,
+			{
+				compress: BlobStorageCompressionType.Gzip
+			},
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+		expect(entityStorage.getStore()).toEqual([
+			{
+				id: result,
+				blobSize: 43,
+				blobHash: "sha256:16j7swfXgJRpypq8sAguT41WUeRtPNt2LQLQvzfJ5ZI=",
+				dateCreated: "2024-08-22T11:56:56.272Z",
+				fileExtension: "txt",
+				encodingFormat: "text/plain",
+				isEncrypted: false,
+				compression: BlobStorageCompressionType.Gzip,
+				nodeIdentity: "test-node-identity",
+				userIdentity: "test-user-identity"
+			}
+		]);
+
+		const compressedData = await service.get(
+			result,
+			{ includeContent: true, decompress: false },
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+		// Should still be compressed
+		expect(compressedData.blob ?? "").toEqual(
+			"H4sIAAAAAAAAAwvJSFUoLM1MzlZIKsovz1NIy69QyCrNLShWyC9LLVIoyUhVyEmsqlRIyU8HADmjT0ErAAAA"
+		);
+
+		const uncompressedData = await service.get(
+			result,
+			{ includeContent: true },
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+		expect(Converter.base64ToBytes(uncompressedData.blob ?? "")).toEqual(
 			Converter.utf8ToBytes("The quick brown fox jumps over the lazy dog")
 		);
 	});

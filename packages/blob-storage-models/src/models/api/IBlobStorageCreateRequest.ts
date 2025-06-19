@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import type { BlobStorageCompressionType } from "../blobStorageCompressionType";
 
 /**
  * Request to create an entry in blob storage.
@@ -35,6 +36,11 @@ export interface IBlobStorageCreateRequest {
 		 * @default false
 		 */
 		disableEncryption?: boolean;
+
+		/**
+		 * Optional compression type to use for the blob, defaults to no compression.
+		 */
+		compress?: BlobStorageCompressionType;
 
 		/**
 		 * Use a different vault key id for encryption, if not provided the default vault key id will be used.

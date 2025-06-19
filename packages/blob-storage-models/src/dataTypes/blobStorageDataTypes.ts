@@ -3,6 +3,7 @@
 import { DataTypeHandlerFactory, type IJsonSchema } from "@twin.org/data-core";
 import { BlobStorageContexts } from "../models/blobStorageContexts";
 import { BlobStorageTypes } from "../models/blobStorageTypes";
+import BlobStorageCompressionTypeSchema from "../schemas/BlobStorageCompressionType.json";
 import BlobStorageEntrySchema from "../schemas/BlobStorageEntry.json";
 
 /**
@@ -20,6 +21,16 @@ export class BlobStorageDataTypes {
 				type: BlobStorageTypes.Entry,
 				defaultValue: {},
 				jsonSchema: async () => BlobStorageEntrySchema as IJsonSchema
+			})
+		);
+
+		DataTypeHandlerFactory.register(
+			`${BlobStorageContexts.ContextRoot}${BlobStorageTypes.CompressionType}`,
+			() => ({
+				context: BlobStorageContexts.ContextRoot,
+				type: BlobStorageTypes.CompressionType,
+				defaultValue: {},
+				jsonSchema: async () => BlobStorageCompressionTypeSchema as IJsonSchema
 			})
 		);
 	}
