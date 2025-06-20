@@ -543,6 +543,7 @@ export async function blobStorageGetContent(
 	const component = ComponentFactory.get<IBlobStorageComponent>(componentName);
 
 	const decompress = Coerce.boolean(request.query?.decompress);
+	const download = Coerce.boolean(request.query?.download) ?? false;
 
 	const result = await component.get(
 		request.pathParams.id,
@@ -578,7 +579,7 @@ export async function blobStorageGetContent(
 		attachment: {
 			mimeType: compressedEncodingFormat ?? encodingFormat,
 			filename,
-			inline: !(request.query?.download ?? false)
+			inline: !download
 		}
 	};
 }

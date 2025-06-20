@@ -23,7 +23,7 @@ export interface IBlobStorageGetContentRequest {
 		 * If the content should be decompressed, if it was compressed when stored, defaults to true.
 		 * @default true
 		 */
-		decompress?: string;
+		decompress?: boolean | string;
 
 		/**
 		 * Use a different vault key id for decryption, if not provided the default vault key id will be used.
@@ -36,7 +36,7 @@ export interface IBlobStorageGetContentRequest {
 		 * Otherwise the browser should show the content inside the page.
 		 * @default false
 		 */
-		download?: string;
+		download?: boolean | string;
 
 		/**
 		 * Set the filename to use when a download is triggered.

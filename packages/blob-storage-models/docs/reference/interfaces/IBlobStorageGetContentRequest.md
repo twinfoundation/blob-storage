@@ -26,7 +26,7 @@ The query parameters.
 
 #### decompress?
 
-> `optional` **decompress**: `string`
+> `optional` **decompress**: `string` \| `boolean`
 
 If the content should be decompressed, if it was compressed when stored, defaults to true.
 
@@ -50,7 +50,7 @@ undefined
 
 #### download?
 
-> `optional` **download**: `string`
+> `optional` **download**: `string` \| `boolean`
 
 Set the download flag which should prompt the browser to save the file.
 Otherwise the browser should show the content inside the page.

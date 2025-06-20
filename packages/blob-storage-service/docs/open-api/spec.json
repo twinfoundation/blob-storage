@@ -171,7 +171,10 @@
 						"in": "query",
 						"required": false,
 						"schema": {
-							"type": "number"
+							"type": [
+								"number",
+								"string"
+							]
 						}
 					},
 					{
@@ -388,7 +391,10 @@
 						"in": "query",
 						"required": false,
 						"schema": {
-							"type": "string"
+							"type": [
+								"boolean",
+								"string"
+							]
 						},
 						"example": "true"
 					},
@@ -398,7 +404,10 @@
 						"in": "query",
 						"required": false,
 						"schema": {
-							"type": "string"
+							"type": [
+								"boolean",
+								"string"
+							]
 						}
 					},
 					{

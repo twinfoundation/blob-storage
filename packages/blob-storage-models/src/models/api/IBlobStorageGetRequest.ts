@@ -31,13 +31,13 @@ export interface IBlobStorageGetRequest {
 		 * Include the content in the response, otherwise only metadata is returned.
 		 * @default false
 		 */
-		includeContent?: string;
+		includeContent?: boolean | string;
 
 		/**
 		 * If the content should be decompressed, if it was compressed when stored, defaults to true.
 		 * @default true
 		 */
-		decompress?: string;
+		decompress?: boolean | string;
 
 		/**
 		 * Use a different vault key id for decryption, if not provided the default vault key id will be used.
