@@ -1,5 +1,21 @@
 # @twin.org/blob-storage-service - Changelog
 
+## [0.0.1-next.37](https://github.com/twinfoundation/blob-storage/compare/blob-storage-service-v0.0.1-next.36...blob-storage-service-v0.0.1-next.37) (2025-06-20)
+
+
+### Bug Fixes
+
+* query params force coercion ([a5e547a](https://github.com/twinfoundation/blob-storage/commit/a5e547a775f8997cb04780938c7a9561ddb048d1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/blob-storage-models bumped from 0.0.1-next.36 to 0.0.1-next.37
+  * devDependencies
+    * @twin.org/blob-storage-connector-memory bumped from 0.0.1-next.36 to 0.0.1-next.37
+
 ## [0.0.1-next.36](https://github.com/twinfoundation/blob-storage/compare/blob-storage-service-v0.0.1-next.35...blob-storage-service-v0.0.1-next.36) (2025-06-19)
 
 
