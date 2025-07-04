@@ -1,0 +1,1231 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "TWIN - Test Endpoints",
+		"description": "REST API for TWIN - Test Endpoints.",
+		"version": "1.0.0",
+		"license": {
+			"name": "Apache 2.0 License",
+			"url": "https://opensource.org/licenses/Apache-2.0"
+		}
+	},
+	"servers": [
+		{
+			"url": "https://localhost"
+		}
+	],
+	"tags": [
+		{
+			"name": "Blob Storage",
+			"description": "Endpoints which are modelled to access a blob storage contract."
+		}
+	],
+	"paths": {
+		"/blob-storage": {
+			"post": {
+				"operationId": "blobStorageCreate",
+				"summary": "Create an entry in blob storage",
+				"tags": [
+					"Blob Storage"
+				],
+				"security": [
+					{
+						"jwtBearerAuthScheme": []
+					}
+				],
+				"requestBody": {
+					"description": "Request to create an entry in blob storage.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BlobStorageCreateRequest"
+							},
+							"examples": {
+								"blobStorageCreateRequestExample": {
+									"value": {
+										"blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
+										"metadata": {
+											"@context": "https://schema.org",
+											"@type": "DigitalDocument",
+											"name": "myfile.pdf"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "The rest request ended in created response.",
+						"headers": {
+							"location": {
+								"schema": {
+									"type": "string"
+								},
+								"description": "e.g. blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
+							}
+						}
+					},
+					"400": {
+						"description": "The server cannot process the request, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "GeneralError",
+											"message": "component.error",
+											"properties": {
+												"foo": "bar"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "UnauthorizedError",
+											"message": "component.error"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "InternalServerError",
+											"message": "component.error"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "blobStorageQuery",
+				"summary": "Query the items from blob storage",
+				"tags": [
+					"Blob Storage"
+				],
+				"parameters": [
+					{
+						"name": "conditions",
+						"description": "The condition for the query as JSON version of EntityCondition type.",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "orderBy",
+						"description": "The order for the results, default to created.",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"dateCreated",
+								"dateModified"
+							]
+						}
+					},
+					{
+						"name": "orderByDirection",
+						"description": "The direction for the order, defaults to desc.",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/SortDirection"
+						}
+					},
+					{
+						"name": "pageSize",
+						"description": "The number of entries to return per page.",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": [
+								"number",
+								"string"
+							]
+						}
+					},
+					{
+						"name": "cursor",
+						"description": "The cursor to get next chunk of data, returned in previous response.",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "accept",
+						"in": "header",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"style": "simple"
+					}
+				],
+				"security": [
+					{
+						"jwtBearerAuthScheme": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Response to getting the list of entries from a query.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BlobStorageEntryList"
+								},
+								"examples": {
+									"blobStorageListResponseExample": {
+										"value": {
+											"@context": [
+												"https://schema.org",
+												"https://schema.twindev.org/blob-storage/",
+												"https://schema.twindev.org/common/"
+											],
+											"type": "ItemList",
+											"itemListElement": [
+												{
+													"@context": [
+														"https://schema.twindev.org/blob-storage/",
+														"https://schema.twindev.org/common/",
+														"https://schema.org"
+													],
+													"type": "BlobStorageEntry",
+													"id": "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+													"dateCreated": "2024-01-01T00:00:00Z",
+													"encodingFormat": "application/pdf",
+													"blobSize": 42,
+													"blobHash": "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+													"fileExtension": "pdf",
+													"metadata": {
+														"@context": "https://schema.org",
+														"@type": "DigitalDocument",
+														"name": "myfile.pdf"
+													},
+													"blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+												}
+											]
+										}
+									}
+								}
+							},
+							"application/ld+json": {
+								"schema": {
+									"$ref": "#/components/schemas/BlobStorageEntryList"
+								},
+								"examples": {
+									"blobStorageListResponseJsonLdExample": {
+										"value": {
+											"@context": [
+												"https://schema.org",
+												"https://schema.twindev.org/blob-storage/",
+												"https://schema.twindev.org/common/"
+											],
+											"type": "ItemList",
+											"itemListElement": [
+												{
+													"@context": [
+														"https://schema.twindev.org/blob-storage/",
+														"https://schema.twindev.org/common/",
+														"https://schema.org"
+													],
+													"type": "BlobStorageEntry",
+													"id": "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+													"dateCreated": "2024-01-01T00:00:00Z",
+													"encodingFormat": "application/pdf",
+													"blobSize": 42,
+													"blobHash": "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+													"fileExtension": "pdf",
+													"metadata": {
+														"@context": "https://schema.org",
+														"@type": "DigitalDocument",
+														"name": "myfile.pdf"
+													},
+													"blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The server cannot process the request, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "GeneralError",
+											"message": "component.error",
+											"properties": {
+												"foo": "bar"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "UnauthorizedError",
+											"message": "component.error"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The resource you tried to access does not exist, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/NotFoundResponse"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "NotFoundError",
+											"message": "component.error",
+											"properties": {
+												"notFoundId": "1"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "InternalServerError",
+											"message": "component.error"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/blob-storage/{id}": {
+			"get": {
+				"operationId": "blobStorageGet",
+				"summary": "Get the metadata for an item from blob storage",
+				"tags": [
+					"Blob Storage"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"description": "The id of the blob to get in urn format.",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"style": "simple",
+						"example": "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
+					},
+					{
+						"name": "includeContent",
+						"description": "Include the content in the response, otherwise only metadata is returned.",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": [
+								"boolean",
+								"string"
+							]
+						},
+						"example": "true"
+					},
+					{
+						"name": "decompress",
+						"description": "If the content should be decompressed, if it was compressed when stored, defaults to true.",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": [
+								"boolean",
+								"string"
+							]
+						}
+					},
+					{
+						"name": "overrideVaultKeyId",
+						"description": "Use a different vault key id for decryption, if not provided the default vault key id will be used.",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "accept",
+						"in": "header",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"style": "simple"
+					}
+				],
+				"security": [
+					{
+						"jwtBearerAuthScheme": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Response to get an entry from blob storage.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BlobStorageEntry"
+								},
+								"examples": {
+									"blobStorageGetResponseExample": {
+										"value": {
+											"@context": [
+												"https://schema.twindev.org/blob-storage/",
+												"https://schema.twindev.org/common/",
+												"https://schema.org"
+											],
+											"type": "BlobStorageEntry",
+											"id": "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+											"dateCreated": "2024-01-01T00:00:00Z",
+											"encodingFormat": "application/pdf",
+											"blobSize": 42,
+											"blobHash": "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+											"fileExtension": "pdf",
+											"metadata": {
+												"@context": "https://schema.org",
+												"@type": "DigitalDocument",
+												"name": "myfile.pdf"
+											},
+											"blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+										}
+									}
+								}
+							},
+							"application/ld+json": {
+								"schema": {
+									"$ref": "#/components/schemas/BlobStorageEntry"
+								},
+								"examples": {
+									"blobStorageGetResponseJsonLdExample": {
+										"value": {
+											"@context": [
+												"https://schema.twindev.org/blob-storage/",
+												"https://schema.twindev.org/common/",
+												"https://schema.org"
+											],
+											"type": "BlobStorageEntry",
+											"id": "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+											"dateCreated": "2024-01-01T00:00:00Z",
+											"encodingFormat": "application/pdf",
+											"blobSize": 42,
+											"blobHash": "sha256:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+											"fileExtension": "pdf",
+											"metadata": {
+												"@context": "https://schema.org",
+												"@type": "DigitalDocument",
+												"name": "myfile.pdf"
+											},
+											"blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The server cannot process the request, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "GeneralError",
+											"message": "component.error",
+											"properties": {
+												"foo": "bar"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "UnauthorizedError",
+											"message": "component.error"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The resource you tried to access does not exist, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/NotFoundResponse"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "NotFoundError",
+											"message": "component.error",
+											"properties": {
+												"notFoundId": "1"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "InternalServerError",
+											"message": "component.error"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"operationId": "blobStorageUpdate",
+				"summary": "Update the metadata for an item in blob storage",
+				"tags": [
+					"Blob Storage"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"description": "The id of the blob to get in urn format.",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"style": "simple",
+						"example": "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
+					}
+				],
+				"security": [
+					{
+						"jwtBearerAuthScheme": []
+					}
+				],
+				"requestBody": {
+					"description": "Request to update a blob entry.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BlobStorageUpdateRequest"
+							},
+							"examples": {
+								"blobStorageUpdateRequestExample": {
+									"value": {
+										"metadata": {
+											"@context": "https://schema.org",
+											"@type": "DigitalDocument",
+											"name": "myfile.pdf"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "The rest request ended in success with no data."
+					},
+					"400": {
+						"description": "The server cannot process the request, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "GeneralError",
+											"message": "component.error",
+											"properties": {
+												"foo": "bar"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "UnauthorizedError",
+											"message": "component.error"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "InternalServerError",
+											"message": "component.error"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "blobStorageRemove",
+				"summary": "Remove an item from blob storage",
+				"tags": [
+					"Blob Storage"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"description": "The id of the blob to remove in urn format.",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"style": "simple",
+						"example": "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
+					}
+				],
+				"security": [
+					{
+						"jwtBearerAuthScheme": []
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "The rest request ended in success with no data."
+					},
+					"400": {
+						"description": "The server cannot process the request, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "GeneralError",
+											"message": "component.error",
+											"properties": {
+												"foo": "bar"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "UnauthorizedError",
+											"message": "component.error"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The resource you tried to access does not exist, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/NotFoundResponse"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "NotFoundError",
+											"message": "component.error",
+											"properties": {
+												"notFoundId": "1"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "InternalServerError",
+											"message": "component.error"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/blob-storage/{id}/content": {
+			"get": {
+				"operationId": "blobStorageGetContent",
+				"summary": "Get the content for an item in blob storage",
+				"tags": [
+					"Blob Storage"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"description": "",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"style": "simple",
+						"example": "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
+					}
+				],
+				"security": [
+					{
+						"jwtBearerAuthScheme": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The content of the blob, which will be a specific mime type if one can be detected from the content (or set as encodingFormat in the entry), or defaults to application/octet-stream.",
+						"content": {
+							"application/octet-stream": {
+								"schema": {
+									"type": "string",
+									"format": "binary"
+								},
+								"examples": {
+									"blobStorageGetContentResponseExample": {
+										"summary": "Binary Data",
+										"value": ""
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The server cannot process the request, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "GeneralError",
+											"message": "component.error",
+											"properties": {
+												"foo": "bar"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "UnauthorizedError",
+											"message": "component.error"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The resource you tried to access does not exist, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/NotFoundResponse"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "NotFoundError",
+											"message": "component.error",
+											"properties": {
+												"notFoundId": "1"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"examples": {
+									"exampleResponse": {
+										"value": {
+											"name": "InternalServerError",
+											"message": "component.error"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"BlobStorageCompressionType": {
+				"anyOf": [
+					{
+						"type": "string",
+						"const": "gzip",
+						"description": "Gzip."
+					},
+					{
+						"type": "string",
+						"const": "deflate",
+						"description": "Deflate."
+					}
+				],
+				"description": "The types of compression for blob storage data."
+			},
+			"BlobStorageCreateRequest": {
+				"type": "object",
+				"properties": {
+					"blob": {
+						"type": "string",
+						"description": "The data to store in base64 encoding."
+					},
+					"encodingFormat": {
+						"type": "string",
+						"description": "The mime type of the blob, will be detected if left undefined."
+					},
+					"fileExtension": {
+						"type": "string",
+						"description": "The extension of the blob, will be detected if left undefined."
+					},
+					"metadata": {
+						"$ref": "https://schema.twindev.org/json-ld/JsonLdNodeObject"
+					},
+					"disableEncryption": {
+						"type": "boolean",
+						"description": "Disables encryption if enabled by default.",
+						"default": false
+					},
+					"compress": {
+						"$ref": "#/components/schemas/BlobStorageCompressionType"
+					},
+					"overrideVaultKeyId": {
+						"type": "string",
+						"description": "Use a different vault key id for encryption, if not provided the default vault key id will be used.",
+						"default": "undefined"
+					},
+					"namespace": {
+						"type": "string",
+						"description": "The namespace to store the data in, defaults to component configured namespace."
+					}
+				},
+				"required": [
+					"blob"
+				],
+				"additionalProperties": false,
+				"description": "The body parameters."
+			},
+			"BlobStorageEntry": {
+				"type": "object",
+				"properties": {
+					"@context": {
+						"type": "array",
+						"minItems": 2,
+						"description": "JSON-LD Context.",
+						"prefixItems": [
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/blob-storage/"
+							},
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/common/"
+							}
+						],
+						"items": {
+							"$ref": "https://schema.twindev.org/json-ld/JsonLdContextDefinitionElement"
+						}
+					},
+					"type": {
+						"type": "string",
+						"const": "BlobStorageEntry",
+						"description": "JSON-LD Type."
+					},
+					"id": {
+						"type": "string",
+						"description": "The id for the blob."
+					},
+					"dateCreated": {
+						"type": "string",
+						"description": "The date/time when the entry was created."
+					},
+					"dateModified": {
+						"type": "string",
+						"description": "The date/time when the entry was modified."
+					},
+					"blobSize": {
+						"type": "number",
+						"description": "The size of the data in the blob."
+					},
+					"blobHash": {
+						"type": "string",
+						"description": "The hash of the data in the blob."
+					},
+					"encodingFormat": {
+						"type": "string",
+						"description": "The mime type for the blob."
+					},
+					"isEncrypted": {
+						"type": "boolean",
+						"description": "Indicates if the blob is encrypted."
+					},
+					"compression": {
+						"$ref": "#/components/schemas/BlobStorageCompressionType"
+					},
+					"fileExtension": {
+						"type": "string",
+						"description": "The extension."
+					},
+					"metadata": {
+						"$ref": "https://schema.twindev.org/json-ld/JsonLdNodeObject"
+					},
+					"blob": {
+						"type": "string",
+						"description": "The blob in base64 format, included if the includeContent flag was set in the request."
+					}
+				},
+				"required": [
+					"@context",
+					"type",
+					"id",
+					"dateCreated",
+					"blobSize",
+					"blobHash"
+				],
+				"additionalProperties": false,
+				"description": "Interface describing a blob storage entry."
+			},
+			"BlobStorageEntryList": {
+				"type": "object",
+				"properties": {
+					"@context": {
+						"type": "array",
+						"minItems": 3,
+						"description": "JSON-LD Context.",
+						"prefixItems": [
+							{
+								"type": "string",
+								"const": "https://schema.org"
+							},
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/blob-storage/"
+							},
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/common/"
+							}
+						],
+						"items": {
+							"$ref": "https://schema.twindev.org/json-ld/JsonLdContextDefinitionElement"
+						}
+					},
+					"type": {
+						"type": "string",
+						"const": "ItemList",
+						"description": "JSON-LD Type."
+					},
+					"itemListElement": {
+						"type": "array",
+						"description": "The list of entries.",
+						"prefixItems": [
+							{
+								"$ref": "#/components/schemas/BlobStorageEntry"
+							}
+						]
+					},
+					"nextItem": {
+						"type": "string",
+						"description": "The cursor to get the next chunk of entries."
+					}
+				},
+				"required": [
+					"@context",
+					"type",
+					"itemListElement"
+				],
+				"additionalProperties": false,
+				"description": "Interface describing an blob storage entry list."
+			},
+			"BlobStorageUpdateRequest": {
+				"type": "object",
+				"properties": {
+					"encodingFormat": {
+						"type": "string",
+						"description": "The mime type of the blob, will be detected if left undefined."
+					},
+					"fileExtension": {
+						"type": "string",
+						"description": "The extension of the blob, will be detected if left undefined."
+					},
+					"metadata": {
+						"$ref": "https://schema.twindev.org/json-ld/JsonLdNodeObject"
+					}
+				},
+				"additionalProperties": false,
+				"description": "The body parameters."
+			},
+			"Error": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "The name for the error."
+					},
+					"message": {
+						"type": "string",
+						"description": "The message for the error."
+					},
+					"source": {
+						"type": "string",
+						"description": "The source of the error."
+					},
+					"properties": {
+						"type": "object",
+						"additionalProperties": {},
+						"description": "Any additional information for the error."
+					},
+					"stack": {
+						"type": "string",
+						"description": "The stack trace for the error."
+					},
+					"inner": {
+						"$ref": "#/components/schemas/Error"
+					}
+				},
+				"required": [
+					"name",
+					"message"
+				],
+				"additionalProperties": false,
+				"description": "Model to describe serialized error."
+			},
+			"NotFoundResponse": {
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"notFoundId": {
+						"type": "string",
+						"description": "The id if the item that was not found."
+					},
+					"name": {
+						"type": "string",
+						"description": "The name for the error."
+					},
+					"message": {
+						"type": "string",
+						"description": "The message for the error."
+					},
+					"source": {
+						"type": "string",
+						"description": "The source of the error."
+					},
+					"properties": {
+						"type": "object",
+						"additionalProperties": {},
+						"description": "Any additional information for the error."
+					},
+					"stack": {
+						"type": "string",
+						"description": "The stack trace for the error."
+					},
+					"inner": {
+						"$ref": "#/components/schemas/Error"
+					}
+				},
+				"required": [
+					"message",
+					"name"
+				],
+				"description": "The body which contains the error."
+			},
+			"SortDirection": {
+				"anyOf": [
+					{
+						"type": "string",
+						"const": "asc",
+						"description": "Ascending."
+					},
+					{
+						"type": "string",
+						"const": "desc",
+						"description": "Descending."
+					}
+				],
+				"description": "The sort directions."
+			}
+		},
+		"securitySchemes": {
+			"jwtBearerAuthScheme": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	}
+}

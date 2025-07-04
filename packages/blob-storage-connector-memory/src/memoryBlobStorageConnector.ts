@@ -1,103 +1,102 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
-import { Converter, Guards, Is } from "@gtsc/core";
-import { Sha256 } from "@gtsc/crypto";
-import { nameof } from "@gtsc/nameof";
-import type { IRequestContext } from "@gtsc/services";
-import type { IMemoryBlobStorageConnectorConfig } from "./models/IMemoryBlobStorageConnectorConfig";
+import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
+import { Converter, GeneralError, Guards, Urn } from "@twin.org/core";
+import { Sha256 } from "@twin.org/crypto";
+import { nameof } from "@twin.org/nameof";
 
 /**
  * Class for performing blob storage operations in-memory.
  */
 export class MemoryBlobStorageConnector implements IBlobStorageConnector {
 	/**
-	 * Runtime name for the class.
-	 * @internal
+	 * The namespace for the items.
 	 */
-	private static readonly _CLASS_NAME: string = nameof<MemoryBlobStorageConnector>();
+	public static readonly NAMESPACE: string = "memory";
+
+	/**
+	 * Runtime name for the class.
+	 */
+	public readonly CLASS_NAME: string = nameof<MemoryBlobStorageConnector>();
 
 	/**
 	 * The storage for the in-memory items.
 	 * @internal
 	 */
-	private readonly _store: { [tenantId: string]: { [id: string]: Uint8Array } };
+	private readonly _store: { [id: string]: Uint8Array };
 
 	/**
 	 * Create a new instance of MemoryBlobStorageConnector.
-	 * @param config The configuration for the blob storage connector.
 	 */
-	constructor(config?: IMemoryBlobStorageConnectorConfig) {
-		this._store = config?.initialValues ?? {};
+	constructor() {
+		this._store = {};
 	}
 
 	/**
 	 * Set the blob.
-	 * @param requestContext The context for the request.
 	 * @param blob The data for the blob.
-	 * @returns The id of the stored blob.
+	 * @returns The id of the stored blob in urn format.
 	 */
-	public async set(requestContext: IRequestContext, blob: Uint8Array): Promise<string> {
-		Guards.object(MemoryBlobStorageConnector._CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(
-			MemoryBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.uint8Array(MemoryBlobStorageConnector._CLASS_NAME, nameof(blob), blob);
+	public async set(blob: Uint8Array): Promise<string> {
+		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
 
 		const id = Converter.bytesToHex(Sha256.sum256(blob));
 
-		this._store[requestContext.tenantId] ??= {};
-		this._store[requestContext.tenantId][id] = blob;
+		this._store[id] = blob;
 
-		return id;
+		return `blob:${new Urn(MemoryBlobStorageConnector.NAMESPACE, id).toString()}`;
 	}
 
 	/**
 	 * Get the blob.
-	 * @param requestContext The context for the request.
-	 * @param id The id of the blob to get.
+	 * @param id The id of the blob to get in urn format.
 	 * @returns The data for the blob if it can be found or undefined.
 	 */
-	public async get(requestContext: IRequestContext, id: string): Promise<Uint8Array | undefined> {
-		Guards.object(MemoryBlobStorageConnector._CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(
-			MemoryBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(MemoryBlobStorageConnector._CLASS_NAME, nameof(id), id);
+	public async get(id: string): Promise<Uint8Array | undefined> {
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
-		return this._store[requestContext.tenantId]?.[id];
+		const urnParsed = Urn.fromValidString(id);
+
+		if (urnParsed.namespaceMethod() !== MemoryBlobStorageConnector.NAMESPACE) {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
+				namespace: MemoryBlobStorageConnector.NAMESPACE,
+				id
+			});
+		}
+
+		return this._store[urnParsed.namespaceSpecific(1)];
 	}
 
 	/**
 	 * Remove the blob.
-	 * @param requestContext The context for the request.
-	 * @param id The id of the blob to remove.
-	 * @returns Nothing.
+	 * @param id The id of the blob to remove in urn format.
+	 * @returns True if the blob was found.
 	 */
-	public async remove(requestContext: IRequestContext, id: string): Promise<void> {
-		Guards.object(MemoryBlobStorageConnector._CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(
-			MemoryBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(MemoryBlobStorageConnector._CLASS_NAME, nameof(id), id);
+	public async remove(id: string): Promise<boolean> {
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
-		if (!Is.undefined(this._store[requestContext.tenantId]?.[id])) {
-			delete this._store[requestContext.tenantId]?.[id];
+		const urnParsed = Urn.fromValidString(id);
+
+		if (urnParsed.namespaceMethod() !== MemoryBlobStorageConnector.NAMESPACE) {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
+				namespace: MemoryBlobStorageConnector.NAMESPACE,
+				id
+			});
 		}
+
+		const namespaceId = urnParsed.namespaceSpecific(1);
+		if (this._store[namespaceId]) {
+			delete this._store[namespaceId];
+			return true;
+		}
+		return false;
 	}
 
 	/**
-	 * Get the memory store for the specified tenant.
-	 * @param tenantId The tenant id.
+	 * Get the memory store.
 	 * @returns The store.
 	 */
-	public getStore(tenantId: string): { [id: string]: Uint8Array } | undefined {
-		return this._store[tenantId];
+	public getStore(): { [id: string]: Uint8Array } {
+		return this._store;
 	}
 }

@@ -1,0 +1,18 @@
+{
+	"info": {
+		"gcpBlobStorageConnector": {
+			"bucketCreating": "Creating bucket \"{bucket}\"",
+			"bucketCreated": "Created bucket \"{bucket}\"",
+			"bucketExists": "Skipping create bucket \"{bucket}\" as it already exists"
+		}
+	},
+	"error": {
+		"gcpBlobStorageConnector": {
+			"bucketCreateFailed": "Creating bucket \"{bucket}\" failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
+			"getBlobFailed": "Failed to get blob in GCP",
+			"setBlobFailed": "Failed to set blob in GCP",
+			"removeBlobFailed": "Failed to remove blob in GCP"
+		}
+	}
+}

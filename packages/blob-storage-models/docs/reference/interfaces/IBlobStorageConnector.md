@@ -2,131 +2,72 @@
 
 Interface describing an blob storage connector.
 
-## Hierarchy
+## Extends
 
-- `IService`
-
-  ↳ **`IBlobStorageConnector`**
+- `IComponent`
 
 ## Methods
 
-### bootstrap
+### set()
 
-▸ **bootstrap**(`requestContext`): `Promise`\<`void`\>
-
-Bootstrap the service by creating and initializing any resources it needs.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The request context for bootstrapping. |
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
-
-#### Inherited from
-
-IService.bootstrap
-
-___
-
-### get
-
-▸ **get**(`requestContext`, `id`): `Promise`\<`undefined` \| `Uint8Array`\>
-
-Get the blob.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `id` | `string` | The id of the blob to get. |
-
-#### Returns
-
-`Promise`\<`undefined` \| `Uint8Array`\>
-
-The data for the blob if it can be found or undefined.
-
-___
-
-### remove
-
-▸ **remove**(`requestContext`, `id`): `Promise`\<`void`\>
-
-Remove the blob.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `id` | `string` | The id of the blob to remove. |
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
-
-___
-
-### set
-
-▸ **set**(`requestContext`, `blob`): `Promise`\<`string`\>
+> **set**(`blob`): `Promise`\<`string`\>
 
 Set the blob.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `blob` | `Uint8Array` | The data for the blob. |
+##### blob
+
+`Uint8Array`
+
+The data for the blob.
 
 #### Returns
 
 `Promise`\<`string`\>
 
-The id of the stored blob.
+The id of the stored blob in urn format.
 
-___
+***
 
-### start
+### get()
 
-▸ **start**(): `Promise`\<`void`\>
+> **get**(`id`): `Promise`\<`undefined` \| `Uint8Array`\<`ArrayBufferLike`\>\>
 
-The service needs to be started when the application is initialized.
+Get the blob.
 
-#### Returns
+#### Parameters
 
-`Promise`\<`void`\>
+##### id
 
-Nothing.
+`string`
 
-#### Inherited from
-
-IService.start
-
-___
-
-### stop
-
-▸ **stop**(): `Promise`\<`void`\>
-
-The service needs to be stopped when the application is closed.
+The id of the blob to get in urn format.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<`undefined` \| `Uint8Array`\<`ArrayBufferLike`\>\>
 
-Nothing.
+The data for the blob if it can be found or undefined.
 
-#### Inherited from
+***
 
-IService.stop
+### remove()
+
+> **remove**(`id`): `Promise`\<`boolean`\>
+
+Remove the blob.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The id of the blob to remove in urn format.
+
+#### Returns
+
+`Promise`\<`boolean`\>
+
+True if the blob was found.

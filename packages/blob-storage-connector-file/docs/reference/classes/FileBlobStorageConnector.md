@@ -8,119 +8,144 @@ Class for performing blob storage operations in file.
 
 ## Constructors
 
-### constructor
+### Constructor
 
-• **new FileBlobStorageConnector**(`dependencies`, `config`): [`FileBlobStorageConnector`](FileBlobStorageConnector.md)
+> **new FileBlobStorageConnector**(`options`): `FileBlobStorageConnector`
 
 Create a new instance of FileBlobStorageConnector.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `dependencies` | `Object` | The dependencies for the connector. |
-| `dependencies.logging` | `ILogging` | The logging contract. |
-| `config` | [`IFileBlobStorageConnectorConfig`](../interfaces/IFileBlobStorageConnectorConfig.md) | The configuration for the blob storage connector. |
+##### options
+
+[`IFileBlobStorageConnectorConstructorOptions`](../interfaces/IFileBlobStorageConnectorConstructorOptions.md)
+
+The options for the connector.
 
 #### Returns
 
-[`FileBlobStorageConnector`](FileBlobStorageConnector.md)
+`FileBlobStorageConnector`
+
+## Properties
+
+### NAMESPACE
+
+> `readonly` `static` **NAMESPACE**: `string` = `"file"`
+
+The namespace for the items.
+
+***
+
+### CLASS\_NAME
+
+> `readonly` **CLASS\_NAME**: `string`
+
+Runtime name for the class.
+
+#### Implementation of
+
+`IBlobStorageConnector.CLASS_NAME`
 
 ## Methods
 
-### bootstrap
+### bootstrap()
 
-▸ **bootstrap**(`requestContext`): `Promise`\<`void`\>
+> **bootstrap**(`nodeLoggingConnectorType?`): `Promise`\<`boolean`\>
 
-Bootstrap the connector by creating and initializing any resources it needs.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The request context for bootstrapping. |
-
-#### Returns
-
-`Promise`\<`void`\>
-
-The response of the bootstrapping as log entries.
-
-#### Implementation of
-
-IBlobStorageConnector.bootstrap
-
-___
-
-### get
-
-▸ **get**(`requestContext`, `id`): `Promise`\<`undefined` \| `Uint8Array`\>
-
-Get the blob.
+Bootstrap the component by creating and initializing any resources it needs.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `id` | `string` | The id of the blob to get. |
+##### nodeLoggingConnectorType?
+
+`string`
+
+The node logging connector type, defaults to "node-logging".
 
 #### Returns
 
-`Promise`\<`undefined` \| `Uint8Array`\>
+`Promise`\<`boolean`\>
 
-The data for the blob if it can be found or undefined.
-
-#### Implementation of
-
-IBlobStorageConnector.get
-
-___
-
-### remove
-
-▸ **remove**(`requestContext`, `id`): `Promise`\<`void`\>
-
-Remove the blob.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `id` | `string` | The id of the blob to remove. |
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
+True if the bootstrapping process was successful.
 
 #### Implementation of
 
-IBlobStorageConnector.remove
+`IBlobStorageConnector.bootstrap`
 
-___
+***
 
-### set
+### set()
 
-▸ **set**(`requestContext`, `blob`): `Promise`\<`string`\>
+> **set**(`blob`): `Promise`\<`string`\>
 
 Set the blob.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `blob` | `Uint8Array` | The data for the blob. |
+##### blob
+
+`Uint8Array`
+
+The data for the blob.
 
 #### Returns
 
 `Promise`\<`string`\>
 
-The id of the stored blob.
+The id of the stored blob in urn format.
 
 #### Implementation of
 
-IBlobStorageConnector.set
+`IBlobStorageConnector.set`
+
+***
+
+### get()
+
+> **get**(`id`): `Promise`\<`undefined` \| `Uint8Array`\<`ArrayBufferLike`\>\>
+
+Get the blob.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The id of the blob to get in urn format.
+
+#### Returns
+
+`Promise`\<`undefined` \| `Uint8Array`\<`ArrayBufferLike`\>\>
+
+The data for the blob if it can be found or undefined.
+
+#### Implementation of
+
+`IBlobStorageConnector.get`
+
+***
+
+### remove()
+
+> **remove**(`id`): `Promise`\<`boolean`\>
+
+Remove the blob.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The id of the blob to remove in urn format.
+
+#### Returns
+
+`Promise`\<`boolean`\>
+
+True if the blob was found.
+
+#### Implementation of
+
+`IBlobStorageConnector.remove`

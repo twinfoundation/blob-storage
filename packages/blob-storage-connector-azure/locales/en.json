@@ -1,0 +1,18 @@
+{
+	"info": {
+		"azureBlobStorageConnector": {
+			"containerCreating": "Creating container \"{container}\"",
+			"containerCreated": "Created container \"{container}\"",
+			"containerExists": "Skipping create container \"{container}\" as it already exists"
+		}
+	},
+	"error": {
+		"azureBlobStorageConnector": {
+			"containerCreateFailed": "Creating container \"{container}\" failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
+			"getBlobFailed": "Failed to get blob in Azure",
+			"setBlobFailed": "Failed to set blob in Azure",
+			"removeBlobFailed": "Failed to remove blob in Azure"
+		}
+	}
+}

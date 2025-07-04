@@ -1,11 +1,11 @@
-# GTSC Blob Storage Connector Memory
+# TWIN Blob Storage Connector Memory
 
 Blob Storage connector implementation using in-memory storage.
 
 ## Installation
 
 ```shell
-npm install @gtsc/blob-storage-connector-memory
+npm install @twin.org/blob-storage-connector-memory
 ```
 
 ## Examples
@@ -14,7 +14,7 @@ Usage of the APIs is shown in the examples [docs/examples.md](docs/examples.md)
 
 ## Reference
 
-Detailed reference documentation for the API can be found in [docs/reference/modules.md](docs/reference/modules.md)
+Detailed reference documentation for the API can be found in [docs/reference/index.md](docs/reference/index.md)
 
 ## Changelog
 

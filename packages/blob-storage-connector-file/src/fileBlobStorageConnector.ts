@@ -2,29 +2,26 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { access, mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
-import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
-import { BaseError, Converter, FilenameHelper, GeneralError, Guards } from "@gtsc/core";
-import { Sha256 } from "@gtsc/crypto";
-import type { ILogging } from "@gtsc/logging-models";
-import { nameof } from "@gtsc/nameof";
-import type { IRequestContext } from "@gtsc/services";
-import type { IFileBlobStorageConnectorConfig } from "./models/IFileBlobStorageConnectorConfig";
+import type { IBlobStorageConnector } from "@twin.org/blob-storage-models";
+import { BaseError, Converter, GeneralError, Guards, Urn } from "@twin.org/core";
+import { Sha256 } from "@twin.org/crypto";
+import { LoggingConnectorFactory } from "@twin.org/logging-models";
+import { nameof } from "@twin.org/nameof";
+import type { IFileBlobStorageConnectorConstructorOptions } from "./models/IFileBlobStorageConnectorConstructorOptions";
 
 /**
  * Class for performing blob storage operations in file.
  */
 export class FileBlobStorageConnector implements IBlobStorageConnector {
 	/**
-	 * Runtime name for the class.
-	 * @internal
+	 * The namespace for the items.
 	 */
-	private static readonly _CLASS_NAME: string = nameof<FileBlobStorageConnector>();
+	public static readonly NAMESPACE: string = "file";
 
 	/**
-	 * The logging contract.
-	 * @internal
+	 * Runtime name for the class.
 	 */
-	private readonly _logging: ILogging;
+	public readonly CLASS_NAME: string = nameof<FileBlobStorageConnector>();
 
 	/**
 	 * The directory to use for storage.
@@ -40,43 +37,30 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 
 	/**
 	 * Create a new instance of FileBlobStorageConnector.
-	 * @param dependencies The dependencies for the connector.
-	 * @param dependencies.logging The logging contract.
-	 * @param config The configuration for the blob storage connector.
+	 * @param options The options for the connector.
 	 */
-	constructor(
-		dependencies: {
-			logging: ILogging;
-		},
-		config: IFileBlobStorageConnectorConfig
-	) {
-		Guards.object(FileBlobStorageConnector._CLASS_NAME, nameof(dependencies), dependencies);
-		Guards.object(
-			FileBlobStorageConnector._CLASS_NAME,
-			nameof(dependencies.logging),
-			dependencies.logging
-		);
-		Guards.object<FileBlobStorageConnector>(
-			FileBlobStorageConnector._CLASS_NAME,
-			nameof(config),
-			config
-		);
-		Guards.string(FileBlobStorageConnector._CLASS_NAME, nameof(config.directory), config.directory);
-		this._logging = dependencies.logging;
-		this._directory = path.resolve(config.directory);
-		this._extension = config.extension ?? ".blob";
+	constructor(options: IFileBlobStorageConnectorConstructorOptions) {
+		Guards.object(this.CLASS_NAME, nameof(options), options);
+		Guards.object(this.CLASS_NAME, nameof(options.config), options.config);
+		Guards.stringValue(this.CLASS_NAME, nameof(options.config.directory), options.config.directory);
+		this._directory = path.resolve(options.config.directory);
+		this._extension = options.config.extension ?? ".blob";
 	}
 
 	/**
-	 * Bootstrap the connector by creating and initializing any resources it needs.
-	 * @param requestContext The request context for bootstrapping.
-	 * @returns The response of the bootstrapping as log entries.
+	 * Bootstrap the component by creating and initializing any resources it needs.
+	 * @param nodeLoggingConnectorType The node logging connector type, defaults to "node-logging".
+	 * @returns True if the bootstrapping process was successful.
 	 */
-	public async bootstrap(requestContext: IRequestContext): Promise<void> {
+	public async bootstrap(nodeLoggingConnectorType?: string): Promise<boolean> {
+		const nodeLogging = LoggingConnectorFactory.getIfExists(
+			nodeLoggingConnectorType ?? "node-logging"
+		);
+
 		if (!(await this.dirExists(this._directory))) {
-			this._logging.log(requestContext, {
+			await nodeLogging?.log({
 				level: "info",
-				source: FileBlobStorageConnector._CLASS_NAME,
+				source: this.CLASS_NAME,
 				message: "directoryCreating",
 				data: {
 					directory: this._directory
@@ -86,148 +70,129 @@ export class FileBlobStorageConnector implements IBlobStorageConnector {
 			try {
 				await mkdir(this._directory, { recursive: true });
 
-				this._logging.log(requestContext, {
+				await nodeLogging?.log({
 					level: "info",
-					source: FileBlobStorageConnector._CLASS_NAME,
+					source: this.CLASS_NAME,
 					message: "directoryCreated",
 					data: {
 						directory: this._directory
 					}
 				});
 			} catch (err) {
-				this._logging.log(requestContext, {
+				await nodeLogging?.log({
 					level: "error",
-					source: FileBlobStorageConnector._CLASS_NAME,
+					source: this.CLASS_NAME,
 					message: "directoryCreateFailed",
 					data: {
 						directory: this._directory
 					},
 					error: BaseError.fromError(err)
 				});
+				return false;
 			}
 		} else {
-			this._logging.log(requestContext, {
+			await nodeLogging?.log({
 				level: "info",
-				source: FileBlobStorageConnector._CLASS_NAME,
+				source: this.CLASS_NAME,
 				message: "directoryExists",
 				data: {
 					directory: this._directory
 				}
 			});
 		}
+
+		return true;
 	}
 
 	/**
 	 * Set the blob.
-	 * @param requestContext The context for the request.
 	 * @param blob The data for the blob.
-	 * @returns The id of the stored blob.
+	 * @returns The id of the stored blob in urn format.
 	 */
-	public async set(requestContext: IRequestContext, blob: Uint8Array): Promise<string> {
-		Guards.object(FileBlobStorageConnector._CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(
-			FileBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.uint8Array(FileBlobStorageConnector._CLASS_NAME, nameof(blob), blob);
+	public async set(blob: Uint8Array): Promise<string> {
+		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
 
 		try {
-			const tenantPath = await this.createTenantPath(requestContext, true);
+			if (!(await this.dirExists(this._directory))) {
+				await mkdir(this._directory);
+			}
 
 			const id = Converter.bytesToHex(Sha256.sum256(blob));
 
-			const fullPath = path.join(tenantPath, `${id}${this._extension}`);
+			const fullPath = path.join(this._directory, `${id}${this._extension}`);
 
 			await writeFile(fullPath, blob);
 
-			return id;
+			return `blob:${new Urn(FileBlobStorageConnector.NAMESPACE, id).toString()}`;
 		} catch (err) {
-			throw new GeneralError(FileBlobStorageConnector._CLASS_NAME, "setBlobFailed", undefined, err);
+			throw new GeneralError(this.CLASS_NAME, "setBlobFailed", undefined, err);
 		}
 	}
 
 	/**
 	 * Get the blob.
-	 * @param requestContext The context for the request.
-	 * @param id The id of the blob to get.
+	 * @param id The id of the blob to get in urn format.
 	 * @returns The data for the blob if it can be found or undefined.
 	 */
-	public async get(requestContext: IRequestContext, id: string): Promise<Uint8Array | undefined> {
-		Guards.object(FileBlobStorageConnector._CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(
-			FileBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(FileBlobStorageConnector._CLASS_NAME, nameof(id), id);
+	public async get(id: string): Promise<Uint8Array | undefined> {
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
+
+		const urnParsed = Urn.fromValidString(id);
+
+		if (urnParsed.namespaceMethod() !== FileBlobStorageConnector.NAMESPACE) {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
+				namespace: FileBlobStorageConnector.NAMESPACE,
+				id
+			});
+		}
 
 		try {
-			const tenantPath = await this.createTenantPath(requestContext, false);
-
-			const fullPath = path.join(tenantPath, `${id}${this._extension}`);
+			const fullPath = path.join(
+				this._directory,
+				`${urnParsed.namespaceSpecific(1)}${this._extension}`
+			);
 
 			return await readFile(fullPath);
 		} catch (err) {
 			if (BaseError.isErrorCode(err, "ENOENT")) {
 				return;
 			}
-			throw new GeneralError(FileBlobStorageConnector._CLASS_NAME, "getBlobFailed", { id }, err);
+			throw new GeneralError(this.CLASS_NAME, "getBlobFailed", { id }, err);
 		}
 	}
 
 	/**
 	 * Remove the blob.
-	 * @param requestContext The context for the request.
-	 * @param id The id of the blob to remove.
-	 * @returns Nothing.
+	 * @param id The id of the blob to remove in urn format.
+	 * @returns True if the blob was found.
 	 */
-	public async remove(requestContext: IRequestContext, id: string): Promise<void> {
-		Guards.object(FileBlobStorageConnector._CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(
-			FileBlobStorageConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(FileBlobStorageConnector._CLASS_NAME, nameof(id), id);
+	public async remove(id: string): Promise<boolean> {
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
+
+		const urnParsed = Urn.fromValidString(id);
+
+		if (urnParsed.namespaceMethod() !== FileBlobStorageConnector.NAMESPACE) {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
+				namespace: FileBlobStorageConnector.NAMESPACE,
+				id
+			});
+		}
 
 		try {
-			const tenantPath = await this.createTenantPath(requestContext, false);
-
-			const fullPath = path.join(tenantPath, `${id}${this._extension}`);
+			const fullPath = path.join(
+				this._directory,
+				`${urnParsed.namespaceSpecific(1)}${this._extension}`
+			);
 
 			await unlink(fullPath);
+
+			return true;
 		} catch (err) {
 			if (BaseError.isErrorCode(err, "ENOENT")) {
-				return;
+				return false;
 			}
-			throw new GeneralError(FileBlobStorageConnector._CLASS_NAME, "removeBlobFailed", { id }, err);
+			throw new GeneralError(this.CLASS_NAME, "removeBlobFailed", { id }, err);
 		}
-	}
-
-	/**
-	 * Create the path and folder for tenant.
-	 * @param create Create the tenant path if it doesn't exist.
-	 * @returns The path with tenant included.
-	 * @internal
-	 */
-	private async createTenantPath(
-		requestContext: IRequestContext,
-		create: boolean
-	): Promise<string> {
-		const tenantPath = path.join(
-			this._directory,
-			FilenameHelper.safeFilename(requestContext.tenantId)
-		);
-		if (create) {
-			try {
-				if (!(await this.dirExists(tenantPath))) {
-					await mkdir(tenantPath);
-				}
-			} catch {}
-		}
-
-		return tenantPath;
 	}
 
 	/**
