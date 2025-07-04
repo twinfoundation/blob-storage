@@ -77,6 +77,8 @@ jobs:
             -f parents[]="$CURRENT_SHA" \
             -f 'author[name]=github-actions[bot]' \
             -f 'author[email]=41898282+github-actions[bot]@users.noreply.github.com' \
+            -f 'committer[name]=github-actions[bot]' \
+            -f 'committer[email]=41898282+github-actions[bot]@users.noreply.github.com' \
             --jq '.sha')
 
           # Update branch reference with force
