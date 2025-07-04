@@ -1,11 +1,11 @@
 {
-	"packages/blob-storage-models": "0.0.0",
-	"packages/blob-storage-connector-memory": "0.0.0",
-	"packages/blob-storage-service": "0.0.0",
-	"packages/blob-storage-rest-client": "0.0.0",
-	"packages/blob-storage-connector-file": "0.0.0",
-	"packages/blob-storage-connector-ipfs": "0.0.0",
-	"packages/blob-storage-connector-aws-s3": "0.0.0",
-	"packages/blob-storage-connector-azure": "0.0.0",
-	"packages/blob-storage-connector-gcp": "0.0.0"
+	"packages/blob-storage-models": "0.0.1",
+	"packages/blob-storage-connector-memory": "0.0.1",
+	"packages/blob-storage-service": "0.0.1",
+	"packages/blob-storage-rest-client": "0.0.1",
+	"packages/blob-storage-connector-file": "0.0.1",
+	"packages/blob-storage-connector-ipfs": "0.0.1",
+	"packages/blob-storage-connector-aws-s3": "0.0.1",
+	"packages/blob-storage-connector-azure": "0.0.1",
+	"packages/blob-storage-connector-gcp": "0.0.1"
 }
